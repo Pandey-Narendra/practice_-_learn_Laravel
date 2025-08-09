@@ -1,0 +1,15 @@
+1) Create Project : 
+    composer create-project --prefer-dist laravel/laravel project_name
+    cd project_name
+
+
+2) Global Laravel :
+    composer global require laravel/installer
+    laravel new project_name
+    cd project_name
+
+
+3) Set Up .env and database
+    php artisan migrate 
+
+4) php artisan serve
