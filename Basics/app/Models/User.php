@@ -46,13 +46,38 @@ class User extends Authenticatable
         ];
     }
 
-    // One User Can Order Multiple Orders
-    public function orders() {
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'user_roles');
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+
+    public function orders()
+    {
         return $this->hasMany(Order::class);
     }
 
-    // one user can give multiple reviews to multiple products(one review per product) using reviews table as pivot
-    public function review() {
-        return $this->belongsToMany(product::class, 'reviews');
-    }
+    // // One User Can Order Multiple Orders
+    // public function orders() {
+    //     return $this->hasMany(Order::class);
+    // }
+
+    // // one user can give multiple reviews to multiple products(one review per product) using reviews table as pivot
+    // public function review() {
+    //     return $this->belongsToMany(product::class, 'reviews');
+    // }
 }
