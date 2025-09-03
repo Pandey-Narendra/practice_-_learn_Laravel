@@ -45,4 +45,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // One User Can Order Multiple Orders
+    public function orders() {
+        return $this->hasMany(Order::class);
+    }
+
+    // one user can give multiple reviews to multiple products(one review per product) using reviews table as pivot
+    public function review() {
+        return $this->belongsToMany(product::class, 'reviews');
+    }
 }

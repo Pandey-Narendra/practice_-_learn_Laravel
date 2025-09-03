@@ -1,0 +1,304 @@
+Introduction to Migrations: 
+    1) manage your database schema (structure) in a version-controlled way.
+
+    2) Why use them ?
+        
+        Version Control : Each migration file represents a specific change, so you can track who made what changes and when.
+        Team Collaboration : In a team, everyone can run the same migrations to keep their local databases in sync with the production one.
+        Rollback Capability : If something goes wrong, you can easily undo changes without losing data (in most cases).
+        Environment Consistency : Migrations ensure that development, staging, and production databases are identical in structure.
+        Database Agnostic : Laravel's schema builder abstracts away differences between databases like MySQL, PostgreSQL, SQLite, etc., so your code works across them.
+
+    3) Creating Migrations
+        
+        php artisan make:migration : This generates a new PHP file in the database/migrations directory.
+
+        Start with the action: Create, Add, Update, Drop
+        Include the table name
+        End with Table suffix
+
+        php artisan make:migration create_table_name(s/ies)_table
+
+            Examples:
+                php artisan make:migration create_users_table
+                php artisan make:migration add_email_to_users_table  
+                php artisan make:migration update_posts_table
+                php artisan make:migration drop_old_data_table
+
+                # Create migration for new table
+                php artisan make:migration create_posts_table --create=posts
+
+                # Create migration for existing table
+                php artisan make:migration add_status_to_users_table --table=users
+
+                # Specify custom path
+                php artisan make:migration create_posts_table --path=database/custom_migrations
+
+
+
+        The file extends Illuminate\Database\Migrations\Migration.
+        
+        It has two methods: up() (applies the migration) and down() (reverses it).
+            
+            The up() Method
+                The up() method defines the changes you want to make to your database:
+
+                Create new tables
+
+                Add columns to existing tables
+
+                Create indexes
+
+                Add foreign key constraints
+
+            The down() Method
+                The down() method defines how to reverse the changes made in up():
+
+                Drop tables created in up()
+
+                Remove columns added in up()
+
+                Drop indexes created in up()
+
+                Remove foreign key constraints
+
+        Use the Schema facade to define changes.
+
+       For rollback:  Migrations are batched by execution time. If you run multiple at once, they're in one batch—rollback undoes the whole batch.
+
+    4) Running Migrations
+        
+        php artisan migrate : Runs all pending migrations.
+        php artisan migrate --force
+
+        php artisan migrate:rollback : Rolls back(empty table, undo changes on attributes) the last batch of migrations (calls down()).
+        Example: php artisan migrate:rollback --step=2 (rolls back last 2 batches).
+
+        php artisan migrate:refresh : Rolls back(empty table, undo changes on attributes) (calls down()) all migrations and re-runs (calls up()) them.
+        Example: php artisan migrate:refresh (combines rollback(last batch) + migrate).
+        
+        php artisan migrate:fresh : Drops all tables(all batches) and re-runs migrations
+        Example: php artisan migrate:fresh --seed (also runs seeders).
+
+        php artisan migrate:reset : Rollback(empty table, undo changes on attributes)(calls down())  all migrations
+
+        php artisan migrate:status : Shows which migrations have run, with timestamps and batch numbers.
+
+        php artisan migrate --pretend : to see SQL without executing.
+
+        Running Specific Migrations
+        php artisan migrate --path=database/migrations/2023_01_01_000000_create_posts_table.php
+
+    5) Defining Tables & Columns
+
+        Creating Tables: Schema::create('table_name', function (Blueprint $table) { ... });
+
+        Modifying Tables: Schema::table('table_name', function (Blueprint $table) { ... });
+        The $table is a Blueprint object for chaining column definitions.
+
+        $table->softDeletes()
+
+    6) Column Types
+        
+        1) string($column, $length = 255) : VARCHAR for short text.
+        Example: $table->string('name', 100); (up to 100 chars).
+
+        integer($column): INT for whole numbers.
+        Example: $table->integer('age').
+
+        bigInteger($column): BIGINT for large integers (e.g., IDs in big apps).
+        Example: $table->bigInteger('views_count').
+
+        text($column): TEXT for long text (up to 65k chars).
+        Example: $table->text('bio').
+
+        boolean($column): TINYINT (0 or 1) for true/false.
+        Example: $table->boolean('is_active')->default(false)
+
+        enum($column, $allowedValues): ENUM for fixed options.
+        Example: $table->enum('status', ['active', 'inactive', 'pending'])
+
+        json($column): JSON for structured data.
+        Example: $table->json('preferences'); (stores arrays/objects as JSON).
+
+        timestamp($column): TIMESTAMP for dates/times.
+        Example: $table->timestamp('last_login_at')->nullable()
+
+        float($column, $totalDigits, $decimals): FLOAT for decimals. E.g., $table->float('price', 8, 2); (8 total digits, 2 after decimal).
+
+        date($column): DATE for YYYY-MM-DD.
+        
+        time($column): TIME for HH:MM:SS.
+        
+        dateTime($column): DATETIME for full date/time.
+        
+        binary($column): BLOB for binary data.
+        
+        uuid($column): UUID for unique identifiers.
+
+        example: 
+                Schema::create('products', function (Blueprint $table) {
+                    $table->id();
+                    $table->string('name');
+                    $table->text('description');
+                    $table->boolean('in_stock')->default(true);
+                    $table->enum('category', ['electronics', 'books']);
+                    $table->json('attributes');
+                    $table->timestamps();
+                });
+
+                Primary Key Columns
+                    $table->id();                           // Auto-incrementing BIGINT primary key
+                    $table->bigIncrements('id');           // Same as id() (older syntax)
+                    $table->increments('id');              // Auto-incrementing INT primary key
+                    $table->uuid('uuid');                  // UUID column
+
+                String & Text Columns
+                    $table->string('name');                // VARCHAR(255)
+                    $table->string('name', 100);          // VARCHAR(100) 
+                    $table->text('description');          // TEXT
+                    $table->mediumText('content');         // MEDIUMTEXT
+                    $table->longText('content');           // LONGTEXT
+                    $table->char('code', 4);              // CHAR(4)
+
+                Numeric Columns
+                    $table->integer('views');              // INT
+                    $table->bigInteger('big_number');      // BIGINT
+                    $table->smallInteger('small_number');  // SMALLINT
+                    $table->tinyInteger('tiny_number');    // TINYINT
+                    $table->mediumInteger('medium_number'); // MEDIUMINT
+                    $table->decimal('price', 8, 2);       // DECIMAL(8,2)
+                    $table->float('rating');               // FLOAT
+                    $table->double('latitude', 8, 6);      // DOUBLE
+                    $table->unsignedInteger('positive');   // Unsigned INT
+                    $table->unsignedBigInteger('big_positive'); // Unsigned BIGINT
+                
+                Boolean & Date/Time Columns
+                    $table->boolean('is_active');          // BOOLEAN
+                    $table->date('birth_date');            // DATE
+                    $table->dateTime('created_at');        // DATETIME
+                    $table->time('start_time');            // TIME
+                    $table->timestamp('updated_at');       // TIMESTAMP
+                    $table->timestamps();                  // created_at & updated_at
+                    $table->softDeletes()                  // deleted_at
+                    $table->year('graduation_year');       // YEAR
+
+                Special Data Types
+                    $table->json('preferences');           // JSON
+                    $table->jsonb('data');                // JSONB (PostgreSQL)
+                    $table->enum('status', ['active', 'inactive']); // ENUM
+                    $table->binary('file_data');          // BLOB
+                    $table->ipAddress('client_ip');
+                    $table->macAddress('device_mac');
+                    $table->uuid('uuid')->unique();
+                    $table->ulid('ulid')->unique();
+
+    7) Column Modifiers
+        
+        Changing existing columns : composer require doctrine/dbal 
+        use ->change() in a new migration: $table->string('name', 100)->nullable()->change();
+            
+            Renaming Tables
+                $table->renameColumn('name', 'full_name');
+            
+            Dropping Columns
+                $table->dropColumn('old_column');           // Drop single column
+                $table->dropColumn(['col1', 'col2']);       // Drop multiple columns
+
+            Dropping Tables
+                Schema::drop('table_name');                    // Drop table (fails if doesn't exist)
+                Schema::dropIfExists('table_name');           // Drop table safely
+
+
+        nullable(): Allows NULL values.
+            Example: $table->string('middle_name')->nullable();
+        
+        default($value): Sets a default value.
+            Example: $table->integer('votes')->default(0);
+        
+        unique(): Ensures unique values (creates unique index).
+            Example: $table->string('email')->unique();
+        
+        unsigned(): For integers, makes them unsigned (positive only).
+            Example: $table->bigInteger('user_id')->unsigned();
+        
+        index(): Creates an index for faster queries.
+            Example: $table->string('slug')->index();
+        
+        $table->string('slug')->comment('URL slug');   // Add column comment
+
+        primary(): Makes it a primary key
+        
+        foreign(): Defines a foreign key
+
+            Basic Foreign Keys
+                $table->foreignId('user_id')->constrained(); // References users.id
+
+            Explicit Foreign Key Definition
+                $table->unsignedBigInteger('category_id');
+                $table->foreign('category_id')->references('id')->on('categories');
+
+            Cascade Actions
+                ->onDelete('cascade')      // Delete related records
+                ->onDelete('set null')     // Set foreign key to NULL
+                ->onDelete('restrict')     // Prevent deletion
+                ->onDelete('no action')    // Database default behavior
+
+                ->onUpdate('cascade')      // Update related records
+                ->onUpdate('restrict')     // Prevent updates
+            
+            Dropping Foreign Keys
+                // Drop by constraint name
+                $table->dropForeign('posts_user_id_foreign');
+
+                // Drop by column name (uses convention)
+                $table->dropForeign(['user_id']);
+
+                // Drop foreign id column entirely
+                $table->dropForeignId('user_id');
+
+
+
+        Positioning Modifiers
+            $table->string('middle_name')->after('first_name'); // Position after specific column
+            $table->string('prefix')->first();                  // Position as first column
+
+        Advanced Modifiers
+            $table->timestamp('created_at')->useCurrent();         // Use current timestamp
+            $table->timestamp('updated_at')->useCurrentOnUpdate();
+            $table->string('name')->comment('Display name');
+            $table->string('name')->charset('utf8mb4');           // Set character set
+            $table->string('name')->collation('utf8mb4_unicode_ci'); // Set collation
+
+    8) Indexes & Keys
+
+        Primary Keys
+            $table->id();                              // Auto-incrementing primary key
+            $table->primary('id');                     // Define primary key
+            $table->primary(['category_id', 'user_id']); // Composite primary key (no duplicates across both)
+            $table->string('code', 10)->primary();
+        
+            To drop : In down(), use $table->dropPrimary()
+
+        Unique Indexes
+            $table->string('email')->unique();         // Inline unique constraint
+            $table->unique('email');                   // Separate unique constraint
+            $table->unique(['user_id', 'category_id'], 'unique_user_category'); // Composite unique (no duplicates across both)
+
+            To drop : In down(), use $table->dropUnique('name')
+
+        Regular Indexes
+            $table->string('name')->index();           // Inline index
+            $table->index('name');                     // Separate index
+            $table->index(['user_id', 'created_at']);  // Composite index For queries filtering on multiple columns.
+
+            To drop : $table->dropIndex('index_name');
+
+        Custom Index Names
+
+            $table->index('user_id', 'idx_user_id');   // Custom index name
+            $table->unique('email', 'unique_user_email'); // Custom unique constraint name
+
+    9)  Seed immediately after table creation ( --seed )
+        Artisan::call('db:seed', ['--class' => 'PermissionSeeder']);
+

@@ -1,0 +1,169 @@
+Foreign Key Relationships in Laravel — Migration Notes
+
+    1. Standard Syntax (foreignId()->constrained())
+
+        $table->foreignId('user_id')
+            ->constrained()
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
+
+        Creates an unsigned BIGINT column named user_id
+        Adds a foreign key referencing id on the users table
+        By default: onDelete('restrict') unless specified
+
+    2. Short Syntax
+
+        $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+
+        Same as above but written in one line for brevity.
+
+    3. Custom Table & Column Names
+
+        $table->foreignId('user_id')
+            ->constrained('users', 'user_id')
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
+        
+        The referenced table or column name is different from Laravel’s default assumption (id).
+
+    4. Old-School Method
+
+        $table->unsignedBigInteger('user_id');
+
+        $table->foreign('user_id')
+            ->references('id')
+            ->on('users')
+            ->onDelete('cascade')
+            ->onUpdate('cascade');
+
+        You want full control over column type and naming.
+        Works for non-standard IDs or legacy databases.
+
+    5. Multiple Column Foreign Keys (Composite Keys)
+
+        $table->primary(['user_id', 'role_id']);
+        
+        $table->foreign(['user_id', 'role_id'])
+            ->references(['user_id', 'role_id'])
+            ->on('user_roles');
+
+        You need multi-column constraints.
+        Typically for pivot tables.
+
+    6. Without Foreign Key Constraint (Soft Relationship)
+
+        $table->foreignId('user_id'); // No constrained()
+
+        You don’t want the database to enforce the relationship.
+        Laravel’s Eloquent models still handle it logically.
+
+    7. Raw SQL Example
+
+        user_id BIGINT UNSIGNED NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+        Writing migrations in raw SQL.
+        Needed for highly customized DB structures.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    1. One-to-One (hasOne & belongsTo)
+        
+        When to use:
+            Splitting a large table into logical parts (e.g., user profiles).
+            Attaching optional, singular data (e.g., a user’s settings).
+
+        Database:
+            Child table has a foreign key referencing parent primary key.
+
+        // users table
+        id | name | email
+
+        // user_profiles table
+        // ForeignId('user_id')->references('id')->users('users');
+        id | user_id (FK) | bio | avatar_url
+
+        In this case, the user_profiles table has a foreign key referencing the users table primary key.
+        This user_id attribute/column in user_profiles tables belongs to(belongsTo) the id attribute/column in users table.
+
+            class UserProfile extends Model
+            {
+                public function user()
+                {
+                    return $this->belongsTo(
+                        User::class  // referenced model/table
+                    ); 
+                }
+            }
+
+        To keep the dependecy working, we need to prevent user deletion in the parent table if there is a child record in the child table.
+        This id attribute/column in users table has exactly one(hasOne) entry in user_id attribute/column in user_profiles table.
+
+            class User extends Model
+            {
+                public function profile()
+                {
+                    return $this->hasOne(UserProfile::class);
+                }
+            }
+
+
+    ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+    2. One-to-Many (hasMany & belongsTo) 
+        One parent record relates to multiple child records. The child table stores the parent’s foreign key.
+
+        When to use:
+            Any situation where one parent record relates to multiple child records.
+
+                For example:
+                    A user can have many orders.
+                    A blog author can have many posts.
+                    A category can have many products.
+        
+        Database:
+            The child table contains a foreign key referencing the parent table’s primary key.
+
+        // users table
+        id | name
+
+        // orders table
+        // ForeignId('user_id')->references('id')->users('users');
+        id | user_id (FK) | total_amount
+
+        In this case, the orders table has a foreign key (user_id) referencing the users table primary key (id).
+        This user_id column in orders belongsTo the id column in users.
+
+            // Child model: Order
+            // This means: each order belongs to one user.
+            class Order extends Model
+            {
+                public function user()
+                {
+                    return $this->belongsTo(
+                        User::class // referenced model/table
+                    );
+                }
+            }
+
+            To keep the dependecy working, we need to prevent user deletion in the parent table if there is a child record in the child table.
+            This id attribute/column in users table has many(hasMany) entries in user_id attribute/column in orders table.
+
+            // Parent model: User
+            // This means: each user has many orders.
+            class User extends Model
+            {
+                public function orders()
+                {
+                    return $this->hasMany(Order::class);
+                }
+            }
+            
+    ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------    

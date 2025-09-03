@@ -1,0 +1,270 @@
+1. Introduction to Eloquent ORM Methods
+    
+    Eloquent ORM methods are functions provided by Laravel's Eloquent system, which is an object-relational mapper (ORM).
+    Eloquent methods turn database records into objects with attributes and relationships. 
+    These methods allow you to interact with your database using PHP objects (models) instead of raw SQL queries. 
+    Each database table is represented by a model class (e.g., User for the users table), and Eloquent methods handle querying, inserting, updating, deleting, and managing relationships between models.
+
+    Difference between Query Builder methods and Eloquent methods:
+
+        Query Builder: 
+            Query Builder (accessed via DB::table('users')) is a fluent interface for building SQL queries directly. 
+            It's lower-level, returns arrays or collections of stdClass objects, and is great for complex joins or when you don't need models (e.g., DB::table('users')->where('age', '>', 18)->get()).
+
+        Eloquent
+            Eloquent methods build on the Query Builder but are model-centric. 
+            They return model instances or Eloquent collections, enforce relationships, and trigger model events/hooks. 
+            Eloquent uses the Query Builder under the hood (e.g., User::where('age', '>', 18)->get() is equivalent but returns User models). 
+            
+        Use Eloquent for object-oriented interactions; fall back to Query Builder for raw performance or non-model queries.
+
+        How they map to SQL : 
+            Eloquent builds queries via the underlying builder, 
+                e.g., User::find(1) -> select * from "users" where "users"."id" = 1 limit 1.
+
+2) Basic CRUD Methods
+
+    Reading (Retrieving Models):
+
+        all() : 
+            Retrieves all records from the table as an Eloquent collection.
+                Eloquent : 
+                    $users = User::all();
+                    
+                SQL : SELECT * FROM table;
+                Query Builder : 
+                MongoDB : 
+                Mongoose :
+
+        find($id) : 
+            Retrieves a single model by primary key.
+                Eloquent : $user = User::find(1);
+                SQL : SELECT * FROM table WHERE id = ? LIMIT 1;
+
+        findOrFail($id) : 
+            Like find(), but throws ModelNotFoundException if not found.
+                $user = User::findOrFail(1);
+        
+        first() :
+            Retrieves the first matching record (after any queries).
+                $user = User::where('active', true)->first();
+                SELECT * FROM table LIMIT 1;
+
+        firstOrFail() : 
+            Like first(), but throws exception if none found.
+
+        get() : 
+            Executes the query and returns a collection of models.
+                $activeUsers = User::where('active', true)->get();
+                SELECT * FROM table
+
+        pluck($column, $key = null) : 
+            Returns a collection of a single column's values, optionally keyed.
+                $names = User::pluck('name', 'id'); // ['1' => 'John', '2' => 'Jane'];
+                SELECT column FROM table;
+
+3) Creating/Updating/Deleting 
+
+    create($attributes) : 
+        Creates a new model, fills attributes, saves it.
+            $user = User::create(
+                    [
+                        'name' => 'John', 
+                        'email' => 'john@example.com'
+                    ]
+                );
+
+            INSERT INTO table (...) VALUES (...);
+
+        save() : 
+            Saves changes to an existing model or inserts a new one.
+                
+                // Insert
+                $user = new User(['name' => 'John']);
+                $user->save(); 
+
+                // Update
+                $user->name = 'Jane';
+                $user->save(); 
+
+        update($attributes) :
+            Updates matching models with attributes.
+                User::where('id', 1)
+                    ->update(
+                        [
+                            'name' => 'Jane'
+                        ]
+                    );
+                
+                UPDATE table SET ... WHERE ...
+
+        delete() : 
+            Deletes a model instance.
+                $user->delete();
+                DELETE FROM table WHERE id = ?;
+
+        destroy($ids) :
+            Deletes by primary key(s).
+                User::destroy(1); or User::destroy([1, 2, 3]);
+                DELETE FROM table WHERE id IN (...);
+
+4) Query Building Methods
+    where($column, $operator = '=', $value) : 
+        Adds a WHERE clause. Chainable.
+            User::where('age', '>', 18)->where('active', true)->get();
+            SQL: WHERE age > 18 AND active = 1
+    
+    orWhere($column, $operator = '=', $value) : 
+        Adds OR WHERE.
+            User::where('age', '>', 18)->orWhere('vip', true)->get();
+    
+    whereBetween($column, [$min, $max]) : 
+        WHERE BETWEEN.
+            User::whereBetween('age', [18, 65])->get();
+
+    whereIn($column, $values) :
+        WHERE IN
+            User::whereIn('id', [1, 2, 3])->get();
+    
+    whereNotIn($column, $values) :
+        WHERE NOT IN
+            User::whereNotIn('id', [1, 2, 3])->get();
+
+    whereNull($column) :
+        WHERE IS NULL
+            User::whereNull('deleted_at')->get();
+    
+    whereNotNull($column) :
+        NOT NULL
+            User::whereNotNull('deleted_at')->get();
+
+    orderBy($column, $direction = 'asc') :
+        ORDER BY.
+            User::orderBy('name', 'desc')->get();
+
+    latest($column = 'created_at') :
+        Latest
+            Post::latest()->get(); // Recent posts first
+
+    oldest($column = 'created_at') :
+        Oldest
+            Post::oldest()->get(); // Oldest posts first
+    
+    limit($count) / take($count):
+        LIMIT (take is alias).
+            User::limit(10)->get();
+
+    skip($offset) : 
+        OFFSET.
+            User::skip(10)->take(5)->get(); // Pagination basics
+    
+    Real-world use: Fetching active users sorted by join date: User::where('active', true)->orderBy('created_at', 'desc')->take(20)->get();
+
+5) Aggregation Methods
+
+    count() : 
+        Counts matching records.
+            $totalUsers = User::count();
+            SQL: COUNT(*).
+    
+    sum($column) : 
+        Sums a column
+            $totalSales = Order::sum('amount');
+            
+    avg($column) :
+        Averages a column.
+            $avgAge = User::avg('age');
+    
+    min($column) : 
+        Min
+            $youngest = User::min('age');
+
+    max($column) :
+        Max
+            $oldest = User::max('age');
+
+    exists() : 
+        Checks if any records match. Returns boolean.
+            $is_user = User::where('email', $email)->exists(); { /* user exists */ }
+    
+    doesntExist() : 
+            Checks if any records  does not match. Returns boolean.
+                $user_notExists = User::where('email', $email)->doesntExist(); { /* user  does not exists */ }
+
+6) Retrieving Relationships with Methods
+    
+    with($relations) :
+        Eager loads relationships to avoid N+1 queries.
+            User::with('posts')->get(); // Loads users and their posts in 2 queries
+    
+    load($relations) : 
+        Lazy loads on existing models/collections.
+            $users = User::all(); $users->load('posts');
+    
+    loadMissing($relations) :
+        Loads only if not already loaded.
+            $user->loadMissing('posts');
+
+    has($relation) : 
+        Filters models that have at least one related model.
+            User::has('posts')->get(); // Users with posts
+    
+    whereHas($relation, $callback) :
+        Filters with conditions on relation.
+            User::whereHas('posts', fn($q) => $q->where('published', true))->get();
+
+    withCount($relations) : Adds a {relation}_count attribute.
+        User::withCount('posts')->get(); // $user->posts_count
+
+    withSum($relations, $column) : 
+        Aggregates on sum relations.
+            Order::withSum('items', 'price')->get(); // $order->items_sum_price
+
+    withAvg($relations, $column) :
+        Aggregates on avg relations.
+            Order::withAvg('items', 'price')->get(); // $order->items_avg_price
+    
+    N+1 Problem and Solution: 
+        Lazy loading fetches relations per model (N queries for N models +1). 
+        Eager loading with with() batches them (1+N -> 2 queries). 
+        Always eager load in loops/lists.
+
+    Example: 
+        Users with published posts: 
+            User::with('posts')->whereHas('posts', fn($q) => $q->where('published', true))->get();
+
+7) Insert & Update Shortcuts
+
+    firstOrCreate($attributes, $values = []) :
+        Finds first matching or creates new.
+            User::firstOrCreate(
+                [
+                    'email' => 'john@example.com'
+                ], 
+                
+                ['name' => 'John']
+            );
+
+    firstOrNew($attributes, $values = []) :
+        Like above, but doesn't save—returns unsaved model.
+        $user = User::firstOrNew(
+            [
+                'email' => 'john@example.com'
+            ]
+        ); 
+        $user->save();
+
+    updateOrCreate($attributes, $values) :
+        Finds and updates, or creates.
+            User::updateOrCreate(
+                [
+                    'email' => 'john@example.com'
+                ], 
+                
+                ['name' => 'John Doe']
+            );
+
+8) Chunking & Streaming Methods (for Big Datasets)
+
+
+            

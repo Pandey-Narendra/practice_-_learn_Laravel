@@ -12,8 +12,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('product_categories', function (Blueprint $table) {
-            $table->id();
+            // $table->id();
+            $table->foreignId('product_id')->constrained()->onDelete('cascade');
+            $table->foreignId('category_id')->constrained()->OnDelete('cascade');
+            $table->primary(['product_id', 'category_id']);
             $table->timestamps();
+
+            //-------------------------------------------------------
+                // $table->unsignedBigInteger('user_id');
+                // $table->foreignId('user_id')->references('id')->on('users');
+
+                // SQL
+                // user_id bigint unsigned not null,
+                // foreign key(user_id) references users(id);
+            //-------------------------------------------------------
+
         });
     }
 
