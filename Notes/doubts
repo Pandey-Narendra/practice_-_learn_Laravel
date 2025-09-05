@@ -1,2 +1,9 @@
 1) on join which table to put on side first
+    It depends on what you want to preserve (include all rows from, even without matches)
+    Start with (or prioritize) the "primary" table you must include all of, and join outwards.
+    For LEFT JOIN: Put the table you want to preserve on the left side
+    For RIGHT JOIN: Put the table you want to preserve on the right side
+
 2) on group by or order by in joins which we should use for it 
+    . GROUP BY is only needed when you're performing aggregates like COUNT, SUM, AVG, etc., to collapse rows.
+    Avoid if not aggregating to prevent unnecessary row collapsing.
