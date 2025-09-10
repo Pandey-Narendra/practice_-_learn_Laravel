@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\DB;
 
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Role;
+use App\Models\Post;
 use App\Models\User;
 
 
@@ -23,8 +25,7 @@ class BasicsController extends Controller
     // left join to right join or right join to left join ---> reverse the table order
     // ORDER BY--> If sorting was needed
 
-    // 1) Find all users and their roles using an inner join.
-    
+    // Question 1: Find all users and their roles using an inner join.
     public function joins_01() {
 
         $eloquentORM = User::join('user_roles', 'users.id', '=', 'user_roles.user_id')
@@ -75,8 +76,7 @@ class BasicsController extends Controller
         dd('Find all users and their roles using an inner join','Eloquent ORM', $eloquentORM, 'Eloquent ORM Relationship', $ormRelationship,  $ormRelationshipHas, 'Query Builder', $queryBuilder, 'SQL', $sql);
     }
 
-    // 2) List all users, even if they have no roles, using a left join.
-
+   // Question 2: List all users, even if they have no roles, using a left join.
     public function joins_02() {
 
         $eloquentORM = User::leftJoin('user_roles', 'users.id', '=', 'user_roles.user_id')
@@ -118,8 +118,7 @@ class BasicsController extends Controller
         dd('List all users, even if they have no roles, using a left join','Eloquent ORM', $eloquentORM,'Eloquent ORM Relationship' , $ormRelationship,'Query Builder', $queryBuilder, 'SQL', $sql);
     }
 
-    // 3) List all roles, even if no users have them, using a right join.
-    
+    // Question 3: List all roles, even if no users have them, using a right join.
     public function joins_03() {
         // For Eloquent: 
         //     It's model-centric and starts from the roles table (base for Role::), making RIGHT JOIN tricky for preserving the base without exclusions. 
@@ -155,4 +154,213 @@ class BasicsController extends Controller
 
         dd('List all roles, even if no users have them, using a right join.', '$eloquentORM', $eloquentORM, '$ormRelationship', $ormRelationship, '$queryBuilder', $queryBuilder, '$rawDBSQL', $rawDBSQL);
     }
+
+    // Question 4: Find users who have the same role as another user using self-join.
+    public function joins_04(){
+        $eloquentORM = User::join('user_roles as ur1', 'users.id', '=', 'ur1.user_id')
+            ->join('user_roles as ur2', 'ur1.user_id', '<>', 'ur2.user_id')
+            ->join('users as u2', 'ur2.user_id', '=', 'u2.id')
+            ->where('ur1.role_id', '=', 'ur2.role_id')
+            ->select('users.name as user1_name', 'ur1.role_id as user1_role', 'u2.name as user2_name', 'ur2.role_id as user2_role')
+            ->get()
+        ;
+
+        $eloquentORM = User::join('user_roles as ur1', 'users.id', '=', 'ur1.user_id')
+            ->join('user_roles as ur2', 'ur1.role_id', '=', 'ur2.role_id')
+            ->join('users as u2', 'ur2.user_id', '=', 'u2.id')
+            ->where('ur1.role_id', '<>', DB::raw('u2.id'))
+            ->select('users.name as user1_name', 'ur1.role_id as user1_role', 'u2.name as user2_name', 'ur2.role_id as user2_role')
+            ->get()
+        ;
+
+        dd('Eloquent ORM', $eloquentORM);
+    }
+
+    // Question 5: Generate a Cartesian product of users and products using cross join (limit to 10 rows).
+    public function joins_05(){
+        $eloquentORM = User::crossJoin('products')
+            ->select('users.id as user_id', 'users.name as user_name', 'products.id as product_id', 'products.name as product_name')
+            ->limit(10)
+            ->get()
+        ;
+
+        // With Relationships
+        $users = User::select('id', 'name')->get();
+        $products = Product::select('id', 'name')->get();
+        
+        $ormRelationship = $users->crossJoin($products)
+                            ->take(10)
+                            ->map(fn($pair) => 
+                                [
+                                    'user_id'=> $pair[0]->id,
+                                    'name' => $pair[0]->name,
+                                    'product_id'=> $pair[1]->id,
+                                    'product_name' => $pair[1]->name 
+                                ]
+                            )
+        ;
+
+        $queryBuilder = DB::table('users')
+                        ->crossJoin('products')
+                        ->select('users.id as user_id', 'users.name as user_name', 'products.id as product_id', 'products.name as product_name')
+                        ->take(10)
+                        ->get()
+        ;
+
+        $sql = DB::select('
+                select u.id as user_id, u.name as user_name, p.id as product_id, p.name as product_name
+                from users u
+                cross join products p
+                limit 10
+        ');
+
+        dd($eloquentORM, $ormRelationship, $queryBuilder, $sql);
+    }
+
+    // Question 6: Find posts with their author's name using inner join.
+    public function joins_06() {
+        $eloquent = Post::join('users', 'posts.user_id', '=', 'users.id')
+                    ->select('posts.id as post_id', 'posts.title', 'users.id as user_id', 'users.name as author_name')
+                    ->get()
+        ;
+
+        $eloquentORMRelationship = Post::with('user')
+                                    ->get() // with('user') returns a Builder, not a Collection.You must call get() first to fetch the collection, then map
+                                    ->map( fn ($map) =>
+                                        [
+                                            'posts_id' => $map->id,
+                                            'post_title' => $map->title,
+                                            'user_id' => $map->user?->id,
+                                            'user_name' => $map->user?->name
+                                        ]
+                                    )
+        ;
+
+        $queryBuilder = DB::table('posts')
+                    ->join('users', 'posts.user_id', '=', 'users.id')
+                    ->select('posts.id as post_id', 'posts.title', 'users.id as user_id', 'users.name as author_name')
+                    ->get()
+        ;
+
+        $sql =DB::select('
+                SELECT posts.id as post_id, posts.title, users.id as user_id, users.name as author_name 
+                FROM posts 
+                INNER JOIN users ON posts.user_id = users.id
+            ')
+        ;
+
+        dd($eloquent, $eloquentORMRelationship, $queryBuilder, $sql);
+
+    }
+
+    // Question 7: List products and their order quantities using left join on order_items.
+    public function joins_07() {
+        $eloquent = Product::leftJoin('order_items as ot', 'products.id', '=', 'ot.product_id')
+                    -> select('products.name as product_name', 'sum(ot.quantity) as total_orders')
+                    ->groupBY('products.id')        
+        ;
+
+        $eloquentORMRelationship = Product::with('orderItems')->get(); // Aggregates via withSum or post-process
+
+        // Flatten: $flattened = $results->map(fn($product) => ['product_id' => $product->id, 'name' => $product->name, 'total_quantity' => $product->order_items_sum_quantity ?? 0]);
+        $eloquentORMRelationshipSum = Product::withSum('orderItems', 'quantity')->get(); // Adds order_items_sum_quantity attribute
+
+        $queryBuilder = DB::table('products')
+                        ->leftJoin('order_items as ot', 'products.id', '=', 'ot.product_id')
+                        -> select('products.name as product_name', 'sum(ot.quantity) as total_orders')
+                        ->groupBY('products.id') 
+        ;
+        // dd('sdfe');
+
+        $sqlDBRaw = DB::select('
+            SELECT p.id, p.name, sum(o.quantity) as total_orders 
+            from products p 
+            left join order_items o on p.id = o.product_id 
+            group by p.id, p.name
+        ');
+
+        dd($eloquent, $eloquentORMRelationship, $eloquentORMRelationshipSum, $queryBuilder, $sqlDBRaw);
+    }
+
+    // Question 8: Find users who have placed orders and their total amount using inner join and group by.
+    public function joins_08() {
+
+        $eloquent = User::join('orders', 'users.id', '=', 'orders.user_id')
+            ->select('users.id as user_id', 'users.name', DB::raw('SUM(orders.total_amount) as total_spent'))
+            ->groupBy('users.id', 'users.name')
+            ->get()
+        ;
+
+        $eloquentORMRelationship = User::has('orders')->withSum('orders', 'total_amount')->get();  // Filters users with orders, adds orders_sum_total_amount
+        // Flatten: $flattened = $results->map(fn($user) => ['user_id' => $user->id, 'name' => $user->name, 'total_spent' => $user->orders_sum_total_amount]);
+
+        $queryBuilder = DB::table('users')
+            ->join('orders', 'users.id', '=', 'orders.user_id')
+            ->select('users.id as user_id', 'users.name', DB::raw('SUM(orders.total_amount) as total_spent'))
+            ->groupBy('users.id', 'users.name')
+            ->get()
+        ;
+
+        $sqlDBRaw = DB::select('
+            SELECT users.id as user_id, users.name, SUM(orders.total_amount) as total_spent 
+            FROM users 
+            INNER JOIN orders ON users.id = orders.user_id 
+            GROUP BY users.id, users.name
+        ');
+        
+        dd($eloquent, $eloquentORMRelationship, $queryBuilder, $sqlDBRaw);
+    }
+
+    // Question 9: List posts with number of likes using left join.
+    public function joins_09() {
+        
+        $eloquent = Post::leftJoin('likes', 'posts.id', '=', 'likes.post_id')
+            ->select('posts.id as post_id', 'posts.title', DB::raw('COUNT(likes.id) as like_count'))
+            ->groupBy('posts.id', 'posts.title')
+            ->get()
+        ;
+
+        $eloquentORMRelationship = Post::withCount('likes')->get();  // Adds likes_count attribute to each post
+        // Flatten: $flattened = $results->map(fn($post) => ['post_id' => $post->id, 'title' => $post->title, 'like_count' => $post->likes_count]);
+
+        $queryBuilder = DB::table('posts')
+            ->leftJoin('likes', 'posts.id', '=', 'likes.post_id')
+            ->select('posts.id as post_id', 'posts.title', DB::raw('COUNT(likes.id) as like_count'))
+            ->groupBy('posts.id', 'posts.title')
+            ->get()
+        ;
+
+        $sqlDBRaw = DB::select('SELECT posts.id as post_id, posts.title, COUNT(likes.id) as like_count FROM posts LEFT JOIN likes ON posts.id = likes.post_id GROUP BY posts.id, posts.title');
+
+        dd($eloquent, $eloquentORMRelationship, $queryBuilder, $sqlDBRaw);
+    }
+    
+     public function joins_10() {
+        
+        $eloquent = Order::join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->join('products', 'order_items.product_id', '=', 'products.id')
+            ->select('orders.id as order_id', 'orders.total_amount', 'products.id as product_id', 'products.name as product_name', 'order_items.quantity')
+            ->get()
+        ;
+
+        $eloquentORMRelationship =Order::with('orderItems.product')->get();  // Nested: orderItems collection, each with product model
+        // To flatten: $flattened = $results->flatMap(fn($order) => $order->orderItems->map(fn($item) => ['order_id' => $order->id, 'total_amount' => $order->total_amount, 'product_id' => $item->product->id, 'product_name' => $item->product->name, 'quantity' => $item->quantity]));
+        
+        $queryBuilder = DB::table('orders')
+            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->join('products', 'order_items.product_id', '=', 'products.id')
+            ->select('orders.id as order_id', 'orders.total_amount', 'products.id as product_id', 'products.name as product_name', 'order_items.quantity')
+            ->get()
+        ;
+
+        $sqlDBRaw = DB::select('
+            SELECT orders.id as order_id, orders.total_amount, products.id as product_id, products.name as product_name, order_items.quantity 
+            FROM orders INNER JOIN order_items ON orders.id = order_items.order_id 
+            INNER JOIN products ON order_items.product_id = products.id'
+        );
+
+        dd($eloquent, $eloquentORMRelationship, $queryBuilder, $sqlDBRaw);
+    }
+
+    // -- Question 11: Find users who have made posts using subquery in WHERE -- select DISTINCT(user_id) from posts; select name from users where id in ( select DISTINCT(user_id) from posts );
 }
