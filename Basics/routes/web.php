@@ -41,3 +41,17 @@ use App\Http\Controllers\PracticeQueries\BasicsController;
 
     // Question 10: Find orders with product details using multiple joins (orders, order_items, products).
     Route::get('basics/joins/10', [BasicsController::class, 'joins_10']);
+
+// Sub Query
+
+    // -- Question 1: Find users who have made posts using subquery in WHERE
+    Route::get('basics/sub_query/01', [BasicsController::class, 'sub_query_01']);
+
+    // Question 2: Find the post with the maximum number of comments using subquery in SELECT.
+    Route::get('basics/sub_query/02', [BasicsController::class, 'sub_query_02']);
+
+    // Question 3: Find products with price above average price using subquery in WHERE.
+    Route::get('basics/sub_query/03', [BasicsController::class, 'sub_query_03']);
+
+    // Question 4: Find users who have not placed any orders using subquery with NOT IN.
+    Route::get('basics/sub_query/04', [BasicsController::class, 'sub_query_04']);

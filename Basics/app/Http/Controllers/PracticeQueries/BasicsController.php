@@ -13,10 +13,12 @@ use App\Models\Role;
 use App\Models\Post;
 use App\Models\User;
 
+use function Laravel\Prompts\select;
 
 class BasicsController extends Controller
 {
-    // JOINS : join('join_table', 'main_table.column_name', '=', 'join_table.column_name')
+
+// JOINS : join('join_table', 'main_table.column_name', '=', 'join_table.column_name')
         // leftJoin
         // Alias ?
     
@@ -335,6 +337,7 @@ class BasicsController extends Controller
         dd($eloquent, $eloquentORMRelationship, $queryBuilder, $sqlDBRaw);
     }
     
+    // Question 10: Find orders with product details using multiple joins (orders, order_items, products).
      public function joins_10() {
         
         $eloquent = Order::join('order_items', 'orders.id', '=', 'order_items.order_id')
@@ -362,5 +365,145 @@ class BasicsController extends Controller
         dd($eloquent, $eloquentORMRelationship, $queryBuilder, $sqlDBRaw);
     }
 
-    // -- Question 11: Find users who have made posts using subquery in WHERE -- select DISTINCT(user_id) from posts; select name from users where id in ( select DISTINCT(user_id) from posts );
+// Sub Query : 
+
+    // -- Question 1: Find users who have made posts using subquery in WHERE
+    public function sub_query_01() {
+        $eloquent = User::whereIn('id', function ($query) {
+                    $query->select('user_id')->from('posts')->distinct(); // sub_query
+                })
+                ->select('id','name')->get()
+        ;
+
+        $ormRelationship = User::has('posts')->select('id', 'name')->get();
+
+        $queryBuilder = DB::table('users')
+                        ->whereIn('id', DB::table('posts')->select('user_id')->get())
+                        ->select('name', 'id')
+                        ->get()
+        ;
+
+        $sqlDBRaw = DB::select('
+                    select name 
+                    from users
+                    where id IN (
+                        select distinct(user_id) 
+                        from posts
+                    )    
+        ');
+
+        dd($eloquent, $ormRelationship, $queryBuilder);
+    }
+
+    // Question 2: Find the post with the maximum number of comments using subquery in SELECT.
+    public function sub_query_02() {
+        
+        // ->take(1) ?
+
+        $eloquent = Post::select('id', 'title', DB::raw('select count(posts_id) from comments where posts.id = comments.posts_id as total_comments'))
+                    ->orderBYDesc('total_comments')
+                    ->take(1)
+                    ->get()
+        ;
+
+        $eloquentORMRelationship = Post::withCount('comments')
+                                    ->orderByDesc('comments_count')
+                                    ->take(1)
+                                    ->get()
+        ;
+
+        $queryBuilder = DB::table('posts')
+                        ->select('id', 'name', DB::table('select count(post_id) from comments where posts.id = comments.post_id as total_count'))
+                        ->orderByDesc('total_count')
+                        ->take(1)
+                        ->get()
+        ;
+
+        $sqlDBRaw = DB::raw('
+            select id, name,  (select count(posts_id) from commnents where posts.id = comments.post_id) as total_commnets
+            from posts
+            order by total_count desc 
+            limit 1
+        '); 
+
+        dd($eloquent, $eloquentORMRelationship, $queryBuilder, $sqlDBRaw);
+    }
+
+    // DB::raw() --> what it is , how it works, why use it, when use it, how to use it ???
+    // DB::table() --> what it is , how it works, why use it, when use it, how to use it ???
+    // When to write anomous functions, how to write ???
+    // selectRaw() ???
+
+    // Question 3: Find products with price above average price using subquery in WHERE.
+    public function sub_query_03() {
+
+        $eloquent = Product::where('price', '>', function ($query){
+                $query->select(DB::raw('avg(price)'))->from('products');
+            })
+            ->select('id', 'name', 'price')
+            ->get()    
+        ;
+        
+        $queryBuilder = DB::table('products')
+                        ->where('price', '>', DB::table('products')->selectRaw('avg(price)'))
+                        ->select('id', 'name', 'price')
+                        ->get()
+        ;
+
+        $rawDBSQL = DB::select(
+                    'select id, name, price 
+                    from products 
+                    where price > 
+                    (
+                        select avg(price) from products
+                    )'
+            )
+        ;
+
+        dd($eloquent, $queryBuilder, $rawDBSQL);
+    }
+
+    // Question 4: Find users who have not placed any orders using subquery with NOT IN.
+    public function sub_query_04(){
+        $eloquent = User::whereNotIn('id', function ($query){
+                $query->select('user_id')->from('orders')->distinct();
+            })
+            ->select('id', 'name')
+            ->get()
+        ;
+
+        $eloquentORMRelationship = User::doesntHave('orders')->select('id', 'name')->get();
+
+        $queryBuilder = DB::table('users')
+                        ->whereNotIn('id', 
+                                        DB::table('orders')
+                                        ->select('user_id')
+                                        ->distinct()
+                                    )
+                        ->select('id', 'name')
+                        ->get()
+        
+        ;
+
+
+        $rawDBSQL = DB::select('
+                select id, name 
+                from users
+                where id not in (
+                    select distinct(user_id)
+                    from orders
+                )
+            ')
+        ;
+
+        dD($eloquent, $eloquentORMRelationship, $queryBuilder, $rawDBSQL);
+    }
+
+    // Question 5: Find the total likes per post using subquery in FROM.
+    public function sub_query_05(){
+       
+    }
+
+    // Question 6: Find the latest post for each user using correlated subquery.
+
 }
