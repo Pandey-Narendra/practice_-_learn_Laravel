@@ -745,3 +745,327 @@
 
     // bindec('11001')
     // echo binaryToDecimal('11001');
+
+// 45) Write a program to check if a year is a leap year.
+
+        // Div by 4, not 100 unless 400.
+        function isLeapYear(int $year) : bool {
+            if(($year % 4 == 0 && $year % 100 != 0) || ($year % 400 === 0)){
+                return true;
+            }
+
+            return false;
+        }
+
+        // if(isLeapYear(2000)) {
+        //     echo "leap year";
+        // }else{
+        //     echo " not a leap year";
+        // }
+
+// 46) Write a program to find GCD of two numbers
+        // GCD(a,b)=GCD(b,a mod b) untill b=0;
+
+        function gcd(int $a, int $b) : int {
+            while($b !== 0){
+                $temp = $b;
+                $b = $a % $b;
+                $a =$temp;
+            }
+
+            return $a;
+        }
+
+        // echo gcd(48,18);
+
+// 47) Write a program to find LCM of two numbers.
+        // LCM(a, b) = (a × b) / GCD(a, b)
+
+        function lcm(int $a, int $b) : int {
+            return $a*$b/gcd($a, $b);
+        }
+
+        // echo lcm(12,18);
+
+// 48) Write a program to print all prime numbers in a given range.
+        function primeNoInRange(int $start, int $end) : array {
+            $primeNumbers = [];
+
+            for ($i = $start; $i <= $end; $i++) {
+                if ($i < 2) continue; // skip numbers < 2
+
+                $isPrime = true;
+                for ($j = 2; $j <= sqrt($i); $j++) {
+                    if ($i % $j == 0) {
+                        $isPrime = false;
+                        break;
+                    }
+                }
+
+                if ($isPrime) {
+                    $primeNumbers[] = $i;
+                }
+            }
+
+            return $primeNumbers;
+        }
+
+        // print_r(primeNoInRange(10, 30));
+
+// 49) Write a program to find missing number in an array.
+        // $n * ($n + 1) / 2
+        function findMissingNumber(array $arr) : int {
+            $n = count($arr) + 1; 
+            $expectedSum = $n * ($n + 1) / 2;
+            $actualSum = array_sum($arr);
+
+            return $expectedSum - $actualSum;
+        }
+
+        // Example
+        // $arr = [1, 2, 4, 5, 6]; 
+        // echo "Missing Number: " . findMissingNumber($arr);
+
+// 51) Write a program to find pair of numbers with given sum in an array.
+        function findPairs(array $arr, int $target) : array {
+            $pairs = [];
+            $n = count($arr);
+
+            for ($i = 0; $i < $n; $i++) {
+                for ($j = $i + 1; $j < $n; $j++) {
+                    if ($arr[$i] + $arr[$j] == $target) {
+                        $pairs[] = [$arr[$i], $arr[$j]];
+                    }
+                }
+            }
+
+            return $pairs;
+        }
+
+        // $arr = [2, 4, 3, 5, 7, 8, -1];
+        // $target = 7;
+        // print_r(findPairs($arr, $target));
+
+// 52) Write a program to check if a number is a palindrome.
+        function isPalindromeNumber(int $num) : bool {
+            $original = $num;
+            $reverse = 0;
+
+            while ($num > 0) {
+                $digit = $num % 10;           // get last digit
+                $reverse = ($reverse * 10) + $digit; // build reverse number
+                $num = intdiv($num, 10);      // remove last digit
+            }
+
+            return $original === $reverse;
+        }
+
+        // $number = 121;
+        // if (isPalindromeNumber($number)) {
+        //     echo "$number is a Palindrome";
+        // } else {
+        //     echo "$number is NOT a Palindrome";
+        // }
+
+// 53) Write a program to find the square root of a number without built-in functions.
+// 54) Write a program to solve quadratic equation.
+        function quadraticRoots(float $a, float $b, float $c): array {
+            
+            $disc = $b*$b - 4*$a*$c;
+            
+            if ($disc < 0) return [];
+            
+            $root1 = (-$b + sqrt($disc)) / (2*$a);
+            $root2 = (-$b - sqrt($disc)) / (2*$a);
+            
+            return [$root1, $root2];
+        }
+
+        // print_r(quadraticRoots(1,2,1));
+
+
+// 55) Find the nth term of an arithmetic sequence
+        // function nthTermAP(int $firstTerm, int $commonDiff, int $n) : int {
+        //     return $firstTerm + ($n - 1) * $commonDiff;
+        // }
+
+        // // Example usage
+        // $a = 5;   // first term
+        // $d = 3;   // common difference
+        // $n = 10;  // nth term
+
+        // echo "The $n-th term of the AP is " . nthTermAP($a, $d, $n);
+
+// 56) Write a program to print a pyramid pattern of stars.
+
+        function pyramidStars(int $n) {
+            for ($i = 1; $i <= $n; $i++) {
+                // Print spaces
+                for ($j = 0; $j < $n - $i; $j++) {
+                    echo " ";
+                }
+                // Print stars
+                for ($k = 1; $k <= $i; $k++) {
+                    echo "*";
+                }
+                echo "\n"; // Move to next row
+            }
+        }
+
+        // pyramidStars(5);
+
+// 56.1) Write a program to print a inverse pyramid pattern of stars.
+        function pyramidReverseStars(int $n) {
+            for($i=0; $i < $n; $i++) {
+
+                for($k=$n; $k > $n - $i -1; $k--) {
+                    echo " ";
+                }
+
+                for($j=$n-$i; $j > 0; $j--) {
+                    echo '*';
+                }
+
+                echo "\n";
+            }
+        }
+
+        // pyramidReverseStars(5);
+
+// 57) Write a program to print a pyramid pattern of stars 2.
+
+        function pyramidPatternStars(int $n) {
+            for ($i = 1; $i <= $n; $i++) {
+                // Print spaces
+                for ($j = 1; $j <= $n - $i; $j++) {
+                    echo " ";
+                }
+                // Print stars
+                for ($k = 1; $k <= 2 * $i - 1; $k++) {
+                    echo "*";
+                }
+                echo "\n"; // Move to next row
+            }
+        }
+
+        // pyramidPatternStars(5);
+
+// 57.1)  Write a program to print a pyramid reverse pattern of stars 2
+
+        function pyramidPatternReverseStars(int $n) {
+            
+            for($i = 0; $i < $n; $i++){
+                
+                for($j = $n; $j <= $n-$i-1; $j--){
+                    echo " ";
+                }
+
+                for($k = $n-$i; $k > 0; $k--) {
+                    echo "*";
+                }
+
+                echo "\n";
+            }
+        }
+
+        // pyramidPatternReverseStars(5);
+
+// 58) Write a program to print Floyd’s triangle.
+
+        function floydTriangle($n) {
+            
+            $count=0;
+            
+            for($i=1; $i<=$n; $i++){
+
+                for($k = 0; $k < $n-$i; $k++) {
+                    echo " ";
+                }
+
+                for($j=0; $j<$i; $j++){
+                    echo ++$count ." ";
+                }
+
+                echo "\n";
+
+            }
+        }
+
+        // floydTriangle(5);
+
+// 59) Write a program to print Pascal’s triangle.
+        function pascalTriangle(int $n) {
+            
+            for($i=0; $i< $n; $i++) {
+
+                for($k = 0; $k < $n-$i; $k++) {
+                    echo " ";
+                }
+
+                $number = 1;    // first element will always be 1
+                for($j=0; $j<=$i; $j++) {
+                    echo $number." ";
+                    $number = $number * ($i-$j) / ($j+1);   // Compute next number in row using combinatorial formula
+                }
+
+                echo "\n";
+
+            }
+        }
+
+        // pascalTriangle(5);
+
+// 60) Write a program to print a diamond pattern.
+
+// 61) Write a program to print numeric pyramid
+
+        function pyramidNumericpyramid(int $n) {
+            for ($i = 1; $i <= $n; $i++) {
+                // Print spaces
+                for ($j = 0; $j < $n - $i; $j++) {
+                    echo " ";
+                }
+                // Print stars
+                for ($k = 1; $k <= $i; $k++) {
+                    // echo "*";
+                    echo $k.' ';
+                }
+
+                echo "\n"; // Move to next row
+            }
+        }
+
+        // pyramidNumericpyramid(5);
+
+// 62) Write a program to print alphabet pyramid.
+
+    function alphabetPyramid(int $rows) {
+        for ($i = 1; $i <= $rows; $i++) {
+            // Print spaces for alignment
+            for ($j = 1; $j <= $rows - $i; $j++) {
+                echo " ";
+            }
+            // Print letters
+            for ($k = 0; $k < $i; $k++) {
+                echo chr(65 + $k) . " "; // 65 is ASCII for 'A'
+            }
+            echo "\n"; // Move to next row
+        }
+    }
+
+    // alphabetPyramid(5);
+
+// 63) Write a program to print hollow square pattern.
+
+// 64) Write a program to print right-angled triangle of numbers.
+
+    function rightAngledNumberTriangle(int $rows) {
+        for ($i = 1; $i <= $rows; $i++) {
+            for ($j = 1; $j <= $i; $j++) {
+                echo $j . " ";
+            }
+            echo "\n"; // Move to next row
+        }
+    }
+
+    // rightAngledNumberTriangle(5);
