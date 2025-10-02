@@ -55,3 +55,9 @@ use App\Http\Controllers\PracticeQueries\BasicsController;
 
     // Question 4: Find users who have not placed any orders using subquery with NOT IN.
     Route::get('basics/sub_query/04', [BasicsController::class, 'sub_query_04']);
+
+
+// Correlated Query
+    
+    // Question 1: Find the latest post for each user using correlated subquery.
+    Route::get('basics/correlated_query/01', [BasicsController::class, 'correlated_query_01']);

@@ -1,0 +1,177 @@
+PHP stands for Hypertext Pre-processor. 
+ 
+ What is a middleware in Laravel?
+    Middleware acts as a bridge between a request and a response. 
+    It performs actions on the request before passing it to the controller and on the response before returning it to the client. 
+    Middleware can be used for authentication, logging, and other HTTP request manipulations.
+        php artisan make:middleware CheckAdminRole
+
+What is CSRF protection in Laravel?
+    CSRF (Cross-Site Request Forgery) protection in Laravel is a security feature that guards against 
+    malicious attacks where unauthorized commands are submitted from a user that the web application trusts. 
+    Laravel provides CSRF protection by generating a CSRF token for each active user session and verifying it on each incoming POST request.
+
+
+What do you mean by bundles?
+
+    In Laravel, bundles are referred to as packages. 
+    These packages are used to increase the functionality of Laravel. 
+    A package can have views, configuration, migrations, routes, and tasks.
+
+Explain traits in Laravel.
+    Laravel traits are a group of functions that you include within another class. 
+    A trait is like an abstract class. You cannot instantiate directly, but its methods can be used in concreate class
+
+Explain the concept of contracts in Laravel.
+    They are set of interfaces of Laravel framework. 
+    These contracts provide core services. 
+    Contracts defined in Laravel include corresponding implementation of framework.
+
+
+Explain the concept of service providers in Laravel.
+    Service providers are a fundamental part of the service container and dependency injection systems.
+        Service providers bootstrap various components of the framework and register bindings, aliases, and configurations.
+    They allow for modular and extensible application development by enabling developers to register their own services 
+        and dependencies with the service container. Service providers are typically used to register additional functionality, 
+        such as third-party packages or custom application components.
+    They also help to keep the application organized and maintainable by separating functionality into smaller, more focused modules. 
+    Service providers are a powerful feature of Laravel that contributes to its flexibility and ease of use.
+
+
+Explain Laravel Facades.
+    Laravel Facades provide a static interface to classes available in the application's service container. 
+    They allow you to access these classes in a simple and expressive way without needing to instantiate them manually.
+        Example : 
+            use Illuminate\Support\Facades\Cache;
+            DB, Auth
+
+Explain the concept of eager loading in Laravel.
+    In Laravel, eager loading is a technique that allows developers to load relationships of a model in a single database query, 
+        reducing the number of queries executed and improving performance. 
+    This helps avoid the “N+1 problem” commonly encountered in ORM systems, where multiple queries are executed to 
+        retrieve related data for each record in a result set. By eager loading relationships, developers can improve the 
+        performance of their applications and reduce the overhead of accessing related data.
+
+
+
+Explain Laravel Queues.
+    Laravel Queues allow you to defer time-consuming tasks such as sending emails, processing images, or executing heavy calculations to be handled asynchronously. 
+    This improves the responsiveness of your application and provides a better user experience.
+
+What is Laravel Envoy?
+    Laravel Envoy is a tool included with Laravel that allows you to define and run common tasks on remote servers using a simple and expressive syntax.
+     It provides a convenient way to automate deployment and server management tasks.
+
+What is Laravel Mix?
+    Laravel Mix is a wrapper around Webpack, a popular JavaScript module bundler. 
+    It simplifies the process of compiling assets such as JavaScript, CSS, and images, and provides a clean and expressive API for defining asset compilation tasks
+
+What is Laravel Cashier?
+    Laravel Cashier is a package that provides an expressive, fluent interface to Stripe's subscription billing services. 
+    It simplifies the process of managing subscriptions, handling recurring billing, and generating invoices in Laravel applications.
+
+
+Explain Laravel Policies and Gates.
+    Laravel Policies and Gates provide a simple and flexible way to authorize user actions in your application. 
+    Policies define the authorization logic for a particular model, while Gates define general-purpose authorization checks. 
+    They allow you to define fine-grained access control rules based on user roles and permissions.
+
+Explain the concept of Laravel Eloquent Mutators and Accessors.
+    Eloquent Mutators and Accessors allow you to manipulate attribute values when setting or retrieving them from a model. 
+    Mutators modify attribute values before they are saved to the database, while accessors manipulate attribute values when they are retrieved from the database. 
+    They provide a convenient way to customize attribute behavior without modifying database schema.
+
+
+Explain the concept of events in Laravel.
+    An event is an occurrence or action that help you to subscribe and listen for events that occur in Laravel application. 
+    Some of the events are fired automatically by Laravel when any activity occurs.
+
+Explain dependency injection and their types.
+    It is a technique in which one object is dependent on another object.
+    There are three types of dependency injection: 1) Constructor injection, 2) setter injection, and 3) interface injection.
+
+Define Lumen
+    Lumen is a micro-framework. 
+    It is a smaller, and faster, version of a building Laravel based services, and REST API’s.
+
+Implicit Controller.
+    Implicit Controllers help you to define a proper route to handle controller action. You can define them in route.php file with Route:: controller() method.
+
+Define Laravel guard.
+    Laravel guard is a special component that is used to find authenticated users. 
+    The incoming requested is initially routed through this guard to validate credentials entered by users.
+
+
+What is Laravel API rate limit?
+
+Explain collections in Laravel.
+    Collections is a wrapper class to work with arrays. 
+    Laravel Eloquent queries use a set of the most common functions to return database result.
+
+What are policies classes?
+    Policies classes include authorization logic of Laravel application. These classes are used for a particular model or resource.
+
+What do you mean by Laravel Dusk?
+    Laravel Dusk is a tool which is used for testing JavaScript enabled applications. 
+    It provides powerful, browser automation, and testing API.
+
+What is query scope?
+    It is a feature of Laravel where we can reuse similar queries. 
+    We do not require to write the same types of queries again in the Laravel project. 
+    Once the scope is defined, just call the scope method when querying the model.
+
+What is namespace in Laravel?
+    A namespace allows a user to group the functions, classes, and constants under a specific name.
+
+What is Laravel Forge?
+    Laravel Forge helps in organizing and designing a web application. 
+    Although the manufacturers of the Laravel framework developed this toll, it can automate the deployment of every web application that works on a PHP server
+
+What is an Observer?
+    Model Observers is a feature of Laravel. 
+    It is used to make clusters of event listeners for a model. 
+    Method names of these classes depict the Eloquent event. 
+    Observers classes methods receive the model as an argument.
+
+What is the use of the bootstrap directory?
+    It is used to initialize a Laravel project. 
+    This bootstrap directory contains app.php file that is responsible for bootstrapping the framework.
+
+What is Composer in Laravel?
+    Composer is a dependency manager for PHP, which manages the dependencies required by PHP projects and installs them for you. Laravel uses Composer to manage its dependencies and packages.
+
+What are macros in Laravel, and how do you define them?
+    Macros in Laravel allow you to add custom functionality to existing classes without modifying their source code.
+         You can define macros using the Macroable trait and the macro method.
+    Macros can be defined for classes like collections, requests, responses, and more. 
+        They enable you to extend the behavior of Laravel’s core components and make them more versatile.
+
+
+Explain the concept of method injection versus constructor injection in Laravel.
+    In Laravel, method injection and constructor injection are two ways to resolve dependencies and perform dependency injection.
+        Method injection involves type-hinting the dependencies directly in the method signature, and Laravel’s container 
+        automatically resolves and injects the dependencies when invoking the method.
+    Constructor injection, on the other hand, involves injecting dependencies via the constructor of a class, 
+        ensuring that the class has all the required dependencies available when instantiated.
+
+Explain the concept of method visibility (public, private, protected) in Laravel.
+    In Laravel, as in many other object-oriented programming languages, methods can have different visibility levels: public, private, and protected.
+    Public methods can be accessed from anywhere within the class, from other classes, or outside the class. Private methods, 
+    on the other hand, can only be accessed within the class that defines them. Protected methods are similar to private methods 
+    but can also be accessed by child classes that inherit from the parent class.
+
+
+What are some ways to optimise Laravel performance?
+    You can speed up Laravel apps by caching routes and config using Artisan (php artisan route:cache, config:cache), 
+    using eager loading to reduce queries, and minimising middleware. Tools like Laravel Octane can also help in high-performance cases.
+     Database indexing and using queues properly also improve performance.
+
+How do you manage large Laravel projects?
+    “In large projects, I use a modular structure with separate folders for each domain or feature. 
+    I also rely on service classes, repository patterns, and proper naming conventions. Route grouping, custom traits, 
+    and policy-based authorization keep things clean and organized.”
+
+Can you explain repository pattern in the context of Laravel?
+    “The repository pattern separates business logic from data access. Instead of calling Eloquent directly in controllers, 
+    I create a repository class to handle all model interactions. This makes the code easier to test, maintain, and switch to 
+    another data source if needed.”

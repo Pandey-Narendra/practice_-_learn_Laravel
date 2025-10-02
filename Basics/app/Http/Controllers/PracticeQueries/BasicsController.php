@@ -503,7 +503,200 @@ class BasicsController extends Controller
     public function sub_query_05(){
        
     }
+    
 
-    // Question 6: Find the latest post for each user using correlated subquery.
+    // Question 6: Find orders where total_amount is greater than the average order amount using subquery.
+    public function sub_query_06(){
+        // with orders_avg_cte as (SELECT avg(total_amount) as avg_order_amount from orders) select user_id, total_amount from orders where total_amount > (SELECT avg(total_amount) as avg_order_amount from orders);
+    }
 
+    // // Question 7: Find orders where total_amount is greater than the average order amount using subquery.Find products that have been ordered using EXISTS subquery.
+    public function  sub_query_07(){
+        // SELECT p.id, p.name from products p where EXISTS ( select ot.product_id from order_items ot where ot.product_id = p.id );
+
+    }
+
+    // Question 1: Find the latest post for each user using correlated subquery.
+    public function correlated_query_01() {
+        // PHP is case-sensitive for method names. The query uses Post::From(...), but the correct Eloquent Query Builder method is from(...) (lowercase).
+        // the third argument ('p1.user_id') is treated as a literal string value (not a column reference).
+            // whereColumn or whereRaw for a column-to-column comparison
+        $eloquent = Post::from('posts as p1')
+                    ->where('p1.created_at', '=', function ($query) {
+                        $query->select('p2.created_at')
+                              ->from('posts as p2')
+                              ->whereColumn('p2.user_id', '=', 'p1.user_id')
+                              ->orderBy('p2.created_at', 'desc')
+                              ->limit(1)
+                            ;
+                    })
+                    ->select('p1.*')
+                    ->get()
+        
+        ;
+       
+        // For Better performance use Max
+        // $eloquent =  Post::from('posts as p1')
+        //     ->whereRaw('p1.created_at = (SELECT MAX(p2.created_at) FROM posts as p2 WHERE p2.user_id = p1.user_id)')
+        //     ->select('p1.*')
+        //     ->get()
+        // ;
+
+        $eloquentORMRelationship = User::with(['posts' => function ($query) {
+                $query->latest('created_at')->take(1);
+            }])->get()->map(function ($user) {
+                return $user->posts->first();
+            })->filter()
+        ;
+
+        $queryBuilder = DB::table('posts as p1')
+            ->whereRaw('p1.created_at = (SELECT MAX(p2.created_at) FROM posts as p2 WHERE p2.user_id = p1.user_id)')
+            ->select('p1.*')
+            ->get()
+        ;
+
+        $rawDBSQL = DB::select('
+            SELECT p1.* 
+            FROM posts p1 
+                WHERE p1.created_at = (
+                    SELECT MAX(p2.created_at) 
+                    FROM posts p2 
+                    WHERE p2.user_id = p1.user_id
+                )
+            ')
+        ;
+
+        dd($eloquent, $eloquentORMRelationship, $queryBuilder, $rawDBSQL);
+    }
+
+    // Question 2: Find users who have liked more posts than the average using correlated subquery.
+
+    // This is not about the total likes in the system divided by total users.
+    //  Instead, it's about calculating how many unique posts each user has liked, 
+    // then finding the average of those per-user counts, and 
+    // finally identifying users whose personal count exceeds that average.
+    public function correlated_query_02() {
+
+        
+        //         -- Question 2: Find users who have liked more posts than the average using correlated subquery.
+        // -- correlated Query
+
+        //     select DISTINCT(l1.user_id) 
+        //         from likes l1
+        //         where count(l1.user_id) > (
+        //             select l2.avg(l2.user_id) as avg_users
+        //             from likes l2
+        //         )
+        //     ;
+
+        //     select user_id, avg(user_id) as avg_users
+        //     from likes 
+        //     GROUP by user_id;
+
+
+
+    }
+
+    public function correlated_query_03() {
+
+        //    -- Question 3: Find users who have commented on their own posts using correlated subquery. -- posts table --> user_id = comments table user_id and posts table id == comments table post_id 
+        // select p.user_id, p.title 
+        // from posts p 
+        // where exists 
+            // ( select c.post_id 
+            //  from comments c 
+            //  where p.user_id = c.user_id 
+            // and p.id = c.post_id 
+            // );
+
+
+        // select u.id 
+        // from users u 
+        // where EXISTS ( 
+        // select p.user_id 
+        // from posts p 
+        // where p.user_id = u.id 
+        // AND EXISTS ( select c.id 
+        // from comments c 
+        // where c.post_id = p.id and c.user_id = u.id ) );
+    }
+
+    //  Question 4: Find posts where the number of comments is greater than the average number of comments per post.
+    public function correlated_query_04(){
+        // -- Find posts where the number of comments is greater than the average number of comments per post.
+
+        // -- the average number of comments per post
+        // with comments_per_post_avg as (select avg(total_comments) as avg_comments
+        // from (select post_id, count(*) as total_comments from comments GROUP by post_id) as sub
+        // GROUP by post_id)
+
+        // SELECT p.id, p.title, comments_per_post_avg.avg_comments
+        // from posts p, comments_per_post_avg 
+        // where (select count(*) from comments where comments.post_id = p.id) > comments_per_post_avg.avg_comments;
+    }
+
+    //  Question 5: Find posts where the number of comments is greater than the average number of comments per post.
+    public function correlated_query_05() {
+        // -- Find users whose first post was after the average user created_at.
+
+        // --  the average user created_at
+        // SELECT avg(created_at) from posts;
+
+        // select u.id, u.name from users u where (select min(p.created_at) from posts p where p.user_id = u.id ) > (SELECT avg(created_at) from posts);
+    }
+    
+    //  Question 6:  Find orders where the number of items is above the average per order.
+    public function correlated_query_06() {
+
+        // -- Find orders where the number of items is above the average per order. -- the average per order. WITH avg_order as ( select avg(order_count) as avg_per_order from (select count(quantity) as order_count from order_items GROUP by order_id ) as sub_order) select o.id, o.total_amount, o.user_id from orders o , avg_order where (select count(ot.quantity) from order_items ot where ot.order_id = o.id ) > avg_order.avg_per_order;
+    }
+
+// Aggregations Query : 
+
+    public function aggregations_query_01(){
+        // -- Question 36: Find users with more than 2 posts using GROUP BY and HAVING.
+        // select u.id, u.name , count(p.user_id) as total_posts
+        // from users u 
+        // join posts p on u.id = p.user_id
+        // group by u.id
+        // having count(p.id) > 2;
+    }
+
+    public function aggregations_query_02(){
+        // -- Find categories with average price > 200 using GROUP BY and HAVING. select category, avg(price) as avg_price from products group by category having avg_price > 200;
+
+    }
+
+    public function aggregations_query_03(){
+        //    Find posts with more than 1 like using GROUP BY and HAVING.
+        $eloquent =  Post::select('posts.id', 'posts.title', DB::raw('COUNT(likes.id) as like_count'))
+                    ->join('likes', 'posts.id', '=', 'likes.post_id')
+                    ->groupBy('posts.id', 'posts.title')
+                    ->having('like_count', '>', 1)
+                    ->get()
+        ;
+
+    }
+
+    public function aggregations_query_04(){
+        //   Find users with total order amount > 1000 using GROUP BY and HAVING.
+        $eloquent = User::select('users.id', 'users.name', DB::raw('SUM(orders.total_amount) as total_spent'))
+                    ->join('orders', 'users.id', '=', 'orders.user_id')
+                    ->groupBy('users.id', 'users.name')
+                    ->having('total_spent', '>', 1000)
+                    ->get()
+        ;
+
+    }
+
+     public function aggregations_query_05(){
+        //   Find roles with more than 3 users using GROUP BY and HAVING.
+        $eloquent = Role::select('roles.id', 'roles.role_name', DB::raw('COUNT(user_roles.user_id) as user_count'))
+                    ->join('user_roles', 'roles.id', '=', 'user_roles.role_id')
+                    ->groupBy('roles.id', 'roles.role_name')
+                    ->having('user_count', '>', 3)
+                    ->get()
+        ;
+
+    }
 }

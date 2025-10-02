@@ -11,3 +11,6 @@
 3) subquery in eloquent and query builder representation
 
 4) where to DB::raw() and DB::table() inside the query whereOne 
+
+5) PHP is case-sensitive for method names. 
+    The query uses Post::From(...), but the correct Eloquent Query Builder method is from(...) (lowercase).
