@@ -1,12 +1,18 @@
 PHP stands for Hypertext Pre-processor. 
- 
+https://devinterview.io/blog/laravel-interview-questions
+https://www.geeksforgeeks.org/php/top-laravel-interview-questions-and-answers/
+https://www.hirist.tech/blog/top-20-php-oops-interview-questions-and-answers/
+
+
+
+
  What is a middleware in Laravel?
     Middleware acts as a bridge between a request and a response. 
     It performs actions on the request before passing it to the controller and on the response before returning it to the client. 
     Middleware can be used for authentication, logging, and other HTTP request manipulations.
         php artisan make:middleware CheckAdminRole
 
-What is CSRF protection in Laravel?
+    What is CSRF protection in Laravel?
     CSRF (Cross-Site Request Forgery) protection in Laravel is a security feature that guards against 
     malicious attacks where unauthorized commands are submitted from a user that the web application trusts. 
     Laravel provides CSRF protection by generating a CSRF token for each active user session and verifying it on each incoming POST request.
@@ -54,9 +60,13 @@ Explain the concept of eager loading in Laravel.
 
 
 
-Explain Laravel Queues.
-    Laravel Queues allow you to defer time-consuming tasks such as sending emails, processing images, or executing heavy calculations to be handled asynchronously. 
-    This improves the responsiveness of your application and provides a better user experience.
+What are Laravel Jobs and Queues?
+    Laravel’s job and queue system allows developers to defer the processing of time-consuming tasks, such as sending emails 
+    or processing images, to be handled later. Jobs are simply classes that represent specific tasks, and these tasks are placed onto 
+    queues that are processed asynchronously. Laravel supports multiple queue drivers, including database, Redis, and Amazon SQS. 
+    Using queues ensures that your application remains responsive by offloading heavy operations, and it can significantly 
+    improve the performance of large-scale applications.
+
 
 What is Laravel Envoy?
     Laravel Envoy is a tool included with Laravel that allows you to define and run common tasks on remote servers using a simple and expressive syntax.
@@ -175,3 +185,6 @@ Can you explain repository pattern in the context of Laravel?
     “The repository pattern separates business logic from data access. Instead of calling Eloquent directly in controllers, 
     I create a repository class to handle all model interactions. This makes the code easier to test, maintain, and switch to 
     another data source if needed.”
+
+    How does Laravel handle API authentication?
+Answer: Laravel supports several methods, including API tokens, Passports (OAuth2), and Sanctum (lightweight SPA/mobile auth). Sanctum is commonly used for single-page applications and offers token-based authentication with minimal setup.
