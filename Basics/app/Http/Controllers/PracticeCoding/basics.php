@@ -425,7 +425,7 @@
         }
 
         // $arr1 = [1, 2, 3, 4];
-        // $arr2 = [3, 4, 5, 6];
+        // $arr2 = [3, 4, 3, 6];
         // print_r(arrayUnionManual($arr1, $arr2));
 
 // 26) Write a program to reverse an array without using built-in functions.
@@ -481,32 +481,32 @@
 // 28) Write a program to rotate an array by k positions.
 
 // 29) Write a program to check if two strings are anagrams.
-        function anagrams(string $str1, string $str2) : bool {
-           $str1 = strtolower(str_replace(' ', '', $str1));
-           $str2 = strtolower(str_replace(' ', '', $str2));
+        function anagrams(string $str1, string $str2){
+            $len1 = strlen($str1);
+            $len2 = strlen($str2);
 
-           if(strlen($str1) !== strlen($str2)) return false;
+            if($len1 !== $len2) return false;
 
-           $str1_freq = [];
-            for($i=0; $i < strlen($str1); $i++) {
-                $ch = $str1[$i];
-                $str1_freq[$ch] = ($str1_freq[$ch] ?? 0) + 1;
+            $freq_str1 = [];
+            for($i=0; $i < $len1; $i++) {
+                $freq_str1[$str1[$i]] =  ($freq_str1[$str1[$i]] ?? 0) + 1;
             }
 
-            // print_r($str1_freq);
-
-            $str2_freq = [];
-            for($i=0; $i < strlen($str2); $i++) {
-                $ch = $str2[$i];
-                $str2_freq[$ch] = ($str2_freq[$ch] ?? 0) + 1;
+            $freq_str2 = [];
+            for($i=0; $i < $len2; $i++) {
+                $freq_str2[$str2[$i]] =  ($freq_str2[$str2[$i]] ?? 0) + 1;
             }
 
-            // print_r($str2_freq);
+            $isAnagram = true;
 
-            ksort($str1_freq);
-            ksort($str2_freq);
+            for($i=0; $i < $len1; $i++) {
+                if($freq_str1[$str1[$i]] !== $freq_str2[$str1[$i]]){
+                    $isAnagram = false;
+                    break;
+                }
+            }
 
-            return $str1_freq === $str2_freq;
+          return $isAnagram;
         }
 
         // if(anagrams("listen", "silent")) {

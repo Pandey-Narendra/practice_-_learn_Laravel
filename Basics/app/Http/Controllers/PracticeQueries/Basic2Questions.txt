@@ -1,0 +1,941 @@
+<?php
+
+
+1. Write a query to fetch the second highest salary from an Employee table.
+2. Write a query to fetch the nth highest salary from an Employee table.
+3. Find employees who earn more than the average salary.
+4. Find the duplicate records in a table.
+5. Delete duplicate records from a table.
+6. Find employees who do not have a manager.
+7. Write a query to find employees who have the same salary.
+8. Write a query to display employees whose names start with ‘A’.
+9. Write a query to find employees hired in the last 30 days.
+10. Write a query to get the current date and time in SQL.
+11. Self join example: Find employees and their managers in one query.
+12. Find all employees who belong to a department with more than 10 employees.
+13. Write a query to list departments that have no employees.
+14. Write a query to join employees with departments and show department names.
+15. Write a query to join multiple tables (employee, department, salary).
+16. Write a query using a subquery to find employees with salary > average salary.
+17. Write a query using a correlated subquery to find the highest salary in each department.
+18. Difference between EXISTS and IN with example.
+19. Write a query using NOT EXISTS to find departments without employees.
+20. Write a query using ANY and ALL.
+21. Find total salary department-wise.
+22. Find average salary department-wise.
+23. Find maximum salary department-wise.
+24. Count employees in each department.
+25. Find department with the highest average salary.
+26. Top 3 salaries per department.
+27. Rank employees by salary using RANK().
+28. Assign row numbers to employees.
+29. Difference between RANK(), DENSE_RANK(), and ROW_NUMBER().
+30. Find employees with gaps in salary values.
+31. Use LEAD() to show salary difference with the next employee.
+32. Use LAG() to show salary difference with the previous employee.
+33. Use NTILE(4) to divide employees into 4 groups by salary.
+34. Find running total of salaries using SUM() OVER().
+35. Find cumulative average salary using window functions.
+36. Write a query to reverse a string.
+37. Write a query to extract the first 3 characters of an employee name.
+38. Write a query to concatenate first name and last name.
+39. Write a query to count vowels in a string.
+40. Write a query to convert names to uppercase.
+41. Write a query to find employees hired in the year 2022.
+42. Write a query to calculate employee age from DOB.
+43. Write a query to add 30 days to a given date.
+44. Write a query to get difference between two dates.
+45. Write a query to get first and last day of the current month.
+46. Find the highest-paid employee in each department.
+47. Find departments where average salary > 50,000.
+48. Find employees who joined before their manager.
+49. Find the 5th highest salary in the company.
+50. Find all employees except the top 10 earners.
+51. Write a query to fetch the third highest salary from an Employee table.
+52. Find employees who earn less than the average salary in their department.
+53. Find unique records in a table excluding duplicates.
+54. Update salaries of employees in a specific department by 10%.
+55. Find employees with no department assigned.
+56. Write a query to find employees whose salaries are above a certain threshold.
+57. Write a query to display employees whose last names end with ‘son’.
+58. Write a query to find employees hired between two specific dates.
+59. Write a query to format the current date as 'YYYY-MM-DD'.
+60. Inner join example: Fetch employees and their department details.
+61. Left join example: List all departments and their employees, including those with no employees.
+62. Right join example: List all employees and their departments, including those with no department.
+63. Full outer join example: Combine employees and departments showing all records.
+64. Cross join example: Generate all possible employee-department pairs.
+65. Write a subquery to find the minimum salary in the company.
+66. Correlated subquery: Find employees earning more than their department's average.
+67. Nested subquery: Find departments with average salary higher than the company's average.
+68. Write a query using IN to find employees in specific departments.
+69. Write a query using EXISTS to check for employees in a department.
+70. Find minimum salary department-wise.
+71. Find sum of salaries for employees hired after a certain date.
+72. Group employees by salary ranges (e.g., 0-50000, 50001-100000).
+73. Find the department with the lowest total salary.
+74. Count distinct salaries in the company.
+75. Top 5 salaries overall.
+76. Dense rank employees by hire date.
+77. Partition employees by department and rank by salary.
+78. Find consecutive salary duplicates using ROW_NUMBER().
+79. Use OVER() clause to get department-wise row numbers.
+80. Use FIRST_VALUE() to show the highest salary in each partition.
+81. Use LAST_VALUE() to show the lowest salary in each partition.
+82. Divide employees into 3 groups using NTILE(3).
+83. Calculate moving average of salaries over 3 rows.
+84. Use CUME_DIST() to find cumulative distribution of salaries.
+85. Write a query to find the length of employee names.
+86. Write a query to replace 'a' with 'A' in employee names.
+87. Write a query to trim leading/trailing spaces from names.
+88. Write a query to find position of a substring in a name.
+89. Write a query to extract domain from email (assuming email column).
+90. Write a query to find employees born in a specific month.
+91. Write a query to get the day of the week from hire_date.
+92. Write a query to subtract months from a date.
+93. Write a query to get quarter from a date.
+94. Write a query to round dates to the nearest month.
+95. Find the lowest-paid employee in each department.
+96. Find employees who have the same hire date.
+97. Find departments with more than average number of employees.
+98. Find the 10th highest salary using OFFSET.
+99. Find employees with salaries between min and max in their department.
+100. Find all managers and the number of employees reporting to them.
+
+## Schema and Dummy Data
+
+For consistency, the following common schema is used across most questions (variations noted where applicable). Assume standard SQL syntax (e.g., MySQL/PostgreSQL compatible where possible). Some questions may not require all columns.
+
+```sql
+CREATE TABLE Employees (
+    employee_id INT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    salary DECIMAL(10,2),
+    department_id INT,
+    manager_id INT,
+    hire_date DATE,
+    dob DATE,
+    email VARCHAR(100)  -- Added for some string functions
+);
+
+CREATE TABLE Departments (
+    department_id INT PRIMARY KEY,
+    department_name VARCHAR(100)
+);
+```
+
+Dummy data (inserted for demonstration; adjust as needed for queries. This set includes 10 employees across 3 departments for simplicity. Scale up mentally for larger scenarios):
+
+```sql
+INSERT INTO Departments (department_id, department_name) VALUES
+(1, 'HR'),
+(2, 'Engineering'),
+(3, 'Sales');
+
+INSERT INTO Employees (employee_id, first_name, last_name, salary, department_id, manager_id, hire_date, dob, email) VALUES
+(1, 'John', 'Doe', 60000.00, 1, NULL, '2020-01-15', '1985-05-20', 'john.doe@example.com'),
+(2, 'Jane', 'Smith', 75000.00, 2, 1, '2021-03-10', '1990-07-15', 'jane.smith@example.com'),
+(3, 'Alice', 'Johnson', 50000.00, 2, 1, '2019-06-22', '1988-11-30', 'alice.johnson@example.com'),
+(4, 'Bob', 'Brown', 90000.00, 3, NULL, '2022-09-05', '1975-02-10', 'bob.brown@example.com'),
+(5, 'Charlie', 'Davis', 65000.00, 1, 1, '2023-04-18', '1992-09-25', 'charlie.davis@example.com'),
+(6, 'David', 'Wilson', 80000.00, 2, 2, '2020-11-30', '1980-03-05', 'david.wilson@example.com'),
+(7, 'Eve', 'Martinez', 55000.00, 3, 4, '2021-07-12', '1995-12-15', 'eve.martinez@example.com'),
+(8, 'Frank', 'Anderson', 70000.00, 1, 1, '2022-02-28', '1987-08-20', 'frank.anderson@example.com'),
+(9, 'Grace', 'Thomas', 85000.00, 2, 2, '2018-10-09', '1993-04-10', 'grace.thomas@example.com'),
+(10, 'Henry', 'Taylor', 95000.00, 3, 4, '2023-01-20', '1982-06-30', 'henry.taylor@example.com');
+```
+
+Note: For questions requiring more data (e.g., duplicates, larger sets), assume additional rows as described in the solution. Some queries use functions that may vary by SQL dialect (e.g., MySQL vs. SQL Server); I'll note where relevant.
+
+## Answers with Solutions and Details
+
+### 1. Write a query to fetch the second highest salary from an Employee table.
+Solution: 
+```sql
+SELECT MAX(salary) AS second_highest_salary
+FROM Employees
+WHERE salary < (SELECT MAX(salary) FROM Employees);
+```
+Details: This finds the maximum salary that is less than the absolute maximum, assuming no duplicates at the top. If duplicates exist, use DISTINCT: `SELECT DISTINCT salary FROM Employees ORDER BY salary DESC LIMIT 1 OFFSET 1;` (MySQL/PostgreSQL). With dummy data, second highest is 90000.00 (assuming Henry has the highest at 95000.00).
+
+### 2. Write a query to fetch the nth highest salary from an Employee table.
+Solution: 
+```sql
+SELECT salary FROM (
+    SELECT DISTINCT salary, DENSE_RANK() OVER (ORDER BY salary DESC) AS rnk
+    FROM Employees
+) AS ranked WHERE rnk = n;  -- Replace n with the value, e.g., 2
+```
+Details: Use window functions for ranking. For n=2, returns 90000.00. Without window functions: `SELECT DISTINCT salary FROM Employees ORDER BY salary DESC LIMIT 1 OFFSET (n-1);`. Handles ties via DENSE_RANK.
+
+### 3. Find employees who earn more than the average salary.
+Solution: 
+```sql
+SELECT employee_id, first_name, last_name, salary
+FROM Employees
+WHERE salary > (SELECT AVG(salary) FROM Employees);
+```
+Details: Subquery calculates average (e.g., ~72500.00 with dummy data). Returns employees like Bob (90000), David (80000), etc.
+
+### 4. Find the duplicate records in a table.
+Solution: 
+```sql
+SELECT salary, COUNT(*) 
+FROM Employees 
+GROUP BY salary 
+HAVING COUNT(*) > 1;
+```
+Details: Groups by the column to check (e.g., salary). With dummy data, no duplicates; assume added row with salary 60000.00 to test.
+
+### 5. Delete duplicate records from a table.
+Solution: 
+```sql
+DELETE e1 FROM Employees e1
+INNER JOIN Employees e2 
+WHERE e1.salary = e2.salary AND e1.employee_id > e2.employee_id;
+```
+Details: Keeps the lowest employee_id for duplicates. Use CTE in some dialects: `WITH cte AS (SELECT *, ROW_NUMBER() OVER (PARTITION BY salary ORDER BY employee_id) rn FROM Employees) DELETE FROM cte WHERE rn > 1;`.
+
+### 6. Find employees who do not have a manager.
+Solution: 
+```sql
+SELECT employee_id, first_name, last_name 
+FROM Employees 
+WHERE manager_id IS NULL;
+```
+Details: Managers typically have NULL manager_id. With dummy data: John (1), Bob (4).
+
+### 7. Write a query to find employees who have the same salary.
+Solution: 
+```sql
+SELECT e1.employee_id, e1.first_name, e2.employee_id, e2.first_name, e1.salary
+FROM Employees e1
+INNER JOIN Employees e2 ON e1.salary = e2.salary AND e1.employee_id < e2.employee_id;
+```
+Details: Self-join to pair employees with matching salaries. No matches in dummy; add duplicates to test.
+
+### 8. Write a query to display employees whose names start with ‘A’.
+Solution: 
+```sql
+SELECT employee_id, first_name, last_name 
+FROM Employees 
+WHERE first_name LIKE 'A%';
+```
+Details: LIKE for pattern matching. With dummy: Alice.
+
+### 9. Write a query to find employees hired in the last 30 days.
+Solution: 
+```sql
+SELECT employee_id, first_name, last_name, hire_date 
+FROM Employees 
+WHERE hire_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY);  -- MySQL
+```
+Details: Use DATEADD in SQL Server. Assuming current date 2025-09-26, no recent hires in dummy; adjust dates.
+
+### 10. Write a query to get the current date and time in SQL.
+Solution: 
+```sql
+SELECT NOW();  -- MySQL/PostgreSQL (timestamp)
+-- OR SELECT CURRENT_DATE; for date only
+```
+Details: Returns e.g., '2025-09-26 12:00:00'. Dialect-specific: GETDATE() in SQL Server.
+
+### 11. Self join example: Find employees and their managers in one query.
+Solution: 
+```sql
+SELECT e.employee_id, e.first_name AS employee, m.first_name AS manager
+FROM Employees e
+LEFT JOIN Employees m ON e.manager_id = m.employee_id;
+```
+Details: Self-join on manager_id. With dummy: Jane's manager is John, etc.
+
+### 12. Find all employees who belong to a department with more than 10 employees.
+Solution: 
+```sql
+SELECT e.employee_id, e.first_name, e.department_id
+FROM Employees e
+WHERE department_id IN (
+    SELECT department_id FROM Employees GROUP BY department_id HAVING COUNT(*) > 10
+);
+```
+Details: Subquery finds large departments. Dummy has small depts; assume more data.
+
+### 13. Write a query to list departments that have no employees.
+Solution: 
+```sql
+SELECT d.department_id, d.department_name
+FROM Departments d
+LEFT JOIN Employees e ON d.department_id = e.department_id
+WHERE e.employee_id IS NULL;
+```
+Details: Left join identifies orphans. No such in dummy; add empty dept to test.
+
+### 14. Write a query to join employees with departments and show department names.
+Solution: 
+```sql
+SELECT e.employee_id, e.first_name, d.department_name
+FROM Employees e
+INNER JOIN Departments d ON e.department_id = d.department_id;
+```
+Details: Basic inner join. Returns all employees with their dept names.
+
+### 15. Write a query to join multiple tables (employee, department, salary).
+Solution: Assuming salary is in Employees; if separate Salaries table:
+```sql
+-- Assume CREATE TABLE Salaries (employee_id INT, salary DECIMAL(10,2));
+SELECT e.employee_id, e.first_name, d.department_name, s.salary
+FROM Employees e
+INNER JOIN Departments d ON e.department_id = d.department_id
+INNER JOIN Salaries s ON e.employee_id = s.employee_id;
+```
+Details: Multi-join. Use dummy Employees for salary.
+
+### 16. Write a query using a subquery to find employees with salary > average salary.
+Solution: Same as #3. 
+```sql
+SELECT * FROM Employees WHERE salary > (SELECT AVG(salary) FROM Employees);
+```
+Details: Non-correlated subquery.
+
+### 17. Write a query using a correlated subquery to find the highest salary in each department.
+Solution: 
+```sql
+SELECT d.department_name, 
+(SELECT MAX(e2.salary) FROM Employees e2 WHERE e2.department_id = d.department_id) AS max_salary
+FROM Departments d;
+```
+Details: Correlated: subquery runs per department row.
+
+### 18. Difference between EXISTS and IN with example.
+Solution: EXISTS checks for existence (faster for large sets), IN checks values in list.
+Example (IN): `SELECT * FROM Employees WHERE department_id IN (1,2);`
+Example (EXISTS): `SELECT * FROM Departments d WHERE EXISTS (SELECT 1 FROM Employees e WHERE e.department_id = d.department_id);`
+Details: EXISTS is semi-join, stops on first match; IN materializes list.
+
+### 19. Write a query using NOT EXISTS to find departments without employees.
+Solution: 
+```sql
+SELECT d.department_id, d.department_name
+FROM Departments d
+WHERE NOT EXISTS (SELECT 1 FROM Employees e WHERE e.department_id = d.department_id);
+```
+Details: Correlated, similar to #13 but with NOT EXISTS.
+
+### 20. Write a query using ANY and ALL.
+Solution: 
+```sql
+SELECT * FROM Employees WHERE salary > ANY (SELECT salary FROM Employees WHERE department_id = 1);  -- > any in subquery
+SELECT * FROM Employees WHERE salary > ALL (SELECT salary FROM Employees WHERE department_id = 1);  -- > all in subquery
+```
+Details: ANY: true if condition holds for at least one; ALL: for every. With dummy, > ANY HR salaries (e.g., >50000 min).
+
+### 21. Find total salary department-wise.
+Solution: 
+```sql
+SELECT d.department_name, SUM(e.salary) AS total_salary
+FROM Employees e
+INNER JOIN Departments d ON e.department_id = d.department_id
+GROUP BY d.department_name;
+```
+Details: Aggregation with GROUP BY. Dummy: HR ~195000, etc.
+
+### 22. Find average salary department-wise.
+Solution: 
+```sql
+SELECT d.department_name, AVG(e.salary) AS avg_salary
+FROM Employees e
+INNER JOIN Departments d ON e.department_id = d.department_id
+GROUP BY d.department_name;
+```
+Details: Similar to #21, use AVG().
+
+### 23. Find maximum salary department-wise.
+Solution: 
+```sql
+SELECT d.department_name, MAX(e.salary) AS max_salary
+FROM Employees e
+INNER JOIN Departments d ON e.department_id = d.department_id
+GROUP BY d.department_name;
+```
+Details: MAX() aggregate.
+
+### 24. Count employees in each department.
+Solution: 
+```sql
+SELECT d.department_name, COUNT(e.employee_id) AS employee_count
+FROM Departments d
+LEFT JOIN Employees e ON d.department_id = e.department_id
+GROUP BY d.department_name;
+```
+Details: LEFT JOIN to include empty depts.
+
+### 25. Find department with the highest average salary.
+Solution: 
+```sql
+SELECT d.department_name, AVG(e.salary) AS avg_salary
+FROM Employees e
+INNER JOIN Departments d ON e.department_id = d.department_id
+GROUP BY d.department_name
+ORDER BY avg_salary DESC LIMIT 1;
+```
+Details: GROUP BY, ORDER, LIMIT.
+
+### 26. Top 3 salaries per department.
+Solution: 
+```sql
+SELECT department_id, salary
+FROM (
+    SELECT department_id, salary, ROW_NUMBER() OVER (PARTITION BY department_id ORDER BY salary DESC) AS rn
+    FROM Employees
+) AS ranked WHERE rn <= 3;
+```
+Details: Window function for partitioning.
+
+### 27. Rank employees by salary using RANK().
+Solution: 
+```sql
+SELECT employee_id, first_name, salary, RANK() OVER (ORDER BY salary DESC) AS salary_rank
+FROM Employees;
+```
+Details: RANK() skips on ties (e.g., two 1st, next 3rd).
+
+### 28. Assign row numbers to employees.
+Solution: 
+```sql
+SELECT employee_id, first_name, ROW_NUMBER() OVER (ORDER BY employee_id) AS row_num
+FROM Employees;
+```
+Details: Sequential numbering.
+
+### 29. Difference between RANK(), DENSE_RANK(), and ROW_NUMBER().
+Solution: No query; explanation: ROW_NUMBER() assigns unique sequential (no skips). RANK() assigns rank with skips on ties. DENSE_RANK() no skips on ties.
+Example:
+```sql
+SELECT salary, ROW_NUMBER() OVER (ORDER BY salary DESC) rn, RANK() OVER (ORDER BY salary DESC) rnk, DENSE_RANK() OVER (ORDER BY salary DESC) drnk FROM Employees;
+```
+Details: For ties, rn:1,2; rnk:1,1 (next 3); drnk:1,1 (next 2).
+
+### 30. Find employees with gaps in salary values.
+Solution: Assume sorted salaries; use LAG to detect gaps > threshold.
+```sql
+SELECT employee_id, salary, salary - LAG(salary) OVER (ORDER BY salary) AS gap
+FROM Employees
+HAVING gap > 10000;  -- Example threshold
+```
+Details: Window to find differences.
+
+### 31. Use LEAD() to show salary difference with the next employee.
+Solution: 
+```sql
+SELECT employee_id, salary, LEAD(salary) OVER (ORDER BY salary DESC) AS next_salary,
+salary - LEAD(salary) OVER (ORDER BY salary DESC) AS diff
+FROM Employees;
+```
+Details: LEAD() gets next row's value.
+
+### 32. Use LAG() to show salary difference with the previous employee.
+Solution: 
+```sql
+SELECT employee_id, salary, LAG(salary) OVER (ORDER BY salary DESC) AS prev_salary,
+salary - LAG(salary) OVER (ORDER BY salary DESC) AS diff
+FROM Employees;
+```
+Details: LAG() gets previous.
+
+### 33. Use NTILE(4) to divide employees into 4 groups by salary.
+Solution: 
+```sql
+SELECT employee_id, salary, NTILE(4) OVER (ORDER BY salary DESC) AS quartile
+FROM Employees;
+```
+Details: Divides into buckets (1-4).
+
+### 34. Find running total of salaries using SUM() OVER().
+Solution: 
+```sql
+SELECT employee_id, salary, SUM(salary) OVER (ORDER BY employee_id) AS running_total
+FROM Employees;
+```
+Details: Cumulative sum.
+
+### 35. Find cumulative average salary using window functions.
+Solution: 
+```sql
+SELECT employee_id, salary, AVG(salary) OVER (ORDER BY employee_id ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS cum_avg
+FROM Employees;
+```
+Details: Running average.
+
+### 36. Write a query to reverse a string.
+Solution: 
+```sql
+SELECT REVERSE(first_name) AS reversed_name FROM Employees;  -- MySQL
+```
+Details: REVERSE() function. E.g., 'John' -> 'nhoJ'.
+
+### 37. Write a query to extract the first 3 characters of an employee name.
+Solution: 
+```sql
+SELECT SUBSTRING(first_name, 1, 3) AS first_three FROM Employees;
+```
+Details: SUBSTRING/LEFT. E.g., 'Joh' for John.
+
+### 38. Write a query to concatenate first name and last name.
+Solution: 
+```sql
+SELECT CONCAT(first_name, ' ', last_name) AS full_name FROM Employees;
+```
+Details: CONCAT(). E.g., 'John Doe'.
+
+### 39. Write a query to count vowels in a string.
+Solution: 
+```sql
+SELECT first_name, LENGTH(first_name) - LENGTH(REPLACE(LOWER(first_name), 'a', '')) - LENGTH(REPLACE(LOWER(first_name), 'e', '')) + ...  -- For all vowels
+FROM Employees;  -- Manual for a,e,i,o,u
+```
+Details: Replace and length diff. Dialect-specific; use regex in PostgreSQL.
+
+### 40. Write a query to convert names to uppercase.
+Solution: 
+```sql
+SELECT UPPER(first_name) AS upper_name FROM Employees;
+```
+Details: UPPER(). E.g., 'JOHN'.
+
+### 41. Write a query to find employees hired in the year 2022.
+Solution: 
+```sql
+SELECT * FROM Employees WHERE YEAR(hire_date) = 2022;
+```
+Details: YEAR() function. Dummy: Bob, Frank.
+
+### 42. Write a query to calculate employee age from DOB.
+Solution: 
+```sql
+SELECT first_name, TIMESTAMPDIFF(YEAR, dob, CURDATE()) AS age FROM Employees;  -- MySQL
+```
+Details: Age approx. E.g., John ~40.
+
+### 43. Write a query to add 30 days to a given date.
+Solution: 
+```sql
+SELECT DATE_ADD(hire_date, INTERVAL 30 DAY) AS new_date FROM Employees;
+```
+Details: DATE_ADD. E.g., '2020-01-15' -> '2020-02-14'.
+
+### 44. Write a query to get difference between two dates.
+Solution: 
+```sql
+SELECT DATEDIFF(hire_date, dob) AS days_diff FROM Employees;
+```
+Details: Days between hire and DOB.
+
+### 45. Write a query to get first and last day of the current month.
+Solution: 
+```sql
+SELECT DATE_SUB(LAST_DAY(CURDATE()), INTERVAL DAY(LAST_DAY(CURDATE())) - 1 DAY) AS first_day, LAST_DAY(CURDATE()) AS last_day;
+```
+Details: MySQL functions.
+
+### 46. Find the highest-paid employee in each department.
+Solution: 
+```sql
+SELECT d.department_name, e.first_name, e.salary
+FROM Employees e
+INNER JOIN Departments d ON e.department_id = d.department_id
+WHERE e.salary = (SELECT MAX(salary) FROM Employees WHERE department_id = e.department_id);
+```
+Details: Correlated subquery.
+
+### 47. Find departments where average salary > 50,000.
+Solution: 
+```sql
+SELECT d.department_name, AVG(e.salary) AS avg_salary
+FROM Employees e
+INNER JOIN Departments d ON e.department_id = d.department_id
+GROUP BY d.department_name
+HAVING AVG(e.salary) > 50000;
+```
+Details: HAVING clause.
+
+### 48. Find employees who joined before their manager.
+Solution: 
+```sql
+SELECT e.first_name AS employee, m.first_name AS manager, e.hire_date, m.hire_date
+FROM Employees e
+INNER JOIN Employees m ON e.manager_id = m.employee_id
+WHERE e.hire_date < m.hire_date;
+```
+Details: Self-join. Dummy: Check dates.
+
+### 49. Find the 5th highest salary in the company.
+Solution: Similar to #2 with n=5.
+```sql
+SELECT DISTINCT salary FROM Employees ORDER BY salary DESC LIMIT 1 OFFSET 4;
+```
+Details: OFFSET 4 for 5th.
+
+### 50. Find all employees except the top 10 earners.
+Solution: 
+```sql
+SELECT * FROM Employees
+WHERE salary NOT IN (SELECT DISTINCT salary FROM Employees ORDER BY salary DESC LIMIT 10);
+```
+Details: Subquery for top 10 salaries.
+
+### 51. Write a query to fetch the third highest salary from an Employee table.
+Solution: Similar to #1.
+```sql
+SELECT DISTINCT salary FROM Employees ORDER BY salary DESC LIMIT 1 OFFSET 2;
+```
+Details: For third.
+
+### 52. Find employees who earn less than the average salary in their department.
+Solution: 
+```sql
+SELECT e.first_name, e.salary, d.department_name
+FROM Employees e
+INNER JOIN Departments d ON e.department_id = d.department_id
+WHERE e.salary < (SELECT AVG(salary) FROM Employees WHERE department_id = e.department_id);
+```
+Details: Correlated.
+
+### 53. Find unique records in a table excluding duplicates.
+Solution: 
+```sql
+SELECT DISTINCT * FROM Employees;
+```
+Details: Or group to remove dups.
+
+### 54. Update salaries of employees in a specific department by 10%.
+Solution: 
+```sql
+UPDATE Employees SET salary = salary * 1.10 WHERE department_id = 1;
+```
+Details: Update statement.
+
+### 55. Find employees with no department assigned.
+Solution: 
+```sql
+SELECT * FROM Employees WHERE department_id IS NULL;
+```
+Details: NULL check.
+
+### 56. Write a query to find employees whose salaries are above a certain threshold.
+Solution: 
+```sql
+SELECT * FROM Employees WHERE salary > 70000;
+```
+Details: Simple WHERE.
+
+### 57. Write a query to display employees whose last names end with ‘son’.
+Solution: 
+```sql
+SELECT * FROM Employees WHERE last_name LIKE '%son';
+```
+Details: LIKE. Dummy: Johnson, Anderson.
+
+### 58. Write a query to find employees hired between two specific dates.
+Solution: 
+```sql
+SELECT * FROM Employees WHERE hire_date BETWEEN '2020-01-01' AND '2022-12-31';
+```
+Details: BETWEEN.
+
+### 59. Write a query to format the current date as 'YYYY-MM-DD'.
+Solution: 
+```sql
+SELECT DATE_FORMAT(CURDATE(), '%Y-%m-%d');
+```
+Details: MySQL; FORMAT in others.
+
+### 60. Inner join example: Fetch employees and their department details.
+Solution: Same as #14.
+
+### 61. Left join example: List all departments and their employees, including those with no employees.
+Solution: 
+```sql
+SELECT d.department_name, e.first_name
+FROM Departments d
+LEFT JOIN Employees e ON d.department_id = e.department_id;
+```
+Details: All depts, NULL for no employees.
+
+### 62. Right join example: List all employees and their departments, including those with no department.
+Solution: 
+```sql
+SELECT e.first_name, d.department_name
+FROM Employees e
+RIGHT JOIN Departments d ON e.department_id = d.department_id;
+```
+Details: Opposite of left.
+
+### 63. Full outer join example: Combine employees and departments showing all records.
+Solution: 
+```sql
+SELECT e.first_name, d.department_name
+FROM Employees e
+FULL OUTER JOIN Departments d ON e.department_id = d.department_id;
+```
+Details: All from both; MySQL emulates with UNION of LEFT and RIGHT.
+
+### 64. Cross join example: Generate all possible employee-department pairs.
+Solution: 
+```sql
+SELECT e.first_name, d.department_name
+FROM Employees e
+CROSS JOIN Departments d;
+```
+Details: Cartesian product.
+
+### 65. Write a subquery to find the minimum salary in the company.
+Solution: 
+```sql
+SELECT MIN(salary) FROM Employees;
+```
+Details: But as subquery: in WHERE, etc.
+
+### 66. Correlated subquery: Find employees earning more than their department's average.
+Solution: Same as #52 but >.
+
+### 67. Nested subquery: Find departments with average salary higher than the company's average.
+Solution: 
+```sql
+SELECT d.department_name
+FROM Departments d
+INNER JOIN Employees e ON d.department_id = e.department_id
+GROUP BY d.department_name
+HAVING AVG(e.salary) > (SELECT AVG(salary) FROM Employees);
+```
+Details: Nested in HAVING.
+
+### 68. Write a query using IN to find employees in specific departments.
+Solution: 
+```sql
+SELECT * FROM Employees WHERE department_id IN (1,2);
+```
+Details: List check.
+
+### 69. Write a query using EXISTS to check for employees in a department.
+Solution: Same as #18 example.
+
+### 70. Find minimum salary department-wise.
+Solution: Similar to #23 but MIN().
+
+### 71. Find sum of salaries for employees hired after a certain date.
+Solution: 
+```sql
+SELECT SUM(salary) FROM Employees WHERE hire_date > '2022-01-01';
+```
+Details: Filter then aggregate.
+
+### 72. Group employees by salary ranges (e.g., 0-50000, 50001-100000).
+Solution: 
+```sql
+SELECT 
+    CASE 
+        WHEN salary <= 50000 THEN '0-50000'
+        WHEN salary <= 100000 THEN '50001-100000'
+        ELSE 'Above 100000'
+    END AS range, COUNT(*) 
+FROM Employees GROUP BY range;
+```
+Details: CASE for bucketing.
+
+### 73. Find the department with the lowest total salary.
+Solution: Similar to #25 but MIN(SUM) and ORDER ASC LIMIT 1.
+
+### 74. Count distinct salaries in the company.
+Solution: 
+```sql
+SELECT COUNT(DISTINCT salary) FROM Employees;
+```
+Details: DISTINCT count.
+
+### 75. Top 5 salaries overall.
+Solution: 
+```sql
+SELECT DISTINCT salary FROM Employees ORDER BY salary DESC LIMIT 5;
+```
+Details: Top unique.
+
+### 76. Dense rank employees by hire date.
+Solution: 
+```sql
+SELECT employee_id, hire_date, DENSE_RANK() OVER (ORDER BY hire_date) AS drnk
+FROM Employees;
+```
+Details: No skips.
+
+### 77. Partition employees by department and rank by salary.
+Solution: 
+```sql
+SELECT department_id, employee_id, salary, RANK() OVER (PARTITION BY department_id ORDER BY salary DESC) AS dept_rank
+FROM Employees;
+```
+Details: Per dept.
+
+### 78. Find consecutive salary duplicates using ROW_NUMBER().
+Solution: 
+```sql
+WITH cte AS (SELECT salary, ROW_NUMBER() OVER (ORDER BY salary) rn FROM Employees)
+SELECT salary FROM cte c1 JOIN cte c2 ON c1.rn = c2.rn - 1 AND c1.salary = c2.salary;
+```
+Details: Detect consecutives.
+
+### 79. Use OVER() clause to get department-wise row numbers.
+Solution: 
+```sql
+SELECT employee_id, department_id, ROW_NUMBER() OVER (PARTITION BY department_id ORDER BY employee_id) AS dept_row
+FROM Employees;
+```
+Details: Partitioned numbering.
+
+### 80. Use FIRST_VALUE() to show the highest salary in each partition.
+Solution: 
+```sql
+SELECT department_id, salary, FIRST_VALUE(salary) OVER (PARTITION BY department_id ORDER BY salary DESC) AS highest_in_dept
+FROM Employees;
+```
+Details: First in ordered partition.
+
+### 81. Use LAST_VALUE() to show the lowest salary in each partition.
+Solution: 
+```sql
+SELECT department_id, salary, LAST_VALUE(salary) OVER (PARTITION BY department_id ORDER BY salary DESC ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS lowest_in_dept
+FROM Employees;
+```
+Details: Frame for last.
+
+### 82. Divide employees into 3 groups using NTILE(3).
+Solution: Similar to #33 but NTILE(3).
+
+### 83. Calculate moving average of salaries over 3 rows.
+Solution: 
+```sql
+SELECT employee_id, salary, AVG(salary) OVER (ORDER BY salary ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING) AS moving_avg
+FROM Employees;
+```
+Details: Sliding window.
+
+### 84. Use CUME_DIST() to find cumulative distribution of salaries.
+Solution: 
+```sql
+SELECT employee_id, salary, CUME_DIST() OVER (ORDER BY salary) AS cum_dist
+FROM Employees;
+```
+Details: Proportion <= current.
+
+### 85. Write a query to find the length of employee names.
+Solution: 
+```sql
+SELECT first_name, LENGTH(first_name) AS len FROM Employees;
+```
+Details: LENGTH().
+
+### 86. Write a query to replace 'a' with 'A' in employee names.
+Solution: 
+```sql
+SELECT REPLACE(first_name, 'a', 'A') AS replaced FROM Employees;
+```
+Details: REPLACE().
+
+### 87. Write a query to trim leading/trailing spaces from names.
+Solution: 
+```sql
+SELECT TRIM(first_name) AS trimmed FROM Employees;
+```
+Details: TRIM().
+
+### 88. Write a query to find position of a substring in a name.
+Solution: 
+```sql
+SELECT first_name, INSTR(first_name, 'a') AS pos FROM Employees;
+```
+Details: INSTR() or POSITION().
+
+### 89. Write a query to extract domain from email (assuming email column).
+Solution: 
+```sql
+SELECT email, SUBSTRING(email, INSTR(email, '@') + 1) AS domain FROM Employees;
+```
+Details: String manipulation.
+
+### 90. Write a query to find employees born in a specific month.
+Solution: 
+```sql
+SELECT * FROM Employees WHERE MONTH(dob) = 5;
+```
+Details: MONTH(). Dummy: John (May).
+
+### 91. Write a query to get the day of the week from hire_date.
+Solution: 
+```sql
+SELECT hire_date, DAYNAME(hire_date) AS day_week FROM Employees;  -- MySQL
+```
+Details: E.g., 'Wednesday'.
+
+### 92. Write a query to subtract months from a date.
+Solution: 
+```sql
+SELECT DATE_SUB(hire_date, INTERVAL 3 MONTH) AS new_date FROM Employees;
+```
+Details: Subtract.
+
+### 93. Write a query to get quarter from a date.
+Solution: 
+```sql
+SELECT hire_date, QUARTER(hire_date) AS qtr FROM Employees;
+```
+Details: 1-4.
+
+### 94. Write a query to round dates to the nearest month.
+Solution: Custom; e.g., add days to reach next month if >15.
+Details: Complex, use CASE with DAY().
+
+### 95. Find the lowest-paid employee in each department.
+Solution: Similar to #46 but MIN.
+
+### 96. Find employees who have the same hire date.
+Solution: 
+```sql
+SELECT e1.first_name, e2.first_name, e1.hire_date
+FROM Employees e1 JOIN Employees e2 ON e1.hire_date = e2.hire_date AND e1.employee_id < e2.employee_id;
+```
+Details: Self-join.
+
+### 97. Find departments with more than average number of employees.
+Solution: 
+```sql
+SELECT d.department_name, COUNT(e.employee_id) AS cnt
+FROM Departments d LEFT JOIN Employees e ON d.department_id = e.department_id
+GROUP BY d.department_name
+HAVING cnt > (SELECT AVG(cnt) FROM (SELECT COUNT(*) cnt FROM Employees GROUP BY department_id) sub);
+```
+Details: Nested avg.
+
+### 98. Find the 10th highest salary using OFFSET.
+Solution: 
+```sql
+SELECT DISTINCT salary FROM Employees ORDER BY salary DESC LIMIT 1 OFFSET 9;
+```
+Details: For 10th.
+
+### 99. Find employees with salaries between min and max in their department.
+Solution: Trivial (all are); perhaps > min and < max for non-extremes.
+```sql
+SELECT * FROM Employees e
+WHERE salary > (SELECT MIN(salary) FROM Employees WHERE department_id = e.department_id)
+AND salary < (SELECT MAX(salary) FROM Employees WHERE department_id = e.department_id);
+```
+Details: Excludes min/max per dept.
+
+### 100. Find all managers and the number of employees reporting to them.
+Solution: 
+```sql
+SELECT m.employee_id, m.first_name, COUNT(e.employee_id) AS reports
+FROM Employees m LEFT JOIN Employees e ON m.employee_id = e.manager_id
+GROUP BY m.employee_id;
+```
+Details: Self-join, group. Includes managers with 0 reports.

@@ -165,6 +165,131 @@ class Basics2Controller extends Controller
                 // GROUP BY d.department_name;
 
         // 25) Find department with the highest average salary.
+                // SELECT d.department_name, avg(e.employee_id) AS employee_avg
+                // FROM Departments d
+                // LEFT JOIN Employees e ON d.department_id = e.department_id
+                // GROUP BY d.department_name;
+
+        // 26) Find the highest-paid employee in each department. 
+                // select e.first_name, e.last_name, d.department_name, max(e.salary) 
+                // from departments d 
+                // join employees e on d.department_id = e.department_id 
+                // group by d.department_id;
+
+        // 27) Find departments where average salary > 50,000.
+                // select d.department_name, avg(e.salary) as avg_salary 
+                // from departments d 
+                // join employees e on d.department_id = e.department_id 
+                // GROUP by d.department_id 
+                // having avg_salary > 50000;
+
+        // 28) Find employees who joined before their manager.
+
+                // SELECT e.first_name AS employee, m.first_name AS manager, e.hire_date, m.hire_date
+                // FROM Employees e
+                // INNER JOIN Employees m ON e.manager_id = m.employee_id
+                // WHERE e.hire_date < m.hire_date;
+
+        // 29) Find the 5th highest salary in the company.
+                // SELECT DISTINCT salary FROM Employees ORDER BY salary DESC LIMIT 1 OFFSET 4;
+
+        // 30) Find all employees except the top 10 earners.
+                // SELECT * FROM Employees
+                // WHERE salary NOT IN (
+                                                // SELECT DISTINCT salary 
+                                                // FROM Employees 
+                                                // ORDER BY salary DESC LIMIT 10
+                                        // );
+
+        // 31) Write a query to fetch the third highest salary from an Employee table.
+                // SELECT DISTINCT salary FROM Employees ORDER BY salary DESC LIMIT 1 OFFSET 2;
+
+        // 32) Find employees who earn less than the average salary in their department.
+                // SELECT e.first_name, e.salary, d.department_name
+                // FROM Employees e
+                // INNER JOIN Departments d ON e.department_id = d.department_id
+                // WHERE e.salary < (SELECT AVG(salary) FROM Employees WHERE department_id = e.department_id);
+
+        // 33) Find unique records in a table excluding duplicates.
+                // SELECT DISTINCT * FROM Employees;
+        
+        // 34) Update salaries of employees in a specific department by 10%.
+                // UPDATE Employees SET salary = salary * 1.10 WHERE department_id = 1;
+
+        // 35) Find employees with no department assigned.
+                // SELECT * FROM Employees WHERE department_id IS NULL;
+
+        // 36) Write a query to find employees whose salaries are above a certain threshold.
+                // SELECT * FROM Employees WHERE salary > 70000;
+
+        // 37) Write a query to display employees whose last names end with ‘son’.
+                // SELECT * FROM Employees WHERE last_name LIKE '%son';
+
+        // 38) Write a query to find employees hired between two specific dates.
+                // SELECT * FROM Employees WHERE hire_date BETWEEN '2020-01-01' AND '2022-12-31';
+
+        // 39) Write a query to format the current date as 'YYYY-MM-DD'.
+                // SELECT DATE_FORMAT(CURDATE(), '%Y-%m-%d');
+
+        // 40) Combine employees and departments showing all records.
+                // SELECT e.first_name, d.department_name
+                // FROM Employees e
+                // FULL OUTER JOIN Departments d ON e.department_id = d.department_id;
+
+        // 41) Generate all possible employee-department pairs.
+                // SELECT e.first_name, d.department_name
+                // FROM Employees e
+                // CROSS JOIN Departments d;
+
+        // 42) Find departments with average salary higher than the company's average.
+                // SELECT d.department_name
+                // FROM Departments d
+                // INNER JOIN Employees e ON d.department_id = e.department_id
+                // GROUP BY d.department_name
+                // HAVING AVG(e.salary) > (SELECT AVG(salary) FROM Employees);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 
 

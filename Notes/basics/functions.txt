@@ -1,35 +1,3863 @@
-similar_text("Hello", "Hallo", $percent);
-echo $percent; // Output: 80
+### PHP Loops
 
+PHP supports four main types of loops: `while`, `do-while`, `for`, and `foreach`. These are used to execute a block of code repeatedly based on conditions or iterations. Below, I'll explain each one in detail, including what it is, why to use it, how to use it, and when to use it, with proper code examples.
 
-1) strcasecmp : echo strcasecmp("Hello", "hello"); // Output: 0
+#### 1. while Loop
+- **What it is**: The `while` loop is a control structure that repeatedly executes a block of code as long as a specified condition evaluates to true. The condition is checked before each iteration.
+- **Why use it**: It's useful for repeating actions when you don't know in advance how many times the loop will run, but you have a clear stopping condition (e.g., processing data until it's exhausted).
+- **How to use it**: Syntax: `while (condition) { // code to execute }`. The code inside the braces runs if the condition is true, and the loop continues until the condition becomes false. Be careful to update variables inside the loop to avoid infinite loops.
+- **When to use it**: Use it for scenarios like reading from a file line by line or waiting for user input until a valid response is given.
+- **Code example**:
+  ```php
+  <?php
+  $i = 1; // Initialize a counter
+  while ($i <= 5) { // Condition: loop while $i is less than or equal to 5
+      echo "Iteration: $i<br>"; // Output the current iteration
+      $i++; // Increment the counter to eventually make the condition false
+  }
+  // Output: Iteration: 1 Iteration: 2 Iteration: 3 Iteration: 4 Iteration: 5
+  ?>
+  ```
 
-2) strcmp : echo strcmp("a", "b"); // Output: -1
+#### 2. do-while Loop
+- **What it is**: The `do-while` loop is similar to `while`, but the condition is checked after the code block executes, ensuring the loop runs at least once.
+- **Why use it**: It guarantees execution of the code block at least once, even if the condition is initially false, which is helpful for scenarios like menu prompts where you want to show options first.
+- **How to use it**: Syntax: `do { // code to execute } while (condition);`. The code runs first, then the condition is evaluated for the next iteration.
+- **When to use it**: Use it when you need to perform an action at least once before checking the continuation condition, such as in user validation loops.
+- **Code example**:
+  ```php
+  <?php
+  $i = 1; // Initialize a counter
+  do {
+      echo "Iteration: $i<br>"; // Output the current iteration (runs at least once)
+      $i++; // Increment the counter
+  } while ($i <= 5); // Condition checked after execution
+  // Output: Iteration: 1 Iteration: 2 Iteration: 3 Iteration: 4 Iteration: 5
+  ?>
+  ```
 
-3) str_contains : var_dump(str_contains("Hello World", "World")); // Output: bool(true)
+#### 3. for Loop
+- **What it is**: The `for` loop is a compact control structure for executing a block of code a specific number of times, with built-in initialization, condition, and increment/decrement.
+- **Why use it**: It's efficient for counted loops where you know the number of iterations in advance, keeping all loop control in one line for readability.
+- **How to use it**: Syntax: `for (initialization; condition; increment/decrement) { // code to execute }`. Initialization runs once at the start, condition is checked before each iteration, and increment/decrement runs after each iteration.
+- **When to use it**: Use it for iterating over arrays with known sizes or performing a fixed number of repetitions, like generating a table.
+- **Code example**:
+  ```php
+  <?php
+  for ($i = 1; $i <= 5; $i++) { // Initialization: $i=1; Condition: $i<=5; Increment: $i++
+      echo "Iteration: $i<br>"; // Output the current iteration
+  }
+  // Output: Iteration: 1 Iteration: 2 Iteration: 3 Iteration: 4 Iteration: 5
+  ?>
+  ```
 
-4) str_ends_with : var_dump(str_ends_with("file.txt", ".txt")); // Output: bool(true)
+#### 4. foreach Loop
+- **What it is**: The `foreach` loop is designed specifically for iterating over arrays or objects, assigning each element to a variable for processing.
+- **Why use it**: It simplifies array traversal without needing indexes or counters, making code cleaner and less error-prone for associative or indexed arrays.
+- **How to use it**: Syntax: `foreach ($array as $value) { // code }` or `foreach ($array as $key => $value) { // code }`. It loops through each element, assigning the value (and optionally key) to variables.
+- **When to use it**: Use it when working with arrays or collections, such as processing form data or database results.
+- **Code example**:
+  ```php
+  <?php
+  $colors = array("red", "green", "blue"); // Sample array
+  foreach ($colors as $color) { // Loop through each value
+      echo "Color: $color<br>"; // Output the value
+  }
+  // Output: Color: red Color: green Color: blue
 
-5) str_starts_with : var_dump(str_starts_with("http://", "http")); // Output: bool(true)
+  // With keys (for associative array)
+  $person = array("name" => "John", "age" => 30);
+  foreach ($person as $key => $value) {
+      echo "$key: $value<br>";
+  }
+  // Output: name: John age: 30
+  ?>
+  ```
 
-6) strncmp : echo strncmp("Hello", "Hellp", 4); // Output: 0
+### PHP String Functions
 
-7) strpos : echo strpos("Hello World", "World"); // Output: 6
+PHP has over 100 built-in string functions for manipulating text. Below, I explain each one from the comprehensive list, including what it is, why to use it, how to use it, when to use it, and a code example. They are grouped logically for readability. For full details, refer to the PHP manual, but this covers all.
 
-8) strrchr : echo strrchr("dir/file.txt", "/"); // Output: /file.txt
+#### Quoting and Escaping Functions
+1. **addcslashes**
+   - **What it is**: Adds backslashes before characters in a specified list, similar to C-style escaping.
+   - **Why use it**: To escape special characters for safe use in strings, like in shell commands or regex.
+   - **How to use it**: `addcslashes($string, $charlist)` – $charlist is the characters to escape.
+   - **When to use it**: When preparing strings for contexts that interpret special chars, like C code or queries.
+   - **Code example**:
+     ```php
+     <?php
+     echo addcslashes("Hello\nWorld!", "\n"); // Output: Hello\nWorld!
+     ?>
+     ```
 
-9) strrpos : echo strrpos("abacaba", "a"); // Output: 6
+2. **addslashes**
+   - **What it is**: Adds backslashes before single quotes, double quotes, backslashes, and NUL bytes.
+   - **Why use it**: To escape strings for safe insertion into databases or HTML (though prepared statements are better for DB).
+   - **How to use it**: `addslashes($string)`
+   - **When to use it**: For basic escaping in legacy code or when building SQL strings manually.
+   - **Code example**:
+     ```php
+     <?php
+     echo addslashes("O'Reilly"); // Output: O\'Reilly
+     ?>
+     ```
 
-10) strspn : echo strspn("123abc", "123"); // Output: 3
+3. **stripcslashes**
+   - **What it is**: Removes backslashes added by addcslashes.
+   - **Why use it**: To unescape strings that were C-style escaped.
+   - **How to use it**: `stripcslashes($string)`
+   - **When to use it**: When receiving escaped input and needing the original string.
+   - **Code example**:
+     ```php
+     <?php
+     echo stripcslashes("Hello\\nWorld!"); // Output: Hello\nWorld! (with newline)
+     ?>
+     ```
 
-11) strstr : echo strstr("user@example.com", "@"); // Output: @example.com
+4. **stripslashes**
+   - **What it is**: Removes backslashes added by addslashes.
+   - **Why use it**: To clean up escaped strings from input or databases.
+   - **How to use it**: `stripslashes($string)`
+   - **When to use it**: After retrieving data that was escaped for storage.
+   - **Code example**:
+     ```php
+     <?php
+     echo stripslashes("O\'Reilly"); // Output: O'Reilly
+     ?>
+     ```
 
-12) stripos : echo stripos("Hello", "hello"); // Output: 0
+5. **quotemeta**
+   - **What it is**: Adds backslashes before meta characters like . \\ + * ? [ ^ ] ( $ ).
+   - **Why use it**: To escape strings for use in regex patterns.
+   - **How to use it**: `quotemeta($string)`
+   - **When to use it**: When building dynamic regex expressions.
+   - **Code example**:
+     ```php
+     <?php
+     echo quotemeta("Hello. World?"); // Output: Hello\. World\?
+     ?>
+     ```
 
-13) stristr : echo stristr("Hello World", "world"); // Output: World
+#### Encoding and Decoding Functions
+1. **bin2hex**
+   - **What it is**: Converts binary data to hexadecimal representation.
+   - **Why use it**: To safely represent binary data as text, e.g., for storage or transmission.
+   - **How to use it**: `bin2hex($string)`
+   - **When to use it**: When dealing with binary files or encryption outputs.
+   - **Code example**:
+     ```php
+     <?php
+     echo bin2hex("Hello"); // Output: 48656c6c6f
+     ?>
+     ```
 
-14) strripos : echo strripos("abAcAba", "a"); // Output: 6
+2. **convert_cyr_string**
+   - **What it is**: Converts a string from one Cyrillic charset to another.
+   - **Why use it**: To handle legacy Cyrillic encodings in text processing.
+   - **How to use it**: `convert_cyr_string($string, $from, $to)`
+   - **When to use it**: When working with old Russian text data.
+   - **Code example**:
+     ```php
+     <?php
+     echo convert_cyr_string("\xE0\xE1\xE2", 'k', 'w'); // Converts KOI8-R to Windows-1251
+     ?>
+     ```
 
-15) chr : echo chr(65); // Output: A
+3. **convert_uudecode**
+   - **What it is**: Decodes a uuencoded string.
+   - **Why use it**: To decode data encoded for safe email transmission.
+   - **How to use it**: `convert_uudecode($string)`
+   - **When to use it**: When receiving uuencoded attachments.
+   - **Code example**:
+     ```php
+     <?php
+     echo convert_uudecode("+22!L;W9E(%!(4\"$`\n`"); // Output: decoded binary
+     ?>
+     ```
 
-16) chunk_split : echo chunk_split("HelloWorld", 5, "-"); // Output: Hello-World-
+4. **convert_uuencode**
+   - **What it is**: Uuencodes a string for safe transmission.
+   - **Why use it**: To encode binary data as text for email or usenet.
+   - **How to use it**: `convert_uuencode($string)`
+   - **When to use it**: For legacy systems requiring uuencoding.
+   - **Code example**:
+     ```php
+     <?php
+     echo convert_uuencode("Hello"); // Output: +22!L;W9E(%!(4"$` 
+     ?>
+     ```
+
+5. **hex2bin**
+   - **What it is**: Decodes a hexadecimal string to binary.
+   - **Why use it**: To reverse bin2hex for binary data recovery.
+   - **How to use it**: `hex2bin($string)`
+   - **When to use it**: When reading hex-encoded data from storage.
+   - **Code example**:
+     ```php
+     <?php
+     echo hex2bin("48656c6c6f"); // Output: Hello
+     ?>
+     ```
+
+6. **quoted_printable_decode**
+   - **What it is**: Decodes a quoted-printable string to 8-bit.
+   - **Why use it**: To handle MIME-encoded email bodies.
+   - **How to use it**: `quoted_printable_decode($string)`
+   - **When to use it**: When parsing email messages.
+   - **Code example**:
+     ```php
+     <?php
+     echo quoted_printable_decode("Hello=0AWorld"); // Output: Hello\nWorld
+     ?>
+     ```
+
+7. **quoted_printable_encode**
+   - **What it is**: Encodes an 8-bit string to quoted-printable.
+   - **Why use it**: For safe email transmission of non-ASCII chars.
+   - **How to use it**: `quoted_printable_encode($string)`
+   - **When to use it**: When sending MIME emails.
+   - **Code example**:
+     ```php
+     <?php
+     echo quoted_printable_encode("Hello\nWorld"); // Output: Hello=0AWorld
+     ?>
+     ```
+
+8. **utf8_decode**
+   - **What it is**: Decodes UTF-8 string to ISO-8859-1.
+   - **Why use it**: To convert UTF-8 text to single-byte encoding.
+   - **How to use it**: `utf8_decode($string)`
+   - **When to use it**: For legacy systems not supporting UTF-8.
+   - **Code example**:
+     ```php
+     <?php
+     echo utf8_decode("\xC3\xA4"); // Output: ä (in ISO-8859-1)
+     ?>
+     ```
+
+9. **utf8_encode**
+   - **What it is**: Encodes ISO-8859-1 string to UTF-8.
+   - **Why use it**: To convert single-byte text to UTF-8 for modern web use.
+   - **How to use it**: `utf8_encode($string)`
+   - **When to use it**: When upgrading legacy data to UTF-8.
+   - **Code example**:
+     ```php
+     <?php
+     echo utf8_encode("ä"); // Output: \xC3\xA4 (UTF-8)
+     ?>
+     ```
+
+#### HTML and Entity Functions
+1. **get_html_translation_table**
+   - **What it is**: Returns the translation table used by htmlspecialchar or htmlentities.
+   - **Why use it**: To customize or inspect HTML entity mappings.
+   - **How to use it**: `get_html_translation_table($table, $flags, $encoding)`
+   - **When to use it**: When building custom escaping functions.
+   - **Code example**:
+     ```php
+     <?php
+     print_r(get_html_translation_table(HTML_ENTITIES)); // Outputs array of entities
+     ?>
+     ```
+
+2. **html_entity_decode**
+   - **What it is**: Converts HTML entities back to characters.
+   - **Why use it**: To render HTML-encoded text as normal.
+   - **How to use it**: `html_entity_decode($string, $flags, $encoding)`
+   - **When to use it**: When displaying user input that was encoded for safety.
+   - **Code example**:
+     ```php
+     <?php
+     echo html_entity_decode("&lt;b&gt;Bold&lt;/b&gt;"); // Output: <b>Bold</b>
+     ?>
+     ```
+
+3. **htmlentities**
+   - **What it is**: Converts applicable characters to HTML entities.
+   - **Why use it**: To prevent XSS by escaping HTML in user input.
+   - **How to use it**: `htmlentities($string, $flags, $encoding, $double_encode)`
+   - **When to use it**: When outputting user-generated content to HTML.
+   - **Code example**:
+     ```php
+     <?php
+     echo htmlentities("<b>Bold</b>"); // Output: &lt;b&gt;Bold&lt;/b&gt;
+     ?>
+     ```
+
+4. **htmlspecialchars**
+   - **What it is**: Converts special HTML characters to entities ( & " ' < > ).
+   - **Why use it**: For basic HTML escaping to prevent injection attacks.
+   - **How to use it**: `htmlspecialchars($string, $flags, $encoding, $double_encode)`
+   - **When to use it**: In web forms or dynamic HTML generation.
+   - **Code example**:
+     ```php
+     <?php
+     echo htmlspecialchars("<script>alert('xss')</script>"); // Output: &lt;script&gt;alert(&#039;xss&#039;)&lt;/script&gt;
+     ?>
+     ```
+
+5. **htmlspecialchars_decode**
+   - **What it is**: Converts special HTML entities back to characters.
+   - **Why use it**: To reverse htmlspecialchars for editing or processing.
+   - **How to use it**: `htmlspecialchars_decode($string, $flags)`
+   - **When to use it**: When loading encoded data for modification.
+   - **Code example**:
+     ```php
+     <?php
+     echo htmlspecialchars_decode("&lt;b&gt;Bold&lt;/b&gt;"); // Output: <b>Bold</b>
+     ?>
+     ```
+
+#### Hashing and Checksum Functions
+1. **crc32**
+   - **What it is**: Generates the 32-bit CRC polynomial of a string.
+   - **Why use it**: For quick checksums to detect data changes.
+   - **How to use it**: `crc32($string)`
+   - **When to use it**: In data integrity checks or hashing tables.
+   - **Code example**:
+     ```php
+     <?php
+     echo crc32("Hello"); // Output: a number like 4157704578
+     ?>
+     ```
+
+2. **crypt**
+   - **What it is**: Performs one-way hashing for passwords (deprecated for new code; use password_hash instead).
+   - **Why use it**: For legacy password storage.
+   - **How to use it**: `crypt($string, $salt)`
+   - **When to use it**: Only for compatibility with old systems.
+   - **Code example**:
+     ```php
+     <?php
+     echo crypt("password", "salt"); // Output: hashed string
+     ?>
+     ```
+
+3. **md5**
+   - **What it is**: Calculates the MD5 hash of a string.
+   - **Why use it**: For simple checksums (not secure for passwords).
+   - **How to use it**: `md5($string, $raw_output)`
+   - **When to use it**: For file integrity or non-security hashing.
+   - **Code example**:
+     ```php
+     <?php
+     echo md5("Hello"); // Output: 8b1a9953c4611296a827abf8c47804d7
+     ?>
+     ```
+
+4. **md5_file**
+   - **What it is**: Calculates the MD5 hash of a file.
+   - **Why use it**: To verify file integrity after download.
+   - **How to use it**: `md5_file($filename, $raw_output)`
+   - **When to use it**: In file upload/download systems.
+   - **Code example**:
+     ```php
+     <?php
+     echo md5_file("example.txt"); // Output: hash of file content
+     ?>
+     ```
+
+5. **sha1**
+   - **What it is**: Calculates the SHA-1 hash of a string.
+   - **Why use it**: For checksums (not secure for passwords).
+   - **How to use it**: `sha1($string, $raw_output)`
+   - **When to use it**: In legacy APIs or git-like systems.
+   - **Code example**:
+     ```php
+     <?php
+     echo sha1("Hello"); // Output: f7ff9e8b7bb2e09b70935a5d785e0cc5d9d0abf0
+     ?>
+     ```
+
+6. **sha1_file**
+   - **What it is**: Calculates the SHA-1 hash of a file.
+   - **Why use it**: For file verification.
+   - **How to use it**: `sha1_file($filename, $raw_output)`
+   - **When to use it**: Similar to md5_file, for integrity checks.
+   - **Code example**:
+     ```php
+     <?php
+     echo sha1_file("example.txt"); // Output: hash of file content
+     ?>
+     ```
+
+#### Search and Comparison Functions
+1. **levenshtein**
+   - **What it is**: Calculates the Levenshtein distance between two strings (edit distance).
+   - **Why use it**: To measure string similarity for spell checking or fuzzy matching.
+   - **How to use it**: `levenshtein($str1, $str2, $insert_cost, $replace_cost, $delete_cost)`
+   - **When to use it**: In search engines or auto-correct features.
+   - **Code example**:
+     ```php
+     <?php
+     echo levenshtein("kitten", "sitting"); // Output: 3
+     ?>
+     ```
+
+2. **metaphone**
+   - **What it is**: Generates a phonetic key for a string.
+   - **Why use it**: For sound-alike searches.
+   - **How to use it**: `metaphone($string, $max_phonemes)`
+   - **When to use it**: In name matching or search systems.
+   - **Code example**:
+     ```php
+     <?php
+     echo metaphone("programming"); // Output: PRKRMNK
+     ?>
+     ```
+
+3. **similar_text**
+   - **What it is**: Calculates the similarity between two strings as a percentage.
+   - **Why use it**: To find how similar two strings are for matching.
+   - **How to use it**: `similar_text($str1, $str2, &$percent)`
+   - **When to use it**: In plagiarism detection or suggestions.
+   - **Code example**:
+     ```php
+     <?php
+     similar_text("Hello", "Hallo", $percent);
+     echo $percent; // Output: 80
+     ?>
+     ```
+
+4. **soundex**
+   - **What it is**: Generates a Soundex key for phonetic comparison.
+   - **Why use it**: For sound-alike string matching.
+   - **How to use it**: `soundex($string)`
+   - **When to use it**: In databases for name searches.
+   - **Code example**:
+     ```php
+     <?php
+     echo soundex("Robert"); // Output: R163
+     ?>
+     ```
+
+5. **strcasecmp**
+   - **What it is**: Case-insensitive string comparison.
+   - **Why use it**: To compare strings ignoring case.
+   - **How to use it**: `strcasecmp($str1, $str2)` – Returns 0 if equal.
+   - **When to use it**: For user input comparisons like usernames.
+   - **Code example**:
+     ```php
+     <?php
+     echo strcasecmp("Hello", "hello"); // Output: 0
+     ?>
+     ```
+
+6. **strcmp**
+   - **What it is**: Binary-safe string comparison.
+   - **Why use it**: To compare strings byte-by-byte.
+   - **How to use it**: `strcmp($str1, $str2)` – Returns <0, 0, or >0.
+   - **When to use it**: For sorting or equality checks.
+   - **Code example**:
+     ```php
+     <?php
+     echo strcmp("a", "b"); // Output: -1
+     ?>
+     ```
+
+7. **strcoll**
+   - **What it is**: Locale-based string comparison.
+   - **Why use it**: For culturally correct sorting (e.g., accented chars).
+   - **How to use it**: `strcoll($str1, $str2)`
+   - **When to use it**: In multilingual applications.
+   - **Code example**:
+     ```php
+     <?php
+     setlocale(LC_COLLATE, 'de_DE');
+     echo strcoll("ä", "z"); // Output depends on locale
+     ?>
+     ```
+
+8. **strcspn**
+   - **What it is**: Returns length of initial segment not matching a mask.
+   - **Why use it**: To find how many chars before a forbidden one.
+   - **How to use it**: `strcspn($string, $mask, $start, $length)`
+   - **When to use it**: In parsing or validation.
+   - **Code example**:
+     ```php
+     <?php
+     echo strcspn("hello", "l"); // Output: 2 (he before l)
+     ?>
+     ```
+
+9. **str_contains**
+   - **What it is**: Checks if a string contains a substring.
+   - **Why use it**: Simple substring existence check (PHP 8+).
+   - **How to use it**: `str_contains($haystack, $needle)`
+   - **When to use it**: For quick searches in text.
+   - **Code example**:
+     ```php
+     <?php
+     var_dump(str_contains("Hello World", "World")); // Output: bool(true)
+     ?>
+     ```
+
+10. **str_ends_with**
+    - **What it is**: Checks if a string ends with a substring.
+    - **Why use it**: To validate endings like file extensions.
+    - **How to use it**: `str_ends_with($haystack, $needle)`
+    - **When to use it**: In file handling or URL checks.
+    - **Code example**:
+      ```php
+      <?php
+      var_dump(str_ends_with("file.txt", ".txt")); // Output: bool(true)
+      ?>
+      ```
+
+11. **str_starts_with**
+    - **What it is**: Checks if a string starts with a substring.
+    - **Why use it**: To validate prefixes like protocols.
+    - **How to use it**: `str_starts_with($haystack, $needle)`
+    - **When to use it**: In input validation.
+    - **Code example**:
+      ```php
+      <?php
+      var_dump(str_starts_with("http://", "http")); // Output: bool(true)
+      ?>
+      ```
+
+12. **str_ireplace**
+    - **What it is**: Case-insensitive string replace.
+    - **Why use it**: To replace without caring about case.
+    - **How to use it**: `str_ireplace($search, $replace, $subject, &$count)`
+    - **When to use it**: In text normalization.
+    - **Code example**:
+      ```php
+      <?php
+      echo str_ireplace("world", "PHP", "Hello World"); // Output: Hello PHP
+      ?>
+      ```
+
+13. **str_replace**
+    - **What it is**: Replaces all occurrences of a search string.
+    - **Why use it**: For text substitution.
+    - **How to use it**: `str_replace($search, $replace, $subject, &$count)`
+    - **When to use it**: In templating or cleaning data.
+    - **Code example**:
+      ```php
+      <?php
+      echo str_replace("World", "PHP", "Hello World"); // Output: Hello PHP
+      ?>
+      ```
+
+14. **strnatcasecmp**
+    - **What it is**: Case-insensitive natural order comparison.
+    - **Why use it**: For human-friendly sorting (e.g., "img10" after "img2").
+    - **How to use it**: `strnatcasecmp($str1, $str2)`
+    - **When to use it**: In file lists or version comparisons.
+    - **Code example**:
+      ```php
+      <?php
+      echo strnatcasecmp("img10", "img2"); // Output: 1
+      ?>
+      ```
+
+15. **strnatcmp**
+    - **What it is**: Natural order string comparison.
+    - **Why use it**: For alphanumeric sorting.
+    - **How to use it**: `strnatcmp($str1, $str2)`
+    - **When to use it**: In arrays of mixed strings/numbers.
+    - **Code example**:
+      ```php
+      <?php
+      echo strnatcmp("img10", "img2"); // Output: 1
+      ?>
+      ```
+
+16. **strncasecmp**
+    - **What it is**: Case-insensitive comparison of first n chars.
+    - **Why use it**: For partial string matches ignoring case.
+    - **How to use it**: `strncasecmp($str1, $str2, $length)`
+    - **When to use it**: In prefix checks.
+    - **Code example**:
+      ```php
+      <?php
+      echo strncasecmp("Hello", "hello", 5); // Output: 0
+      ?>
+      ```
+
+17. **strncmp**
+    - **What it is**: Binary-safe comparison of first n chars.
+    - **Why use it**: For efficient partial comparisons.
+    - **How to use it**: `strncmp($str1, $str2, $length)`
+    - **When to use it**: In header or protocol parsing.
+    - **Code example**:
+      ```php
+      <?php
+      echo strncmp("Hello", "Hellp", 4); // Output: 0
+      ?>
+      ```
+
+18. **strpbrk**
+    - **What it is**: Searches for any char from a set and returns the rest of the string.
+    - **Why use it**: To find the first occurrence of any char in a mask.
+    - **How to use it**: `strpbrk($haystack, $char_list)`
+    - **When to use it**: In tokenizing or parsing.
+    - **Code example**:
+      ```php
+      <?php
+      echo strpbrk("hello", "lo"); // Output: llo
+      ?>
+      ```
+
+19. **strpos**
+    - **What it is**: Finds position of first occurrence of a substring.
+    - **Why use it**: To locate substrings.
+    - **How to use it**: `strpos($haystack, $needle, $offset)`
+    - **When to use it**: In string searching.
+    - **Code example**:
+      ```php
+      <?php
+      echo strpos("Hello World", "World"); // Output: 6
+      ?>
+      ```
+
+20. **strrchr**
+    - **What it is**: Finds last occurrence of a char and returns the rest.
+    - **Why use it**: To get file names from paths.
+    - **How to use it**: `strrchr($haystack, $needle)`
+    - **When to use it**: In path manipulation.
+    - **Code example**:
+      ```php
+      <?php
+      echo strrchr("dir/file.txt", "/"); // Output: /file.txt
+      ?>
+      ```
+
+21. **strrpos**
+    - **What it is**: Finds position of last occurrence of a substring.
+    - **Why use it**: For reverse searching.
+    - **How to use it**: `strrpos($haystack, $needle, $offset)`
+    - **When to use it**: In string reversal tasks.
+    - **Code example**:
+      ```php
+      <?php
+      echo strrpos("abacaba", "a"); // Output: 6
+      ?>
+      ```
+
+22. **strspn**
+    - **What it is**: Returns length of initial segment matching a mask.
+    - **Why use it**: To count leading matching chars.
+    - **How to use it**: `strspn($string, $mask, $start, $length)`
+    - **When to use it**: In input validation (e.g., digits).
+    - **Code example**:
+      ```php
+      <?php
+      echo strspn("123abc", "123"); // Output: 3
+      ?>
+      ```
+
+23. **strstr**
+    - **What it is**: Finds first occurrence of a string and returns the rest.
+    - **Why use it**: To extract from a point in string.
+    - **How to use it**: `strstr($haystack, $needle, $before_needle)`
+    - **When to use it**: In email or URL parsing.
+    - **Code example**:
+      ```php
+      <?php
+      echo strstr("user@example.com", "@"); // Output: @example.com
+      ?>
+      ```
+
+24. **stripos**
+    - **What it is**: Case-insensitive strpos.
+    - **Why use it**: For case-insensitive searches.
+    - **How to use it**: `stripos($haystack, $needle, $offset)`
+    - **When to use it**: In text searches ignoring case.
+    - **Code example**:
+      ```php
+      <?php
+      echo stripos("Hello", "hello"); // Output: 0
+      ?>
+      ```
+
+25. **stristr**
+    - **What it is**: Case-insensitive strstr.
+    - **Why use it**: For case-insensitive extraction.
+    - **How to use it**: `stristr($haystack, $needle, $before_needle)`
+    - **When to use it**: Similar to strstr but ignoring case.
+    - **Code example**:
+      ```php
+      <?php
+      echo stristr("Hello World", "world"); // Output: World
+      ?>
+      ```
+
+26. **strripos**
+    - **What it is**: Case-insensitive strrpos.
+    - **Why use it**: For last occurrence ignoring case.
+    - **How to use it**: `strripos($haystack, $needle, $offset)`
+    - **When to use it**: In case-insensitive reverse searches.
+    - **Code example**:
+      ```php
+      <?php
+      echo strripos("abAcAba", "a"); // Output: 6
+      ?>
+      ```
+
+#### String Manipulation Functions
+1. **chop**
+   - **What it is**: Alias of rtrim.
+   - **Why use it**: To remove trailing whitespace (legacy name).
+   - **How to use it**: `chop($string, $charlist)`
+   - **When to use it**: Same as rtrim.
+   - **Code example**:
+     ```php
+     <?php
+     echo chop("Hello   "); // Output: Hello
+     ?>
+     ```
+
+2. **chr**
+   - **What it is**: Returns a character from an ASCII value.
+   - **Why use it**: To generate chars from codes.
+   - **How to use it**: `chr($ascii)`
+   - **When to use it**: In binary data or char generation.
+   - **Code example**:
+     ```php
+     <?php
+     echo chr(65); // Output: A
+     ?>
+     ```
+
+3. **chunk_split**
+   - **What it is**: Splits a string into chunks with a separator.
+   - **Why use it**: For formatting like base64 lines.
+   - **How to use it**: `chunk_split($string, $chunklen, $end)`
+   - **When to use it**: In email headers or RFC compliance.
+   - **Code example**:
+     ```php
+     <?php
+     echo chunk_split("HelloWorld", 5, "-"); // Output: Hello-World-
+     ?>
+     ```
+
+4. **count_chars**
+   - **What it is**: Returns char frequency in a string.
+   - **Why use it**: For character analysis.
+   - **How to use it**: `count_chars($string, $mode)`
+   - **When to use it**: In text statistics or encryption analysis.
+   - **Code example**:
+     ```php
+     <?php
+     print_r(count_chars("Hello", 1)); // Output: Array of char => count
+     ?>
+     ```
+
+5. **explode**
+   - **What it is**: Splits a string by a delimiter into an array.
+   - **Why use it**: To parse delimited data.
+   - **How to use it**: `explode($separator, $string, $limit)`
+   - **When to use it**: For CSV or path splitting.
+   - **Code example**:
+     ```php
+     <?php
+     print_r(explode(" ", "Hello World")); // Output: Array ( [0] => Hello [1] => World )
+     ?>
+     ```
+
+6. **hebrev**
+   - **What it is**: Converts logical Hebrew text to visual.
+   - **Why use it**: For right-to-left text rendering.
+   - **How to use it**: `hebrev($hebrew_text, $max_chars_per_line)`
+   - **When to use it**: In Hebrew web apps.
+   - **Code example**:
+     ```php
+     <?php
+     echo hebrev("שלום"); // Output: visual Hebrew
+     ?>
+     ```
+
+7. **hebrevc**
+   - **What it is**: Converts Hebrew text with newline conversion.
+   - **Why use it**: For Hebrew with line breaks.
+   - **How to use it**: `hebrevc($hebrew_text, $max_chars_per_line)`
+   - **When to use it**: Same as hebrev but with newlines.
+   - **Code example**:
+     ```php
+     <?php
+     echo hebrevc("שלום\nעולם"); // Output: visual with converted newlines
+     ?>
+     ```
+
+8. **implode**
+   - **What it is**: Joins array elements into a string with a glue.
+   - **Why use it**: To create delimited strings from arrays.
+   - **How to use it**: `implode($glue, $array)`
+   - **When to use it**: For building CSV or queries.
+   - **Code example**:
+     ```php
+     <?php
+     echo implode(", ", array("apple", "banana")); // Output: apple, banana
+     ?>
+     ```
+
+9. **join**
+   - **What it is**: Alias of implode.
+   - **Why use it**: Same as implode.
+   - **How to use it**: `join($glue, $array)`
+   - **When to use it**: Same as implode.
+   - **Code example**:
+     ```php
+     <?php
+     echo join(", ", array("apple", "banana")); // Output: apple, banana
+     ?>
+     ```
+
+10. **lcfirst**
+    - **What it is**: Makes the first character lowercase.
+    - **Why use it**: For string formatting.
+    - **How to use it**: `lcfirst($string)`
+    - **When to use it**: In camelCase conversions.
+    - **Code example**:
+      ```php
+      <?php
+      echo lcfirst("Hello"); // Output: hello
+      ?>
+      ```
+
+11. **ltrim**
+    - **What it is**: Removes leading whitespace or chars.
+    - **Why use it**: To clean left side of strings.
+    - **How to use it**: `ltrim($string, $charlist)`
+    - **When to use it**: In input sanitization.
+    - **Code example**:
+      ```php
+      <?php
+      echo ltrim("   Hello"); // Output: Hello
+      ?>
+      ```
+
+12. **nl2br**
+    - **What it is**: Inserts HTML <br> before newlines.
+    - **Why use it**: To preserve line breaks in HTML output.
+    - **How to use it**: `nl2br($string, $use_xhtml)`
+    - **When to use it**: When displaying textarea input.
+    - **Code example**:
+      ```php
+      <?php
+      echo nl2br("Hello\nWorld"); // Output: Hello<br />World
+      ?>
+      ```
+
+13. **ord**
+    - **What it is**: Returns ASCII value of first char.
+    - **Why use it**: For char code analysis.
+    - **How to use it**: `ord($string)`
+    - **When to use it**: In binary processing.
+    - **Code example**:
+      ```php
+      <?php
+      echo ord("A"); // Output: 65
+      ?>
+      ```
+
+14. **rtrim**
+    - **What it is**: Removes trailing whitespace or chars.
+    - **Why use it**: To clean right side of strings.
+    - **How to use it**: `rtrim($string, $charlist)`
+    - **When to use it**: In data cleaning.
+    - **Code example**:
+      ```php
+      <?php
+      echo rtrim("Hello   "); // Output: Hello
+      ?>
+      ```
+
+15. **str_decrement**
+    - **What it is**: Decrements an alphanumeric string (PHP 8.3+).
+    - **Why use it**: For sequential string IDs.
+    - **How to use it**: `str_decrement($string)`
+    - **When to use it**: In custom counters.
+    - **Code example**:
+      ```php
+      <?php
+      echo str_decrement("AA"); // Output: Z
+      ?>
+      ```
+
+16. **str_getcsv**
+    - **What it is**: Parses a CSV string into an array.
+    - **Why use it**: For quick CSV parsing without files.
+    - **How to use it**: `str_getcsv($string, $separator, $enclosure, $escape)`
+    - **When to use it**: In string-based CSV data.
+    - **Code example**:
+      ```php
+      <?php
+      print_r(str_getcsv("a,b,c")); // Output: Array ( [0] => a [1] => b [2] => c )
+      ?>
+      ```
+
+17. **str_increment**
+    - **What it is**: Increments an alphanumeric string.
+    - **Why use it**: For generating next IDs like "AA" to "AB".
+    - **How to use it**: `str_increment($string)`
+    - **When to use it**: In sequence generation.
+    - **Code example**:
+      ```php
+      <?php
+      echo str_increment("AZ"); // Output: BA
+      ?>
+      ```
+
+18. **str_pad**
+    - **What it is**: Pads a string to a certain length.
+    - **Why use it**: For formatting output like tables.
+    - **How to use it**: `str_pad($string, $length, $pad_string, $pad_type)`
+    - **When to use it**: In console apps or reports.
+    - **Code example**:
+      ```php
+      <?php
+      echo str_pad("Hello", 10, "*"); // Output: Hello*****
+      ?>
+      ```
+
+19. **str_repeat**
+    - **What it is**: Repeats a string a given number of times.
+    - **Why use it**: For creating fillers or patterns.
+    - **How to use it**: `str_repeat($string, $multiplier)`
+    - **When to use it**: In UI elements like dashes.
+    - **Code example**:
+      ```php
+      <?php
+      echo str_repeat("-", 5); // Output: -----
+      ?>
+      ```
+
+20. **str_rot13**
+    - **What it is**: Performs ROT13 transformation.
+    - **Why use it**: For simple obfuscation.
+    - **How to use it**: `str_rot13($string)`
+    - **When to use it**: In games or basic encoding.
+    - **Code example**:
+      ```php
+      <?php
+      echo str_rot13("Hello"); // Output: Uryyb
+      ?>
+      ```
+
+21. **str_shuffle**
+    - **What it is**: Randomly shuffles a string.
+    - **Why use it**: For randomization.
+    - **How to use it**: `str_shuffle($string)`
+    - **When to use it**: In password generation or tests.
+    - **Code example**:
+      ```php
+      <?php
+      echo str_shuffle("abc"); // Output: random like "cab"
+      ?>
+      ```
+
+22. **str_split**
+    - **What it is**: Splits a string into an array of chunks.
+    - **Why use it**: For fixed-length splitting.
+    - **How to use it**: `str_split($string, $length)`
+    - **When to use it**: In binary data processing.
+    - **Code example**:
+      ```php
+      <?php
+      print_r(str_split("Hello", 2)); // Output: Array ( [0] => He [1] => ll [2] => o )
+      ?>
+      ```
+
+23. **str_word_count**
+    - **What it is**: Returns word count or list.
+    - **Why use it**: For text analysis.
+    - **How to use it**: `str_word_count($string, $format, $charlist)`
+    - **When to use it**: In SEO or summaries.
+    - **Code example**:
+      ```php
+      <?php
+      echo str_word_count("Hello World"); // Output: 2
+      ?>
+      ```
+
+24. **strchr**
+    - **What it is**: Alias of strstr.
+    - **Why use it**: Same as strstr.
+    - **How to use it**: `strchr($haystack, $needle)`
+    - **When to use it**: Same as strstr.
+    - **Code example**:
+      ```php
+      <?php
+      echo strchr("Hello", "l"); // Output: llo
+      ?>
+      ```
+
+25. **strip_tags**
+    - **What it is**: Strips HTML and PHP tags from a string.
+    - **Why use it**: To remove markup for plain text.
+    - **How to use it**: `strip_tags($string, $allowed_tags)`
+    - **When to use it**: In sanitizing user input for text-only.
+    - **Code example**:
+      ```php
+      <?php
+      echo strip_tags("<b>Hello</b>"); // Output: Hello
+      ?>
+      ```
+
+26. **strrev**
+    - **What it is**: Reverses a string.
+    - **Why use it**: For palindrome checks or effects.
+    - **How to use it**: `strrev($string)`
+    - **When to use it**: In string algorithms.
+    - **Code example**:
+      ```php
+      <?php
+      echo strrev("Hello"); // Output: olleH
+      ?>
+      ```
+
+27. **strtok**
+    - **What it is**: Tokenizes a string by delimiters.
+    - **Why use it**: For sequential parsing.
+    - **How to use it**: `strtok($string, $token)` – Call repeatedly.
+    - **When to use it**: In custom parsers.
+    - **Code example**:
+      ```php
+      <?php
+      $token = strtok("a;b;c", ";");
+      while ($token !== false) {
+        echo "$token<br>";
+        $token = strtok(";");
+      }
+      // Output: a b c
+      ?>
+      ```
+
+28. **strtolower**
+    - **What it is**: Converts string to lowercase.
+    - **Why use it**: For case normalization.
+    - **How to use it**: `strtolower($string)`
+    - **When to use it**: In searches or comparisons.
+    - **Code example**:
+      ```php
+      <?php
+      echo strtolower("Hello"); // Output: hello
+      ?>
+      ```
+
+29. **strtoupper**
+    - **What it is**: Converts string to uppercase.
+    - **Why use it**: For emphasis or normalization.
+    - **How to use it**: `strtoupper($string)`
+    - **When to use it**: In headers or acronyms.
+    - **Code example**:
+      ```php
+      <?php
+      echo strtoupper("hello"); // Output: HELLO
+      ?>
+      ```
+
+30. **strtr**
+    - **What it is**: Translates characters or replaces substrings.
+    - **Why use it**: For multiple replacements at once.
+    - **How to use it**: `strtr($string, $from, $to)` or `strtr($string, $replace_pairs)`
+    - **When to use it**: In accent removal or mapping.
+    - **Code example**:
+      ```php
+      <?php
+      echo strtr("baab", "b", "c"); // Output: caac
+      ?>
+      ```
+
+31. **substr**
+    - **What it is**: Returns a part of a string.
+    - **Why use it**: To extract substrings.
+    - **How to use it**: `substr($string, $start, $length)`
+    - **When to use it**: In parsing fixed formats.
+    - **Code example**:
+      ```php
+      <?php
+      echo substr("Hello", 1, 3); // Output: ell
+      ?>
+      ```
+
+32. **substr_compare**
+    - **What it is**: Compares substrings.
+    - **Why use it**: For partial comparisons.
+    - **How to use it**: `substr_compare($main_str, $str, $offset, $length, $case_insensitivity)`
+    - **When to use it**: In string matching.
+    - **Code example**:
+      ```php
+      <?php
+      echo substr_compare("abcde", "bc", 1, 2); // Output: 0
+      ?>
+      ```
+
+33. **substr_count**
+    - **What it is**: Counts occurrences of a substring.
+    - **Why use it**: For frequency analysis.
+    - **How to use it**: `substr_count($haystack, $needle, $offset, $length)`
+    - **When to use it**: In text stats.
+    - **Code example**:
+      ```php
+      <?php
+      echo substr_count("abab", "ab"); // Output: 2
+      ?>
+      ```
+
+34. **substr_replace**
+    - **What it is**: Replaces a portion of a string.
+    - **Why use it**: For targeted replacements.
+    - **How to use it**: `substr_replace($string, $replacement, $start, $length)`
+    - **When to use it**: In masking data.
+    - **Code example**:
+      ```php
+      <?php
+      echo substr_replace("Hello", "World", 0); // Output: World
+      ?>
+      ```
+
+35. **trim**
+    - **What it is**: Removes whitespace or chars from both ends.
+    - **Why use it**: To clean strings completely.
+    - **How to use it**: `trim($string, $charlist)`
+    - **When to use it**: In all input processing.
+    - **Code example**:
+      ```php
+      <?php
+      echo trim(" Hello "); // Output: Hello
+      ?>
+      ```
+
+36. **ucfirst**
+    - **What it is**: Makes first character uppercase.
+    - **Why use it**: For title casing.
+    - **How to use it**: `ucfirst($string)`
+    - **When to use it**: In names or sentences.
+    - **Code example**:
+      ```php
+      <?php
+      echo ucfirst("hello"); // Output: Hello
+      ?>
+      ```
+
+37. **ucwords**
+    - **What it is**: Uppercases first char of each word.
+    - **Why use it**: For title case formatting.
+    - **How to use it**: `ucwords($string, $delimiters)`
+    - **When to use it**: In headings or names.
+    - **Code example**:
+      ```php
+      <?php
+      echo ucwords("hello world"); // Output: Hello World
+      ?>
+      ```
+
+38. **wordwrap**
+    - **What it is**: Wraps string to a given number of chars.
+    - **Why use it**: For text formatting in emails or consoles.
+    - **How to use it**: `wordwrap($string, $width, $break, $cut)`
+    - **When to use it**: In plain text outputs.
+    - **Code example**:
+      ```php
+      <?php
+      echo wordwrap("Long string here", 5, "\n"); // Output: with wraps
+      ?>
+      ```
+
+#### Formatting and Output Functions
+1. **echo**
+   - **What it is**: Outputs one or more strings.
+   - **Why use it**: For simple output without return.
+   - **How to use it**: `echo $string1, $string2;`
+   - **When to use it**: In web pages for HTML.
+   - **Code example**:
+     ```php
+     <?php
+     echo "Hello"; // Output: Hello
+     ?>
+     ```
+
+2. **fprintf**
+   - **What it is**: Writes formatted string to a stream.
+   - **Why use it**: For precise formatting in files.
+   - **How to use it**: `fprintf($handle, $format, $args)`
+   - **When to use it**: In logging or file writing.
+   - **Code example**:
+     ```php
+     <?php
+     $fp = fopen('file.txt', 'w');
+     fprintf($fp, "%s %d", "Age", 30); // Writes to file
+     fclose($fp);
+     ?>
+     ```
+
+3. **number_format**
+   - **What it is**: Formats a number with thousands separator.
+   - **Why use it**: For readable numbers.
+   - **How to use it**: `number_format($number, $decimals, $dec_point, $thousands_sep)`
+   - **When to use it**: In financial displays.
+   - **Code example**:
+     ```php
+     <?php
+     echo number_format(1000.5, 2); // Output: 1,000.50
+     ?>
+     ```
+
+4. **parse_str**
+   - **What it is**: Parses query string into variables.
+   - **Why use it**: To extract URL params.
+   - **How to use it**: `parse_str($string, &$array)`
+   - **When to use it**: In handling GET data.
+   - **Code example**:
+     ```php
+     <?php
+     parse_str("name=John&age=30", $output);
+     print_r($output); // Output: Array ( [name] => John [age] => 30 )
+     ?>
+     ```
+
+5. **print**
+   - **What it is**: Outputs a string (similar to echo, but returns 1).
+   - **Why use it**: For output in expressions.
+   - **How to use it**: `print $string;`
+   - **When to use it**: When need return value.
+   - **Code example**:
+     ```php
+     <?php
+     print "Hello"; // Output: Hello
+     ?>
+     ```
+
+6. **printf**
+   - **What it is**: Outputs a formatted string.
+   - **Why use it**: For C-style formatting.
+   - **How to use it**: `printf($format, $args)`
+   - **When to use it**: In complex outputs.
+   - **Code example**:
+     ```php
+     <?php
+     printf("Pi is %.2f", 3.14159); // Output: Pi is 3.14
+     ?>
+     ```
+
+7. **sprintf**
+   - **What it is**: Returns a formatted string.
+   - **Why use it**: For building strings with formatting.
+   - **How to use it**: `sprintf($format, $args)`
+   - **When to use it**: In variable assignment.
+   - **Code example**:
+     ```php
+     <?php
+     $str = sprintf("Pi is %.2f", 3.14159); // $str = "Pi is 3.14"
+     ?>
+     ```
+
+8. **sscanf**
+   - **What it is**: Parses string according to format.
+   - **Why use it**: For structured input parsing.
+   - **How to use it**: `sscanf($string, $format, &$vars)`
+   - **When to use it**: In log parsing.
+   - **Code example**:
+     ```php
+     <?php
+     sscanf("Age: 30", "Age: %d", $age); // $age = 30
+     ?>
+     ```
+
+9. **vfprintf**
+   - **What it is**: Writes formatted string to stream from array.
+   - **Why use it**: For array-based formatting in files.
+   - **How to use it**: `vfprintf($handle, $format, $args)`
+   - **When to use it**: In advanced logging.
+   - **Code example**:
+     ```php
+     <?php
+     $fp = fopen('file.txt', 'w');
+     vfprintf($fp, "%s %d", array("Age", 30));
+     fclose($fp);
+     ?>
+     ```
+
+10. **vprintf**
+    - **What it is**: Outputs formatted string from array.
+    - **Why use it**: For array args in printf.
+    - **How to use it**: `vprintf($format, $args)`
+    - **When to use it**: When args are in array.
+    - **Code example**:
+      ```php
+      <?php
+      vprintf("Pi is %.2f", array(3.14159)); // Output: Pi is 3.14
+      ?>
+      ```
+
+11. **vsprintf**
+    - **What it is**: Returns formatted string from array.
+    - **Why use it**: For array args in sprintf.
+    - **How to use it**: `vsprintf($format, $args)`
+    - **When to use it**: Same as sprintf with arrays.
+    - **Code example**:
+      ```php
+      <?php
+      $str = vsprintf("Pi is %.2f", array(3.14159)); // $str = "Pi is 3.14"
+      ?>
+      ```
+
+#### Locale and Number Formatting Functions
+1. **localeconv**
+   - **What it is**: Returns numeric formatting info based on locale.
+   - **Why use it**: For localized number displays.
+   - **How to use it**: `localeconv()`
+   - **When to use it**: In international apps.
+   - **Code example**:
+     ```php
+     <?php
+     setlocale(LC_ALL, 'en_US');
+     print_r(localeconv()); // Output: array of locale info
+     ?>
+     ```
+
+2. **money_format**
+   - **What it is**: Formats a number as currency (deprecated in PHP 7.4, removed in 8.0).
+   - **Why use it**: For currency strings (use Intl instead now).
+   - **How to use it**: `money_format($format, $number)`
+   - **When to use it**: In older code for money display.
+   - **Code example**:
+     ```php
+     <?php
+     setlocale(LC_MONETARY, 'en_US');
+     echo money_format('%i', 1234.56); // Output: USD 1,234.56
+     ?>
+     ```
+
+3. **nl_langinfo**
+   - **What it is**: Queries locale information.
+   - **Why use it**: To get locale-specific strings like day names.
+   - **How to use it**: `nl_langinfo($item)`
+   - **When to use it**: In localized date formatting.
+   - **Code example**:
+     ```php
+     <?php
+     setlocale(LC_ALL, 'en_US');
+     echo nl_langinfo(ABDAY_1); // Output: Sun
+     ?>
+     ```
+
+4. **setlocale**
+   - **What it is**: Sets locale information for category.
+   - **Why use it**: To change language or formatting defaults.
+   - **How to use it**: `setlocale($category, $locale)`
+   - **When to use it**: At start of multilingual scripts.
+   - **Code example**:
+     ```php
+     <?php
+     setlocale(LC_ALL, 'de_DE'); // Set to German
+     ?>
+     ```
+
+### PHP Array Functions
+
+PHP has a rich set of array functions for creation, manipulation, searching, sorting, and more. Below, each is explained with details and code.
+
+#### Array Creation and Manipulation
+1. **array**
+   - **What it is**: Creates an array.
+   - **Why use it**: To initialize arrays with values.
+   - **How to use it**: `$arr = array($key => $value, ...);`
+   - **When to use it**: For any array creation.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array("a" => 1, "b" => 2);
+     print_r($arr); // Output: Array ( [a] => 1 [b] => 2 )
+     ?>
+     ```
+
+2. **array_combine**
+   - **What it is**: Creates array using one array for keys and another for values.
+   - **Why use it**: To pair keys and values.
+   - **How to use it**: `array_combine($keys, $values)`
+   - **When to use it**: When merging two arrays into associative.
+   - **Code example**:
+     ```php
+     <?php
+     $keys = array("a", "b");
+     $values = array(1, 2);
+     print_r(array_combine($keys, $values)); // Output: Array ( [a] => 1 [b] => 2 )
+     ?>
+     ```
+
+3. **array_fill**
+   - **What it is**: Fills an array with values.
+   - **Why use it**: To create arrays with repeated values.
+   - **How to use it**: `array_fill($start_index, $num, $value)`
+   - **When to use it**: For initialization like placeholders.
+   - **Code example**:
+     ```php
+     <?php
+     print_r(array_fill(0, 3, "blue")); // Output: Array ( [0] => blue [1] => blue [2] => blue )
+     ?>
+     ```
+
+4. **array_fill_keys**
+   - **What it is**: Fills an array with value, using another array's values as keys.
+   - **Why use it**: To create associative arrays with default values.
+   - **How to use it**: `array_fill_keys($keys, $value)`
+   - **When to use it**: For default configurations.
+   - **Code example**:
+     ```php
+     <?php
+     print_r(array_fill_keys(array("a", "b"), "default")); // Output: Array ( [a] => default [b] => default )
+     ?>
+     ```
+
+5. **compact**
+   - **What it is**: Creates array from variables and their values.
+   - **Why use it**: To bundle variables into an array.
+   - **How to use it**: `compact($var1, $var2, ...)`
+   - **When to use it**: In functions to return multiple values.
+   - **Code example**:
+     ```php
+     <?php
+     $name = "John";
+     $age = 30;
+     print_r(compact("name", "age")); // Output: Array ( [name] => John [age] => 30 )
+     ?>
+     ```
+
+6. **range**
+   - **What it is**: Creates an array of a range of elements.
+   - **Why use it**: For quick numeric or alpha sequences.
+   - **How to use it**: `range($start, $end, $step)`
+   - **When to use it**: For loops or select options.
+   - **Code example**:
+     ```php
+     <?php
+     print_r(range(1, 5)); // Output: Array ( [0] => 1 [1] => 2 [2] => 3 [3] => 4 [4] => 5 )
+     ?>
+     ```
+
+#### Array Iteration and Pointer Management
+1. **current**
+   - **What it is**: Returns the current element in an array.
+   - **Why use it**: To get the current pointer value.
+   - **How to use it**: `current($array)`
+   - **When to use it**: In manual iteration.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array(1, 2);
+     echo current($arr); // Output: 1
+     ?>
+     ```
+
+2. **each**
+   - **What it is**: Returns current key/value pair and advances pointer.
+   - **Why use it**: For manual loop control (deprecated in PHP 7.2).
+   - **How to use it**: `each($array)`
+   - **When to use it**: In old code for iteration.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array("a" => 1);
+     print_r(each($arr)); // Output: Array ( [1] => 1 [value] => 1 [0] => a [key] => a )
+     ?>
+     ```
+
+3. **end**
+   - **What it is**: Sets pointer to last element and returns it.
+   - **Why use it**: To access the last item.
+   - **How to use it**: `end($array)`
+   - **When to use it**: When needing the end without index.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array(1, 2);
+     echo end($arr); // Output: 2
+     ?>
+     ```
+
+4. **key**
+   - **What it is**: Returns the current key.
+   - **Why use it**: To get key without advancing.
+   - **How to use it**: `key($array)`
+   - **When to use it**: In iteration.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array("a" => 1);
+     echo key($arr); // Output: a
+     ?>
+     ```
+
+5. **next**
+   - **What it is**: Advances pointer and returns current value.
+   - **Why use it**: For manual stepping.
+   - **How to use it**: `next($array)`
+   - **When to use it**: In custom loops.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array(1, 2);
+     next($arr);
+     echo current($arr); // Output: 2
+     ?>
+     ```
+
+6. **pos**
+   - **What it is**: Alias of current.
+   - **Why use it**: Same as current.
+   - **How to use it**: `pos($array)`
+   - **When to use it**: Same as current.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array(1);
+     echo pos($arr); // Output: 1
+     ?>
+     ```
+
+7. **prev**
+   - **What it is**: Rewinds pointer and returns current value.
+   - **Why use it**: For backward stepping.
+   - **How to use it**: `prev($array)`
+   - **When to use it**: In bidirectional iteration.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array(1, 2);
+     end($arr);
+     echo prev($arr); // Output: 1
+     ?>
+     ```
+
+8. **reset**
+   - **What it is**: Sets pointer to first element and returns it.
+   - **Why use it**: To restart iteration.
+   - **How to use it**: `reset($array)`
+   - **When to use it**: After looping to reuse array.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array(1, 2);
+     end($arr);
+     echo reset($arr); // Output: 1
+     ?>
+     ```
+
+#### Array Searching and Checking
+1. **array_key_exists**
+   - **What it is**: Checks if a key exists in array.
+   - **Why use it**: To avoid undefined key errors.
+   - **How to use it**: `array_key_exists($key, $array)`
+   - **When to use it**: Before accessing associative keys.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array("a" => 1);
+     var_dump(array_key_exists("a", $arr)); // Output: bool(true)
+     ?>
+     ```
+
+2. **array_key_first**
+   - **What it is**: Gets the first key.
+   - **Why use it**: To access first key without reset.
+   - **How to use it**: `array_key_first($array)`
+   - **When to use it**: In ordered arrays.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array("a" => 1, "b" => 2);
+     echo array_key_first($arr); // Output: a
+     ?>
+     ```
+
+3. **array_key_last**
+   - **What it is**: Gets the last key.
+   - **Why use it**: To access last key without end.
+   - **How to use it**: `array_key_last($array)`
+   - **When to use it**: In processing last item.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array("a" => 1, "b" => 2);
+     echo array_key_last($arr); // Output: b
+     ?>
+     ```
+
+4. **array_keys**
+   - **What it is**: Returns all keys or subset.
+   - **Why use it**: To get keys as array.
+   - **How to use it**: `array_keys($array, $search_value, $strict)`
+   - **When to use it**: For key iteration.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array("a" => 1, "b" => 2);
+     print_r(array_keys($arr)); // Output: Array ( [0] => a [1] => b )
+     ?>
+     ```
+
+5. **array_search**
+   - **What it is**: Searches for value and returns key.
+   - **Why use it**: To find key of value.
+   - **How to use it**: `array_search($needle, $haystack, $strict)`
+   - **When to use it**: In lookups.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array("a" => 1, "b" => 2);
+     echo array_search(2, $arr); // Output: b
+     ?>
+     ```
+
+6. **array_values**
+   - **What it is**: Returns all values as indexed array.
+   - **Why use it**: To reset keys or get values only.
+   - **How to use it**: `array_values($array)`
+   - **When to use it**: After filtering.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array("a" => 1, "b" => 2);
+     print_r(array_values($arr)); // Output: Array ( [0] => 1 [1] => 2 )
+     ?>
+     ```
+
+7. **in_array**
+   - **What it is**: Checks if value exists in array.
+   - **Why use it**: For existence checks.
+   - **How to use it**: `in_array($needle, $haystack, $strict)`
+   - **When to use it**: In validation.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array(1, 2);
+     var_dump(in_array(1, $arr)); // Output: bool(true)
+     ?>
+     ```
+
+8. **key_exists**
+   - **What it is**: Alias of array_key_exists.
+   - **Why use it**: Same as array_key_exists.
+   - **How to use it**: `key_exists($key, $array)`
+   - **When to use it**: Same as array_key_exists.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array("a" => 1);
+     var_dump(key_exists("a", $arr)); // Output: bool(true)
+     ?>
+     ```
+
+9. **array_is_list**
+   - **What it is**: Checks if array is a list (sequential keys starting from 0).
+   - **Why use it**: To verify array structure.
+   - **How to use it**: `array_is_list($array)`
+   - **When to use it**: In data validation.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array(1, 2);
+     var_dump(array_is_list($arr)); // Output: bool(true)
+     ?>
+     ```
+
+#### Array Filtering and Reduction
+1. **array_filter**
+   - **What it is**: Filters elements using a callback.
+   - **Why use it**: To remove unwanted items.
+   - **How to use it**: `array_filter($array, $callback, $flag)`
+   - **When to use it**: In data cleaning.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array(1, 2, 3);
+     print_r(array_filter($arr, fn($v) => $v > 1)); // Output: Array ( [1] => 2 [2] => 3 )
+     ?>
+     ```
+
+2. **array_reduce**
+   - **What it is**: Reduces array to single value using callback.
+   - **Why use it**: For summing or aggregating.
+   - **How to use it**: `array_reduce($array, $callback, $initial)`
+   - **When to use it**: In calculations.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array(1, 2, 3);
+     echo array_reduce($arr, fn($carry, $item) => $carry + $item); // Output: 6
+     ?>
+     ```
+
+3. **array_find**
+   - **What it is**: Returns first element satisfying callback (PHP 8.4+).
+   - **Why use it**: For finding matches.
+   - **How to use it**: `array_find($array, $callback)`
+   - **When to use it**: In searches.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array(1, 2, 3);
+     echo array_find($arr, fn($v) => $v > 1); // Output: 2
+     ?>
+     ```
+
+4. **array_find_key**
+   - **What it is**: Returns key of first element satisfying callback (PHP 8.4+).
+   - **Why use it**: For key-based searches.
+   - **How to use it**: `array_find_key($array, $callback)`
+   - **When to use it**: When needing key of match.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array("a" => 1, "b" => 2);
+     echo array_find_key($arr, fn($v) => $v > 1); // Output: b
+     ?>
+     ```
+
+5. **array_all**
+   - **What it is**: Checks if all elements satisfy callback (PHP 8.4+).
+   - **Why use it**: For validation of all items.
+   - **How to use it**: `array_all($array, $callback)`
+   - **When to use it**: In checks like all positive.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array(2, 4);
+     var_dump(array_all($arr, fn($v) => $v % 2 == 0)); // Output: bool(true)
+     ?>
+     ```
+
+6. **array_any**
+   - **What it is**: Checks if at least one element satisfies callback (PHP 8.4+).
+   - **Why use it**: For existence of condition.
+   - **How to use it**: `array_any($array, $callback)`
+   - **When to use it**: In checks like any even.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array(1, 2);
+     var_dump(array_any($arr, fn($v) => $v % 2 == 0)); // Output: bool(true)
+     ?>
+     ```
+
+#### Array Sorting
+1. **arsort**
+   - **What it is**: Sorts array in descending order, maintaining keys.
+   - **Why use it**: For reverse associative sorting.
+   - **How to use it**: `arsort($array, $flags)`
+   - **When to use it**: In high-to-low lists.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array("a" => 2, "b" => 1);
+     arsort($arr);
+     print_r($arr); // Output: Array ( [a] => 2 [b] => 1 )
+     ?>
+     ```
+
+2. **asort**
+   - **What it is**: Sorts array in ascending order, maintaining keys.
+   - **Why use it**: For associative sorting.
+   - **How to use it**: `asort($array, $flags)`
+   - **When to use it**: In key-preserved sorts.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array("a" => 2, "b" => 1);
+     asort($arr);
+     print_r($arr); // Output: Array ( [b] => 1 [a] => 2 )
+     ?>
+     ```
+
+3. **krsort**
+   - **What it is**: Sorts by key in descending order.
+   - **Why use it**: For reverse key sorting.
+   - **How to use it**: `krsort($array, $flags)`
+   - **When to use it**: In key-based reverse lists.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array("b" => 1, "a" => 2);
+     krsort($arr);
+     print_r($arr); // Output: Array ( [b] => 1 [a] => 2 )
+     ?>
+     ```
+
+4. **ksort**
+   - **What it is**: Sorts by key in ascending order.
+   - **Why use it**: For key sorting.
+   - **How to use it**: `ksort($array, $flags)`
+   - **When to use it**: In alphabetizing keys.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array("b" => 1, "a" => 2);
+     ksort($arr);
+     print_r($arr); // Output: Array ( [a] => 2 [b] => 1 )
+     ?>
+     ```
+
+5. **natcasesort**
+   - **What it is**: Case-insensitive natural order sort.
+   - **Why use it**: For human-friendly case-ignore sorting.
+   - **How to use it**: `natcasesort($array)`
+   - **When to use it**: In file lists ignoring case.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array("Img10", "img2");
+     natcasesort($arr);
+     print_r($arr); // Output: sorted naturally
+     ?>
+     ```
+
+6. **natsort**
+   - **What it is**: Natural order sort.
+   - **Why use it**: For alphanumeric sorting.
+   - **How to use it**: `natsort($array)`
+   - **When to use it**: In version or file sorting.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array("img10", "img2");
+     natsort($arr);
+     print_r($arr); // Output: img2, img10
+     ?>
+     ```
+
+7. **rsort**
+   - **What it is**: Sorts in descending order, reindexing keys.
+   - **Why use it**: For reverse numeric sorting.
+   - **How to use it**: `rsort($array, $flags)`
+   - **When to use it**: In high scores.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array(1, 2);
+     rsort($arr);
+     print_r($arr); // Output: Array ( [0] => 2 [1] => 1 )
+     ?>
+     ```
+
+8. **sort**
+   - **What it is**: Sorts in ascending order, reindexing keys.
+   - **Why use it**: For basic sorting.
+   - **How to use it**: `sort($array, $flags)`
+   - **When to use it**: In lists.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array(2, 1);
+     sort($arr);
+     print_r($arr); // Output: Array ( [0] => 1 [1] => 2 )
+     ?>
+     ```
+
+9. **uasort**
+   - **What it is**: Sorts with user callback, maintaining keys.
+   - **Why use it**: For custom sorting logic.
+   - **How to use it**: `uasort($array, $callback)`
+   - **When to use it**: In complex sorts.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array("a" => 2, "b" => 1);
+     uasort($arr, fn($a, $b) => $a <=> $b);
+     print_r($arr); // Output: sorted with keys
+     ?>
+     ```
+
+10. **uksort**
+    - **What it is**: Sorts keys with user callback.
+    - **Why use it**: For custom key sorting.
+    - **How to use it**: `uksort($array, $callback)`
+    - **When to use it**: When keys need custom order.
+    - **Code example**:
+      ```php
+      <?php
+      $arr = array("b" => 1, "a" => 2);
+      uksort($arr, fn($a, $b) => $a <=> $b);
+      print_r($arr); // Output: sorted keys
+      ?>
+      ```
+
+11. **usort**
+    - **What it is**: Sorts with user callback, reindexing keys.
+    - **Why use it**: For custom value sorting.
+    - **How to use it**: `usort($array, $callback)`
+    - **When to use it**: In object arrays.
+    - **Code example**:
+      ```php
+      <?php
+      $arr = array(2, 1);
+      usort($arr, fn($a, $b) => $a <=> $b);
+      print_r($arr); // Output: sorted
+      ?>
+      ```
+
+12. **array_multisort**
+    - **What it is**: Sorts multiple or multi-dimensional arrays.
+    - **Why use it**: For parallel sorting.
+    - **How to use it**: `array_multisort($array1, $sort_order, $sort_flags, ...)`
+    - **When to use it**: In table sorting.
+    - **Code example**:
+      ```php
+      <?php
+      $arr1 = array(2, 1);
+      $arr2 = array("b", "a");
+      array_multisort($arr1, $arr2);
+      print_r($arr1); // Sorted with $arr2
+      ?>
+      ```
+
+#### Array Comparison (Diff and Intersect)
+1. **array_diff**
+   - **What it is**: Computes difference of arrays (values).
+   - **Why use it**: To find unique values.
+   - **How to use it**: `array_diff($array1, $array2, ...)`
+   - **When to use it**: In set operations.
+   - **Code example**:
+     ```php
+     <?php
+     print_r(array_diff(array(1, 2), array(2, 3))); // Output: Array ( [0] => 1 )
+     ?>
+     ```
+
+2. **array_diff_assoc**
+   - **What it is**: Diff with key check.
+   - **Why use it**: For associative diff.
+   - **How to use it**: `array_diff_assoc($array1, $array2, ...)`
+   - **When to use it**: When keys matter.
+   - **Code example**:
+     ```php
+     <?php
+     print_r(array_diff_assoc(array("a" => 1), array("a" => 2))); // Output: Array ( [a] => 1 )
+     ?>
+     ```
+
+3. **array_diff_key**
+   - **What it is**: Diff using keys.
+   - **Why use it**: For key differences.
+   - **How to use it**: `array_diff_key($array1, $array2, ...)`
+   - **When to use it**: In config comparisons.
+   - **Code example**:
+     ```php
+     <?php
+     print_r(array_diff_key(array("a" => 1, "b" => 2), array("a" => 3))); // Output: Array ( [b] => 2 )
+     ?>
+     ```
+
+4. **array_diff_uassoc**
+   - **What it is**: Diff with user callback for keys.
+   - **Why use it**: Custom key diff.
+   - **How to use it**: `array_diff_uassoc($array1, $array2, $key_callback)`
+   - **When to use it**: Complex key comparisons.
+   - **Code example**:
+     ```php
+     <?php
+     print_r(array_diff_uassoc(array("a" => 1), array("A" => 2), "strcasecmp")); // Output: Array ( [a] => 1 )
+     ?>
+     ```
+
+5. **array_diff_ukey**
+   - **What it is**: Diff using callback on keys.
+   - **Why use it**: Custom key diff without values.
+   - **How to use it**: `array_diff_ukey($array1, $array2, $key_callback)`
+   - **When to use it**: Similar to uassoc but keys only.
+   - **Code example**:
+     ```php
+     <?php
+     print_r(array_diff_ukey(array("a" => 1, "b" => 2), array("A" => 3), "strcasecmp")); // Output: Array ( [b] => 2 )
+     ?>
+     ```
+
+6. **array_udiff**
+   - **What it is**: Diff using callback on values.
+   - **Why use it**: Custom value diff.
+   - **How to use it**: `array_udiff($array1, $array2, $value_callback)`
+   - **When to use it**: For object comparisons.
+   - **Code example**:
+     ```php
+     <?php
+     print_r(array_udiff(array(1, 2), array(2, 3), fn($a, $b) => $a <=> $b)); // Output: Array ( [0] => 1 )
+     ?>
+     ```
+
+7. **array_udiff_assoc**
+   - **What it is**: Diff with key check and value callback.
+   - **Why use it**: Combined custom diff.
+   - **How to use it**: `array_udiff_assoc($array1, $array2, $value_callback)`
+   - **When to use it**: When both keys and custom values matter.
+   - **Code example**:
+     ```php
+     <?php
+     print_r(array_udiff_assoc(array("a" => 1), array("a" => 2), fn($a, $b) => $a <=> $b)); // Output: Array ( [a] => 1 )
+     ?>
+     ```
+
+8. **array_udiff_uassoc**
+   - **What it is**: Diff with callbacks for data and indexes.
+   - **Why use it**: Fully custom diff.
+   - **How to use it**: `array_udiff_uassoc($array1, $array2, $value_callback, $key_callback)`
+   - **When to use it**: Advanced comparisons.
+   - **Code example**:
+     ```php
+     <?php
+     print_r(array_udiff_uassoc(array("a" => 1), array("A" => 2), fn($a, $b) => $a <=> $b, "strcasecmp")); // Output: Array ( [a] => 1 )
+     ?>
+     ```
+
+9. **array_intersect**
+   - **What it is**: Computes intersection of arrays (values).
+   - **Why use it**: To find common values.
+   - **How to use it**: `array_intersect($array1, $array2, ...)`
+   - **When to use it**: In set operations.
+   - **Code example**:
+     ```php
+     <?php
+     print_r(array_intersect(array(1, 2), array(2, 3))); // Output: Array ( [1] => 2 )
+     ?>
+     ```
+
+10. **array_intersect_assoc**
+    - **What it is**: Intersection with key check.
+    - **Why use it**: For associative common items.
+    - **How to use it**: `array_intersect_assoc($array1, $array2, ...)`
+    - **When to use it**: When keys matter in intersection.
+    - **Code example**:
+      ```php
+      <?php
+      print_r(array_intersect_assoc(array("a" => 1), array("a" => 1))); // Output: Array ( [a] => 1 )
+      ?>
+      ```
+
+11. **array_intersect_key**
+    - **What it is**: Intersection using keys.
+    - **Why use it**: For common keys.
+    - **How to use it**: `array_intersect_key($array1, $array2, ...)`
+    - **When to use it**: In config overlaps.
+    - **Code example**:
+      ```php
+      <?php
+      print_r(array_intersect_key(array("a" => 1, "b" => 2), array("a" => 3))); // Output: Array ( [a] => 1 )
+      ?>
+      ```
+
+12. **array_intersect_uassoc**
+    - **What it is**: Intersection with key callback.
+    - **Why use it**: Custom key intersection.
+    - **How to use it**: `array_intersect_uassoc($array1, $array2, $key_callback)`
+    - **When to use it**: Case-insensitive keys.
+    - **Code example**:
+      ```php
+      <?php
+      print_r(array_intersect_uassoc(array("a" => 1), array("A" => 1), "strcasecmp")); // Output: Array ( [a] => 1 )
+      ?>
+      ```
+
+13. **array_intersect_ukey**
+    - **What it is**: Intersection using key callback.
+    - **Why use it**: Custom key intersection without values.
+    - **When to use it**: Similar to uassoc.
+    - **How to use it**: `array_intersect_ukey($array1, $array2, $key_callback)`
+    - **Code example**:
+      ```php
+      <?php
+      print_r(array_intersect_ukey(array("a" => 1, "b" => 2), array("A" => 3), "strcasecmp")); // Output: Array ( [a] => 1 )
+      ?>
+      ```
+
+14. **array_uintersect**
+    - **What it is**: Intersection with value callback.
+    - **Why use it**: Custom value intersection.
+    - **How to use it**: `array_uintersect($array1, $array2, $value_callback)`
+    - **When to use it**: For object intersections.
+    - **Code example**:
+      ```php
+      <?php
+      print_r(array_uintersect(array(1, 2), array(2, 3), fn($a, $b) => $a <=> $b)); // Output: Array ( [1] => 2 )
+      ?>
+      ```
+
+15. **array_uintersect_assoc**
+    - **What it is**: Intersection with key check and value callback.
+    - **Why use it**: Combined custom intersection.
+    - **How to use it**: `array_uintersect_assoc($array1, $array2, $value_callback)`
+    - **When to use it**: Advanced common items.
+    - **Code example**:
+      ```php
+      <?php
+      print_r(array_uintersect_assoc(array("a" => 1), array("a" => 1), fn($a, $b) => $a <=> $b)); // Output: Array ( [a] => 1 )
+      ?>
+      ```
+
+16. **array_uintersect_uassoc**
+    - **What it is**: Intersection with callbacks for data and indexes.
+    - **Why use it**: Fully custom intersection.
+    - **How to use it**: `array_uintersect_uassoc($array1, $array2, $value_callback, $key_callback)`
+    - **When to use it**: Complex scenarios.
+    - **Code example**:
+      ```php
+      <?php
+      print_r(array_uintersect_uassoc(array("a" => 1), array("A" => 1), fn($a, $b) => $a <=> $b, "strcasecmp")); // Output: Array ( [a] => 1 )
+      ?>
+      ```
+
+#### Array Merging and Replacing
+1. **array_merge**
+   - **What it is**: Merges one or more arrays.
+   - **Why use it**: To combine arrays.
+   - **How to use it**: `array_merge($array1, $array2, ...)`
+   - **When to use it**: In data aggregation.
+   - **Code example**:
+     ```php
+     <?php
+     print_r(array_merge(array(1), array(2))); // Output: Array ( [0] => 1 [1] => 2 )
+     ?>
+     ```
+
+2. **array_merge_recursive**
+   - **What it is**: Merges recursively.
+   - **Why use it**: For multi-dimensional combines.
+   - **How to use it**: `array_merge_recursive($array1, $array2, ...)`
+   - **When to use it**: In nested data.
+   - **Code example**:
+     ```php
+     <?php
+     $arr1 = array("a" => array(1));
+     $arr2 = array("a" => array(2));
+     print_r(array_merge_recursive($arr1, $arr2)); // Output: nested merge
+     ?>
+     ```
+
+3. **array_replace**
+   - **What it is**: Replaces elements from passed arrays.
+   - **Why use it**: To override values.
+   - **How to use it**: `array_replace($array, $replacement1, ...)`
+   - **When to use it**: In config overrides.
+   - **Code example**:
+     ```php
+     <?php
+     print_r(array_replace(array("a" => 1), array("a" => 2))); // Output: Array ( [a] => 2 )
+     ?>
+     ```
+
+4. **array_replace_recursive**
+   - **What it is**: Recursive replace.
+   - **Why use it**: For nested overrides.
+   - **How to use it**: `array_replace_recursive($array, $replacement1, ...)`
+   - **When to use it**: In deep configs.
+   - **Code example**:
+     ```php
+     <?php
+     $arr1 = array("a" => array(1));
+     $arr2 = array("a" => array(2));
+     print_r(array_replace_recursive($arr1, $arr2)); // Output: replaced nested
+     ?>
+     ```
+
+#### Array Slicing and Chunking
+1. **array_chunk**
+   - **What it is**: Splits array into chunks.
+   - **Why use it**: For batch processing.
+   - **How to use it**: `array_chunk($array, $size, $preserve_keys)`
+   - **When to use it**: In pagination.
+   - **Code example**:
+     ```php
+     <?php
+     print_r(array_chunk(array(1,2,3,4), 2)); // Output: Array ( [0] => Array ( [0] => 1 [1] => 2 ) [1] => Array ( [0] => 3 [1] => 4 ) )
+     ?>
+     ```
+
+2. **array_slice**
+   - **What it is**: Extracts a slice of array.
+   - **Why use it**: To get sub-arrays.
+   - **How to use it**: `array_slice($array, $offset, $length, $preserve_keys)`
+   - **When to use it**: In limiting results.
+   - **Code example**:
+     ```php
+     <?php
+     print_r(array_slice(array(1,2,3), 1, 2)); // Output: Array ( [0] => 2 [1] => 3 )
+     ?>
+     ```
+
+3. **array_splice**
+   - **What it is**: Removes and replaces portion of array.
+   - **Why use it**: For in-place modifications.
+   - **How to use it**: `array_splice($array, $offset, $length, $replacement)`
+   - **When to use it**: In array editing.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array(1,2,3);
+     array_splice($arr, 1, 1, "new");
+     print_r($arr); // Output: Array ( [0] => 1 [1] => new [2] => 3 )
+     ?>
+     ```
+
+#### Array Stack Operations
+1. **array_pop**
+   - **What it is**: Pops element off end.
+   - **Why use it**: For stack operations.
+   - **How to use it**: `array_pop($array)`
+   - **When to use it**: In LIFO.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array(1,2);
+     echo array_pop($arr); // Output: 2, $arr = array(1)
+     ?>
+     ```
+
+2. **array_push**
+   - **What it is**: Pushes elements onto end.
+   - **Why use it**: To add to array.
+   - **How to use it**: `array_push($array, $value1, ...)`
+   - **When to use it**: In building lists.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array(1);
+     array_push($arr, 2);
+     print_r($arr); // Output: Array ( [0] => 1 [1] => 2 )
+     ?>
+     ```
+
+3. **array_shift**
+   - **What it is**: Shifts element off beginning.
+   - **Why use it**: For queue operations.
+   - **How to use it**: `array_shift($array)`
+   - **When to use it**: In FIFO.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array(1,2);
+     echo array_shift($arr); // Output: 1, $arr = array(2)
+     ?>
+     ```
+
+4. **array_unshift**
+   - **What it is**: Prepends elements to beginning.
+   - **Why use it**: To add to front.
+   - **How to use it**: `array_unshift($array, $value1, ...)`
+   - **When to use it**: In priority queues.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array(2);
+     array_unshift($arr, 1);
+     print_r($arr); // Output: Array ( [0] => 1 [1] => 2 )
+     ?>
+     ```
+
+#### Array Padding and Randomization
+1. **array_pad**
+   - **What it is**: Pads array to specified length.
+   - **Why use it**: To ensure size.
+   - **How to use it**: `array_pad($array, $size, $value)`
+   - **When to use it**: In fixed-size arrays.
+   - **Code example**:
+     ```php
+     <?php
+     print_r(array_pad(array(1), 3, 0)); // Output: Array ( [0] => 1 [1] => 0 [2] => 0 )
+     ?>
+     ```
+
+2. **array_rand**
+   - **What it is**: Picks random keys.
+   - **Why use it**: For random selection.
+   - **How to use it**: `array_rand($array, $num)`
+   - **When to use it**: In lotteries or shuffles.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array("a", "b");
+     echo array_rand($arr); // Output: random key
+     ?>
+     ```
+
+3. **shuffle**
+   - **What it is**: Shuffles array.
+   - **Why use it**: For randomization.
+   - **How to use it**: `shuffle($array)`
+   - **When to use it**: In games.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array(1,2,3);
+     shuffle($arr);
+     print_r($arr); // Output: random order
+     ?>
+     ```
+
+#### Array Transformation
+1. **array_change_key_case**
+   - **What it is**: Changes case of keys.
+   - **Why use it**: For normalization.
+   - **How to use it**: `array_change_key_case($array, $case)`
+   - **When to use it**: In API data.
+   - **Code example**:
+     ```php
+     <?php
+     print_r(array_change_key_case(array("A" => 1), CASE_LOWER)); // Output: Array ( [a] => 1 )
+     ?>
+     ```
+
+2. **array_column**
+   - **What it is**: Returns values from a column in multi-dim array.
+   - **Why use it**: To extract columns.
+   - **How to use it**: `array_column($array, $column_key, $index_key)`
+   - **When to use it**: In database results.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array(array("id" => 1), array("id" => 2));
+     print_r(array_column($arr, "id")); // Output: Array ( [0] => 1 [1] => 2 )
+     ?>
+     ```
+
+3. **array_count_values**
+   - **What it is**: Counts occurrences of values.
+   - **Why use it**: For frequency.
+   - **How to use it**: `array_count_values($array)`
+   - **When to use it**: In stats.
+   - **Code example**:
+     ```php
+     <?php
+     print_r(array_count_values(array(1,1,2))); // Output: Array ( [1] => 2 [2] => 1 )
+     ?>
+     ```
+
+4. **array_flip**
+   - **What it is**: Exchanges keys with values.
+   - **Why use it**: For reverse mapping.
+   - **How to use it**: `array_flip($array)`
+   - **When to use it**: In lookups.
+   - **Code example**:
+     ```php
+     <?php
+     print_r(array_flip(array("a" => 1))); // Output: Array ( [1] => a )
+     ?>
+     ```
+
+5. **array_map**
+   - **What it is**: Applies callback to elements.
+   - **Why use it**: For transformation.
+   - **How to use it**: `array_map($callback, $array1, ...)`
+   - **When to use it**: In data mapping.
+   - **Code example**:
+     ```php
+     <?php
+     print_r(array_map(fn($v) => $v * 2, array(1,2))); // Output: Array ( [0] => 2 [1] => 4 )
+     ?>
+     ```
+
+6. **array_reverse**
+   - **What it is**: Returns reversed array.
+   - **Why use it**: For reversing order.
+   - **How to use it**: `array_reverse($array, $preserve_keys)`
+   - **When to use it**: In stack reversal.
+   - **Code example**:
+     ```php
+     <?php
+     print_r(array_reverse(array(1,2))); // Output: Array ( [0] => 2 [1] => 1 )
+     ?>
+     ```
+
+7. **array_unique**
+   - **What it is**: Removes duplicates.
+   - **Why use it**: For unique lists.
+   - **How to use it**: `array_unique($array, $flags)`
+   - **When to use it**: In data dedup.
+   - **Code example**:
+     ```php
+     <?php
+     print_r(array_unique(array(1,1,2))); // Output: Array ( [0] => 1 [2] => 2 )
+     ?>
+     ```
+
+8. **array_walk**
+   - **What it is**: Applies callback to each element.
+   - **Why use it**: For in-place modification.
+   - **How to use it**: `array_walk($array, $callback, $userdata)`
+   - **When to use it**: In array updates.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array(1,2);
+     array_walk($arr, fn(&$v) => $v *= 2);
+     print_r($arr); // Output: Array ( [0] => 2 [1] => 4 )
+     ?>
+     ```
+
+9. **array_walk_recursive**
+   - **What it is**: Recursive array_walk.
+   - **Why use it**: For nested arrays.
+   - **How to use it**: `array_walk_recursive($array, $callback, $userdata)`
+   - **When to use it**: In deep structures.
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array(array(1), 2);
+     array_walk_recursive($arr, fn(&$v) => $v *= 2);
+     print_r($arr); // Output: doubled nested
+     ?>
+     ```
+
+#### Array Mathematical Operations
+1. **array_product**
+   - **What it is**: Calculates product of values.
+   - **Why use it**: For multiplication aggregate.
+   - **How to use it**: `array_product($array)`
+   - **When to use it**: In math calculations.
+   - **Code example**:
+     ```php
+     <?php
+     echo array_product(array(2,3)); // Output: 6
+     ?>
+     ```
+
+2. **array_sum**
+   - **What it is**: Calculates sum of values.
+   - **Why use it**: For addition aggregate.
+   - **How to use it**: `array_sum($array)`
+   - **When to use it**: In totals.
+   - **Code example**:
+     ```php
+     <?php
+     echo array_sum(array(1,2)); // Output: 3
+     ?>
+     ```
+
+#### Array Counting and Size
+1. **count**
+   - **What it is**: Counts elements.
+   - **Why use it**: To get size.
+   - **How to use it**: `count($array, $mode)`
+   - **When to use it**: In loops.
+   - **Code example**:
+     ```php
+     <?php
+     echo count(array(1,2)); // Output: 2
+     ?>
+     ```
+
+2. **sizeof**
+   - **What it is**: Alias of count.
+   - **Why use it**: Same as count.
+   - **How to use it**: `sizeof($array)`
+   - **When to use it**: Same as count.
+   - **Code example**:
+     ```php
+     <?php
+     echo sizeof(array(1,2)); // Output: 2
+     ?>
+     ```
+
+#### Array Variable Assignment
+1. **extract**
+   - **What it is**: Imports array keys as variables.
+   - **Why use it**: To create variables from array.
+   - **How to use it**: `extract($array, $flags, $prefix)`
+   - **When to use it**: In old code for globals (use caution).
+   - **Code example**:
+     ```php
+     <?php
+     $arr = array("name" => "John");
+     extract($arr);
+     echo $name; // Output: John
+     ?>
+     ```
+
+2. **list**
+   - **What it is**: Assigns variables from array.
+   - **Why use it**: For unpacking.
+   - **How to use it**: `list($var1, $var2) = $array;`
+   - **When to use it**: In multiple returns.
+   - **Code example**:
+     ```php
+     <?php
+     list($a, $b) = array(1, 2);
+     echo $a; // Output: 1
+     ?>
+     ```
+
+### PHP Object Functions
+
+PHP's object functions (from class/obj reference) deal with classes, objects, interfaces, traits, etc. The list is based on standard functions; user notes mentioned some, but here's the full set.
+
+1. **class_alias**
+   - **What it is**: Creates an alias for a class.
+   - **Why use it**: For backward compatibility or short names.
+   - **How to use it**: `class_alias($original, $alias, $autoload)`
+   - **When to use it**: In libraries for renaming.
+   - **Code example**:
+     ```php
+     <?php
+     class MyClass {}
+     class_alias('MyClass', 'AliasClass');
+     $obj = new AliasClass(); // Works
+     ?>
+     ```
+
+2. **class_exists**
+   - **What it is**: Checks if class is defined.
+   - **Why use it**: To avoid errors before instantiation.
+   - **How to use it**: `class_exists($class, $autoload)`
+   - **When to use it**: In dynamic code.
+   - **Code example**:
+     ```php
+     <?php
+     class MyClass {}
+     var_dump(class_exists('MyClass')); // Output: bool(true)
+     ?>
+     ```
+
+3. **enum_exists**
+   - **What it is**: Checks if enum is defined (PHP 8.1+).
+   - **Why use it**: For enum validation.
+   - **How to use it**: `enum_exists($enum, $autoload)`
+   - **When to use it**: In typed code.
+   - **Code example**:
+     ```php
+     <?php
+     enum Suit {}
+     var_dump(enum_exists('Suit')); // Output: bool(true)
+     ?>
+     ```
+
+4. **get_called_class**
+   - **What it is**: Gets the class name of the static method caller.
+   - **Why use it**: For late static binding.
+   - **How to use it**: `get_called_class()`
+   - **When to use it**: In static methods.
+   - **Code example**:
+     ```php
+     <?php
+     class ParentClass {
+         public static function who() { echo get_called_class(); }
+     }
+     class ChildClass extends ParentClass {}
+     ChildClass::who(); // Output: ChildClass
+     ?>
+     ```
+
+5. **get_class**
+   - **What it is**: Gets the class name of an object.
+   - **Why use it**: For introspection.
+   - **How to use it**: `get_class($object)`
+   - **When to use it**: In logging or checks.
+   - **Code example**:
+     ```php
+     <?php
+     class MyClass {}
+     $obj = new MyClass();
+     echo get_class($obj); // Output: MyClass
+     ?>
+     ```
+
+6. **get_class_methods**
+   - **What it is**: Gets methods of a class.
+   - **Why use it**: For reflection.
+   - **How to use it**: `get_class_methods($class)`
+   - **When to use it**: In plugins.
+   - **Code example**:
+     ```php
+     <?php
+     class MyClass { public function method() {} }
+     print_r(get_class_methods('MyClass')); // Output: Array ( [0] => method )
+     ?>
+     ```
+
+7. **get_class_vars**
+   - **What it is**: Gets properties of a class.
+   - **Why use it**: For default values.
+   - **How to use it**: `get_class_vars($class)`
+   - **When to use it**: In serialization.
+   - **Code example**:
+     ```php
+     <?php
+     class MyClass { public $var = 1; }
+     print_r(get_class_vars('MyClass')); // Output: Array ( [var] => 1 )
+     ?>
+     ```
+
+8. **get_declared_classes**
+   - **What it is**: Gets all declared classes.
+   - **Why use it**: For listing classes.
+   - **How to use it**: `get_declared_classes()`
+   - **When to use it**: In debugging.
+   - **Code example**:
+     ```php
+     <?php
+     class MyClass {}
+     print_r(get_declared_classes()); // Includes MyClass
+     ?>
+     ```
+
+9. **get_declared_interfaces**
+   - **What it is**: Gets all declared interfaces.
+   - **Why use it**: For listing interfaces.
+   - **How to use it**: `get_declared_interfaces()`
+   - **When to use it**: In reflection.
+   - **Code example**:
+     ```php
+     <?php
+     interface MyInterface {}
+     print_r(get_declared_interfaces()); // Includes MyInterface
+     ?>
+     ```
+
+10. **get_declared_traits**
+    - **What it is**: Gets all declared traits.
+    - **Why use it**: For listing traits.
+    - **How to use it**: `get_declared_traits()`
+    - **When to use it**: In trait-based code.
+    - **Code example**:
+      ```php
+      <?php
+      trait MyTrait {}
+      print_r(get_declared_traits()); // Includes MyTrait
+      ?>
+      ```
+
+11. **get_mangled_object_vars**
+    - **What it is**: Gets object properties including dynamic.
+    - **Why use it**: For full property dump.
+    - **How to use it**: `get_mangled_object_vars($object)`
+    - **When to use it**: In serialization.
+    - **Code example**:
+      ```php
+      <?php
+      $obj = new stdClass();
+      $obj->prop = 1;
+      print_r(get_mangled_object_vars($obj)); // Output: array with mangled keys
+      ?>
+      ```
+
+12. **get_object_vars**
+    - **What it is**: Gets accessible properties of object.
+    - **Why use it**: To convert object to array.
+    - **How to use it**: `get_object_vars($object)`
+    - **When to use it**: In data extraction.
+    - **Code example**:
+      ```php
+      <?php
+      class MyClass { public $var = 1; }
+      $obj = new MyClass();
+      print_r(get_object_vars($obj)); // Output: Array ( [var] => 1 )
+      ?>
+      ```
+
+13. **get_parent_class**
+    - **What it is**: Gets parent class name.
+    - **Why use it**: For inheritance checks.
+    - **How to use it**: `get_parent_class($object_or_class)`
+    - **When to use it**: In factories.
+    - **Code example**:
+      ```php
+      <?php
+      class ParentClass {}
+      class ChildClass extends ParentClass {}
+      echo get_parent_class('ChildClass'); // Output: ParentClass
+      ?>
+      ```
+
+14. **interface_exists**
+    - **What it is**: Checks if interface is defined.
+    - **Why use it**: For dependency checks.
+    - **How to use it**: `interface_exists($interface, $autoload)`
+    - **When to use it**: Before implementing.
+    - **Code example**:
+      ```php
+      <?php
+      interface MyInterface {}
+      var_dump(interface_exists('MyInterface')); // Output: bool(true)
+      ?>
+      ```
+
+15. **is_a**
+    - **What it is**: Checks if object is of class or subclass.
+    - **Why use it**: For type checking.
+    - **How to use it**: `is_a($object, $class, $allow_string)`
+    - **When to use it**: In polymorphism.
+    - **Code example**:
+      ```php
+      <?php
+      class ParentClass {}
+      class ChildClass extends ParentClass {}
+      $obj = new ChildClass();
+      var_dump(is_a($obj, 'ParentClass')); // Output: bool(true)
+      ?>
+      ```
+
+16. **is_subclass_of**
+    - **What it is**: Checks if object is subclass of class.
+    - **Why use it**: For strict inheritance check.
+    - **How to use it**: `is_subclass_of($object, $class, $allow_string)`
+    - **When to use it**: In validation.
+    - **Code example**:
+      ```php
+      <?php
+      class ParentClass {}
+      class ChildClass extends ParentClass {}
+      $obj = new ChildClass();
+      var_dump(is_subclass_of($obj, 'ParentClass')); // Output: bool(true)
+      ?>
+      ```
+
+17. **method_exists**
+    - **What it is**: Checks if method exists in class.
+    - **Why use it**: For dynamic calls.
+    - **How to use it**: `method_exists($object_or_class, $method)`
+    - **When to use it**: Before call_user_func.
+    - **Code example**:
+      ```php
+      <?php
+      class MyClass { public function method() {} }
+      var_dump(method_exists('MyClass', 'method')); // Output: bool(true)
+      ?>
+      ```
+
+18. **property_exists**
+    - **What it is**: Checks if property exists in class.
+    - **Why use it**: For dynamic properties.
+    - **How to use it**: `property_exists($class, $property)`
+    - **When to use it**: In getters/setters.
+    - **Code example**:
+      ```php
+      <?php
+      class MyClass { public $prop; }
+      var_dump(property_exists('MyClass', 'prop')); // Output: bool(true)
+      ?>
+      ```
+
+19. **trait_exists**
+    - **What it is**: Checks if trait is defined.
+    - **Why use it**: For trait checks.
+    - **How to use it**: `trait_exists($trait, $autoload)`
+    - **When to use it**: Before using.
+    - **Code example**:
+      ```php
+      <?php
+      trait MyTrait {}
+      var_dump(trait_exists('MyTrait')); // Output: bool(true)
+      ?>
+      ```
+
+### PHP Date Functions
+
+Based on standard PHP date/time functions (from searches and known list), here's each with details. PHP's date handling is mostly through procedural functions and the DateTime class.
+
+1. **checkdate**
+   - **What it is**: Validates a Gregorian date.
+   - **Why use it**: To check if date is valid.
+   - **How to use it**: `checkdate($month, $day, $year)`
+   - **When to use it**: In form validation.
+   - **Code example**:
+     ```php
+     <?php
+     var_dump(checkdate(2, 29, 2024)); // Output: bool(true) (leap year)
+     ?>
+     ```
+
+2. **date**
+   - **What it is**: Formats a Unix timestamp.
+   - **Why use it**: To display dates in human format.
+   - **How to use it**: `date($format, $timestamp)`
+   - **When to use it**: In logging or displays.
+   - **Code example**:
+     ```php
+     <?php
+     echo date("Y-m-d"); // Output: 2025-10-03 (based on current date)
+     ?>
+     ```
+
+3. **date_add**
+   - **What it is**: Adds interval to DateTime (alias of DateTime::add).
+   - **Why use it**: For date arithmetic.
+   - **How to use it**: `date_add($datetime, $interval)`
+   - **When to use it**: In scheduling.
+   - **Code example**:
+     ```php
+     <?php
+     $date = new DateTime('2025-10-03');
+     date_add($date, date_interval_create_from_date_string('1 day'));
+     echo $date->format('Y-m-d'); // Output: 2025-10-04
+     ?>
+     ```
+
+4. **date_create**
+   - **What it is**: Creates a DateTime object.
+   - **Why use it**: For object-oriented date handling.
+   - **How to use it**: `date_create($time, $timezone)`
+   - **When to use it**: In modern code.
+   - **Code example**:
+     ```php
+     <?php
+     $date = date_create('2025-10-03');
+     echo date_format($date, 'Y-m-d'); // Output: 2025-10-03
+     ?>
+     ```
+
+5. **date_create_from_format**
+   - **What it is**: Creates DateTime from custom format.
+   - **Why use it**: To parse non-standard dates.
+   - **How to use it**: `date_create_from_format($format, $time, $timezone)`
+   - **When to use it**: In input parsing.
+   - **Code example**:
+     ```php
+     <?php
+     $date = date_create_from_format('j-M-Y', '3-Oct-2025');
+     echo date_format($date, 'Y-m-d'); // Output: 2025-10-03
+     ?>
+     ```
+
+6. **date_diff**
+   - **What it is**: Calculates difference between dates.
+   - **Why use it**: For time spans.
+   - **How to use it**: `date_diff($datetime1, $datetime2, $absolute)`
+   - **When to use it**: In age calculations.
+   - **Code example**:
+     ```php
+     <?php
+     $date1 = date_create('2025-10-03');
+     $date2 = date_create('2025-10-04');
+     $diff = date_diff($date1, $date2);
+     echo $diff->format('%a days'); // Output: 1 days
+     ?>
+     ```
+
+7. **date_format**
+   - **What it is**: Formats DateTime object.
+   - **Why use it**: For custom output.
+   - **How to use it**: `date_format($datetime, $format)`
+   - **When to use it**: With DateTime.
+   - **Code example**:
+     ```php
+     <?php
+     $date = date_create();
+     echo date_format($date, 'Y-m-d'); // Output: current date
+     ?>
+     ```
+
+8. **date_modify**
+   - **What it is**: Modifies DateTime (alias of DateTime::modify).
+   - **Why use it**: For relative changes.
+   - **How to use it**: `date_modify($datetime, $modify)`
+   - **When to use it**: In adjustments.
+   - **Code example**:
+     ```php
+     <?php
+     $date = date_create('2025-10-03');
+     date_modify($date, '+1 day');
+     echo date_format($date, 'Y-m-d'); // Output: 2025-10-04
+     ?>
+     ```
+
+9. **date_parse**
+   - **What it is**: Parses date string into array.
+   - **Why use it**: For breaking down dates.
+   - **How to use it**: `date_parse($date)`
+   - **When to use it**: In analysis.
+   - **Code example**:
+     ```php
+     <?php
+     print_r(date_parse("2025-10-03")); // Output: array with year, month, day
+     ?>
+     ```
+
+10. **date_parse_from_format**
+    - **What it is**: Parses date with format.
+    - **Why use it**: For custom formats.
+    - **How to use it**: `date_parse_from_format($format, $date)`
+    - **When to use it**: In non-standard input.
+    - **Code example**:
+      ```php
+      <?php
+      print_r(date_parse_from_format("j-M-Y", "3-Oct-2025")); // Output: array
+      ?>
+      ```
+
+11. **date_sub**
+    - **What it is**: Subtracts interval from DateTime.
+    - **Why use it**: For backward arithmetic.
+    - **How to use it**: `date_sub($datetime, $interval)`
+    - **When to use it**: In past dates.
+    - **Code example**:
+      ```php
+      <?php
+      $date = date_create('2025-10-03');
+      date_sub($date, date_interval_create_from_date_string('1 day'));
+      echo date_format($date, 'Y-m-d'); // Output: 2025-10-02
+      ?>
+      ```
+
+12. **date_timestamp_get**
+    - **What it is**: Gets Unix timestamp from DateTime.
+    - **Why use it**: To convert to timestamp.
+    - **How to use it**: `date_timestamp_get($datetime)`
+    - **When to use it**: For storage.
+    - **Code example**:
+      ```php
+      <?php
+      $date = date_create('2025-10-03');
+      echo date_timestamp_get($date); // Output: timestamp
+      ?>
+      ```
+
+13. **getdate**
+    - **What it is**: Gets date/time info as array.
+    - **Why use it**: For current or timestamp breakdown.
+    - **How to use it**: `getdate($timestamp)`
+    - **When to use it**: In simple parsing.
+    - **Code example**:
+      ```php
+      <?php
+      print_r(getdate()); // Output: array with current date parts
+      ?>
+      ```
+
+14. **gmdate**
+    - **What it is**: Formats timestamp in GMT.
+    - **Why use it**: For UTC times.
+    - **How to use it**: `gmdate($format, $timestamp)`
+    - **When to use it**: In international apps.
+    - **Code example**:
+      ```php
+      <?php
+      echo gmdate("Y-m-d"); // Output: UTC date
+      ?>
+      ```
+
+15. **idate**
+    - **What it is**: Formats local time/date as integer.
+    - **Why use it**: For single component extraction.
+    - **How to use it**: `idate($format, $timestamp)`
+    - **When to use it**: In performance-sensitive code.
+    - **Code example**:
+      ```php
+      <?php
+      echo idate("Y"); // Output: year as int
+      ?>
+      ```
+
+16. **localtime**
+    - **What it is**: Gets local time as array.
+    - **Why use it**: For C-style time info.
+    - **How to use it**: `localtime($timestamp, $associative)`
+    - **When to use it**: In ported code.
+    - **Code example**:
+      ```php
+      <?php
+      print_r(localtime(time(), true)); // Output: associative array
+      ?>
+      ```
+
+17. **microtime**
+    - **What it is**: Gets current Unix timestamp with microseconds.
+    - **Why use it**: For benchmarking.
+    - **How to use it**: `microtime($get_as_float)`
+    - **When to use it**: In timing code.
+    - **Code example**:
+      ```php
+      <?php
+      echo microtime(true); // Output: float timestamp
+      ?>
+      ```
+
+18. **mktime**
+    - **What it is**: Gets Unix timestamp from date parts.
+    - **Why use it**: To create timestamps.
+    - **How to use it**: `mktime($hour, $minute, $second, $month, $day, $year)`
+    - **When to use it**: In legacy date creation.
+    - **Code example**:
+      ```php
+      <?php
+      echo mktime(0, 0, 0, 10, 3, 2025); // Output: timestamp
+      ?>
+      ```
+
+19. **strftime**
+    - **What it is**: Formats local time/date according to locale (deprecated in PHP 8.1).
+    - **Why use it**: For localized formatting.
+    - **How to use it**: `strftime($format, $timestamp)`
+    - **When to use it**: In old international code.
+    - **Code example**:
+      ```php
+      <?php
+      setlocale(LC_TIME, 'en_US');
+      echo strftime("%A"); // Output: Friday (or current day)
+      ?>
+      ```
+
+20. **strptime**
+    - **What it is**: Parses time/date from string (deprecated in PHP 8.1).
+    - **Why use it**: For locale-based parsing.
+    - **How to use it**: `strptime($date, $format)`
+    - **When to use it**: In legacy parsing.
+    - **Code example**:
+      ```php
+      <?php
+      print_r(strptime("03 Oct 2025", "%d %b %Y")); // Output: array
+      ?>
+      ```
+
+21. **strtotime**
+    - **What it is**: Parses English date description to timestamp.
+    - **Why use it**: For flexible date parsing.
+    - **How to use it**: `strtotime($time, $now)`
+    - **When to use it**: In user input.
+    - **Code example**:
+      ```php
+      <?php
+      echo strtotime("next Friday"); // Output: timestamp
+      ?>
+      ```
+
+22. **time**
+    - **What it is**: Gets current Unix timestamp.
+    - **Why use it**: For now time.
+    - **How to use it**: `time()`
+    - **When to use it**: In logging.
+    - **Code example**:
+      ```php
+      <?php
+      echo time(); // Output: current timestamp
+      ?>
+      ```
+
+23. **timezone_abbreviations_list**
+    - **What it is**: Gets timezone abbreviations.
+    - **Why use it**: For timezone info.
+    - **How to use it**: `timezone_abbreviations_list()`
+    - **When to use it**: In timezone selectors.
+    - **Code example**:
+      ```php
+      <?php
+      print_r(timezone_abbreviations_list()); // Output: array of abbrevs
+      ?>
+      ```
+
+24. **timezone_identifiers_list**
+    - **What it is**: Gets all timezone identifiers.
+    - **Why use it**: For dropdowns.
+    - **How to use it**: `timezone_identifiers_list($what, $country)`
+    - **When to use it**: In user settings.
+    - **Code example**:
+      ```php
+      <?php
+      print_r(timezone_identifiers_list()); // Output: array of IDs
+      ?>
+      ```
+
+25. **timezone_location_get**
+    - **What it is**: Gets location info for timezone.
+    - **Why use it**: For coordinates.
+    - **How to use it**: `timezone_location_get($timezone)`
+    - **When to use it**: In maps.
+    - **Code example**:
+      ```php
+      <?php
+      $tz = new DateTimeZone('America/New_York');
+      print_r(timezone_location_get($tz)); // Output: array with lat/long
+      ?>
+      ```
+
+26. **timezone_name_from_abbr**
+    - **What it is**: Gets timezone name from abbreviation.
+    - **Why use it**: For resolving abbrevs.
+    - **How to use it**: `timezone_name_from_abbr($abbr, $offset, $isdst)`
+    - **When to use it**: In parsing.
+    - **Code example**:
+      ```php
+      <?php
+      echo timezone_name_from_abbr("EST"); // Output: America/New_York or similar
+      ?>
+      ```
+
+27. **timezone_name_get**
+    - **What it is**: Gets name of timezone.
+    - **Why use it**: For display.
+    - **How to use it**: `timezone_name_get($timezone)`
+    - **When to use it**: In logs.
+    - **Code example**:
+      ```php
+      <?php
+      $tz = new DateTimeZone('UTC');
+      echo timezone_name_get($tz); // Output: UTC
+      ?>
+      ```
+
+28. **timezone_offset_get**
+    - **What it is**: Gets offset from UTC.
+    - **Why use it**: For time conversions.
+    - **How to use it**: `timezone_offset_get($timezone, $datetime)`
+    - **When to use it**: In calculations.
+    - **Code example**:
+      ```php
+      <?php
+      $tz = new DateTimeZone('America/New_York');
+      $date = new DateTime('now', $tz);
+      echo timezone_offset_get($tz, $date); // Output: -14400 or similar
+      ?>
+      ```
+
+29. **timezone_open**
+    - **What it is**: Creates DateTimeZone object.
+    - **Why use it**: For timezone handling.
+    - **How to use it**: `timezone_open($timezone)`
+    - **When to use it**: In DateTime.
+    - **Code example**:
+      ```php
+      <?php
+      $tz = timezone_open('UTC');
+      ?>
+      ```
+
+30. **timezone_transitions_get**
+    - **What it is**: Gets timezone transitions.
+    - **Why use it**: For DST info.
+    - **How to use it**: `timezone_transitions_get($timezone, $start, $end)`
+    - **When to use it**: In calendar apps.
+    - **Code example**:
+      ```php
+      <?php
+      $tz = new DateTimeZone('America/New_York');
+      print_r(timezone_transitions_get($tz)); // Output: array of transitions
+      ?>
+      ```
+
+31. **timezone_version_get**
+    - **What it is**: Gets timezone database version.
+    - **Why use it**: For debugging.
+    - **How to use it**: `timezone_version_get()`
+    - **When to use it**: In support.
+    - **Code example**:
+      ```php
+      <?php
+      echo timezone_version_get(); // Output: version like 2024.1
+      ?>
+      ```
+
+### MySQL String Functions
+
+MySQL has functions for string manipulation in SQL queries. Here's each with details, assuming use in queries like SELECT func(...).
+
+#### Character Encoding and Conversion Functions
+1. **ASCII(str)**
+   - **What it is**: Returns ASCII value of leftmost char.
+   - **Why use it**: For char codes in queries.
+   - **How to use it**: SELECT ASCII('A');
+   - **When to use it**: In sorting or filtering.
+   - **Code example** (in PHP with MySQL):
+     ```php
+     // Assume $conn is mysqli connection
+     $result = mysqli_query($conn, "SELECT ASCII('A')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: 65
+     ```
+
+2. **BIN(N)**
+   - **What it is**: Returns binary representation of number.
+   - **Why use it**: For binary strings.
+   - **How to use it**: SELECT BIN(12);
+   - **When to use it**: In bit operations.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT BIN(12)");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: 1100
+     ```
+
+3. **CHAR(N, ... [USING charset_name])**
+   - **What it is**: Returns characters from integers.
+   - **Why use it**: To build strings from codes.
+   - **How to use it**: SELECT CHAR(65);
+   - **When to use it**: In data generation.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT CHAR(65)");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: A
+     ```
+
+4. **HEX(str or N)**
+   - **What it is**: Returns hexadecimal representation.
+   - **Why use it**: For hex encoding.
+   - **How to use it**: SELECT HEX('Hello');
+   - **When to use it**: In binary data.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT HEX('Hello')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: 48656C6C6F
+     ```
+
+5. **OCT(N)**
+   - **What it is**: Returns octal representation.
+   - **Why use it**: For octal strings.
+   - **How to use it**: SELECT OCT(12);
+   - **When to use it**: In permissions like chmod.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT OCT(12)");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: 14
+     ```
+
+6. **ORD(str)**
+   - **What it is**: Returns char code of leftmost char.
+   - **Why use it**: For multi-byte codes.
+   - **How to use it**: SELECT ORD('A');
+   - **When to use it**: In encoding.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT ORD('A')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: 65
+     ```
+
+7. **UNHEX(str)**
+   - **What it is**: Returns string from hex.
+   - **Why use it**: To decode hex.
+   - **How to use it**: SELECT UNHEX('48656C6C6F');
+   - **When to use it**: In binary storage.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT UNHEX('48656C6C6F')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: Hello
+     ```
+
+#### String Length and Position Functions
+1. **BIT_LENGTH(str)**
+   - **What it is**: Returns length in bits.
+   - **Why use it**: For bit-level size.
+   - **How to use it**: SELECT BIT_LENGTH('Hello');
+   - **When to use it**: In optimization.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT BIT_LENGTH('Hello')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: 40
+     ```
+
+2. **CHAR_LENGTH(str)**
+   - **What it is**: Returns number of characters.
+   - **Why use it**: For char count (multi-byte safe).
+   - **How to use it**: SELECT CHAR_LENGTH('Hello');
+   - **When to use it**: In length checks.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT CHAR_LENGTH('Hello')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: 5
+     ```
+
+3. **CHARACTER_LENGTH(str)**
+   - **What it is**: Synonym for CHAR_LENGTH.
+   - **Why use it**: Same as CHAR_LENGTH.
+   - **How to use it**: SELECT CHARACTER_LENGTH('Hello');
+   - **When to use it**: Same as CHAR_LENGTH.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT CHARACTER_LENGTH('Hello')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: 5
+     ```
+
+4. **LENGTH(str)**
+   - **What it is**: Returns length in bytes.
+   - **Why use it**: For byte size.
+   - **How to use it**: SELECT LENGTH('Hello');
+   - **When to use it**: In storage estimates.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT LENGTH('Hello')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: 5
+     ```
+
+5. **OCTET_LENGTH(str)**
+   - **What it is**: Synonym for LENGTH.
+   - **Why use it**: Same as LENGTH.
+   - **How to use it**: SELECT OCTET_LENGTH('Hello');
+   - **When to use it**: Same as LENGTH.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT OCTET_LENGTH('Hello')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: 5
+     ```
+
+6. **INSTR(str, substr)**
+   - **What it is**: Returns position of substring.
+   - **Why use it**: For locating.
+   - **How to use it**: SELECT INSTR('Hello', 'll');
+   - **When to use it**: In searches.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT INSTR('Hello', 'll')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: 3
+     ```
+
+7. **LOCATE(substr, str [, pos])**
+   - **What it is**: Returns position of substring.
+   - **Why use it**: For optional start pos.
+   - **How to use it**: SELECT LOCATE('ll', 'Hello', 1);
+   - **When to use it**: In repeated searches.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT LOCATE('ll', 'Hello')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: 3
+     ```
+
+8. **POSITION(substr IN str)**
+   - **What it is**: Synonym for LOCATE.
+   - **Why use it**: Same as LOCATE.
+   - **How to use it**: SELECT POSITION('ll' IN 'Hello');
+   - **When to use it**: Same as LOCATE.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT POSITION('ll' IN 'Hello')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: 3
+     ```
+
+#### String Concatenation and Building Functions
+1. **CONCAT(str1, str2, ...)**
+   - **What it is**: Concatenates strings.
+   - **Why use it**: To join columns.
+   - **How to use it**: SELECT CONCAT('Hel', 'lo');
+   - **When to use it**: In full names.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT CONCAT('Hel', 'lo')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: Hello
+     ```
+
+2. **CONCAT_WS(separator, str1, str2, ...)**
+   - **What it is**: Concatenates with separator, skipping NULL.
+   - **Why use it**: For safe joining.
+   - **How to use it**: SELECT CONCAT_WS(' ', 'Hello', NULL, 'World');
+   - **When to use it**: In addresses.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT CONCAT_WS(' ', 'Hello', 'World')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: Hello World
+     ```
+
+3. **ELT(N, str1, str2, ...)**
+   - **What it is**: Returns string at index N.
+   - **Why use it**: For conditional strings.
+   - **How to use it**: SELECT ELT(2, 'a', 'b', 'c');
+   - **When to use it**: In case-like.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT ELT(2, 'a', 'b', 'c')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: b
+     ```
+
+4. **EXPORT_SET(bits, on, off [, separator [, number_of_bits]])**
+   - **What it is**: Returns string from bits.
+   - **Why use it**: For bit representations.
+   - **How to use it**: SELECT EXPORT_SET(5, '1', '0', ',', 4);
+   - **When to use it**: In bit fields.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT EXPORT_SET(5, '1', '0', ',', 4)");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: 1,0,1,0
+     ```
+
+5. **MAKE_SET(bits, str1, str2, ...)**
+   - **What it is**: Returns set of strings from bits.
+   - **Why use it**: For set fields.
+   - **How to use it**: SELECT MAKE_SET(1|4, 'a', 'b', 'c');
+   - **When to use it**: In SET columns.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT MAKE_SET(1|4, 'a', 'b', 'c')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: a,c
+     ```
+
+6. **REPEAT(str, count)**
+   - **What it is**: Repeats string count times.
+   - **Why use it**: For padding.
+   - **How to use it**: SELECT REPEAT('a', 3);
+   - **When to use it**: In formatting.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT REPEAT('a', 3)");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: aaa
+     ```
+
+7. **SPACE(N)**
+   - **What it is**: Returns N spaces.
+   - **Why use it**: For spacing.
+   - **How to use it**: SELECT SPACE(5);
+   - **When to use it**: In alignment.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT SPACE(5)");
+     $row = mysqli_fetch_array($result);
+     echo strlen($row[0]); // Output: 5
+     ```
+
+#### String Extraction and Modification Functions
+1. **INSERT(str, pos, len, newstr)**
+   - **What it is**: Inserts newstr at pos, replacing len chars.
+   - **Why use it**: For string editing.
+   - **How to use it**: SELECT INSERT('Hello', 3, 0, 'X');
+   - **When to use it**: In updates.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT INSERT('Hello', 3, 0, 'X')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: HeXllo
+     ```
+
+2. **LEFT(str, len)**
+   - **What it is**: Returns leftmost len chars.
+   - **Why use it**: For prefixes.
+   - **How to use it**: SELECT LEFT('Hello', 3);
+   - **When to use it**: In truncation.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT LEFT('Hello', 3)");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: Hel
+     ```
+
+3. **MID(str, pos [, len])**
+   - **What it is**: Synonym for SUBSTRING.
+   - **Why use it**: For substrings.
+   - **How to use it**: SELECT MID('Hello', 2, 3);
+   - **When to use it**: In extraction.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT MID('Hello', 2, 3)");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: ell
+     ```
+
+4. **REPLACE(str, from_str, to_str)**
+   - **What it is**: Replaces from_str with to_str.
+   - **Why use it**: For substitutions.
+   - **How to use it**: SELECT REPLACE('Hello', 'l', 'x');
+   - **When to use it**: In cleaning.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT REPLACE('Hello', 'l', 'x')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: Hexxo
+     ```
+
+5. **RIGHT(str, len)**
+   - **What it is**: Returns rightmost len chars.
+   - **Why use it**: For suffixes.
+   - **How to use it**: SELECT RIGHT('Hello', 3);
+   - **When to use it**: In extensions.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT RIGHT('Hello', 3)");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: llo
+     ```
+
+6. **RPAD(str, len, padstr)**
+   - **What it is**: Pads right to len with padstr.
+   - **Why use it**: For alignment.
+   - **How to use it**: SELECT RPAD('Hello', 10, '*');
+   - **When to use it**: In reports.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT RPAD('Hello', 10, '*')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: Hello*****
+     ```
+
+7. **SUBSTR(str, pos [, len])**
+   - **What it is**: Returns substring.
+   - **Why use it**: For extraction.
+   - **How to use it**: SELECT SUBSTR('Hello', 2, 3);
+   - **When to use it**: In parsing.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT SUBSTR('Hello', 2, 3)");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: ell
+     ```
+
+8. **SUBSTRING(str, pos [, len])**
+   - **What it is**: Synonym for SUBSTR.
+   - **Why use it**: Same as SUBSTR.
+   - **How to use it**: SELECT SUBSTRING('Hello', 2, 3);
+   - **When to use it**: Same as SUBSTR.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT SUBSTRING('Hello', 2, 3)");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: ell
+     ```
+
+9. **SUBSTRING_INDEX(str, delim, count)**
+   - **What it is**: Returns substring before count delimiters.
+   - **Why use it**: For splitting.
+   - **How to use it**: SELECT SUBSTRING_INDEX('a.b.c', '.', 2);
+   - **When to use it**: In paths.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT SUBSTRING_INDEX('a.b.c', '.', 2)");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: a.b
+     ```
+
+10. **TRIM([{BOTH | LEADING | TRAILING} [remstr] FROM] str)**
+    - **What it is**: Removes leading/trailing chars.
+    - **Why use it**: For cleaning.
+    - **How to use it**: SELECT TRIM(' Hello ');
+    - **When to use it**: In input.
+    - **Code example**:
+      ```php
+      $result = mysqli_query($conn, "SELECT TRIM(' Hello ')");
+      $row = mysqli_fetch_array($result);
+      echo $row[0]; // Output: Hello
+      ?>
+      ```
+
+#### Case and Formatting Functions
+1. **FORMAT(X, D [, locale])**
+   - **What it is**: Formats number with decimals.
+   - **Why use it**: For readable numbers.
+   - **How to use it**: SELECT FORMAT(1234.567, 2);
+   - **When to use it**: In reports.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT FORMAT(1234.567, 2)");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: 1,234.57
+     ```
+
+2. **LCASE(str)**
+   - **What it is**: Synonym for LOWER.
+   - **Why use it**: To lowercase.
+   - **How to use it**: SELECT LCASE('Hello');
+   - **When to use it**: In comparisons.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT LCASE('Hello')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: hello
+     ```
+
+3. **LOWER(str)**
+   - **What it is**: Converts to lowercase.
+   - **Why use it**: For case-insensitivity.
+   - **How to use it**: SELECT LOWER('Hello');
+   - **When to use it**: In searches.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT LOWER('Hello')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: hello
+     ```
+
+4. **UCASE(str)**
+   - **What it is**: Synonym for UPPER.
+   - **Why use it**: To uppercase.
+   - **How to use it**: SELECT UCASE('hello');
+   - **When to use it**: In formatting.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT UCASE('hello')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: HELLO
+     ```
+
+5. **UPPER(str)**
+   - **What it is**: Converts to uppercase.
+   - **Why use it**: For emphasis.
+   - **How to use it**: SELECT UPPER('hello');
+   - **When to use it**: In headers.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT UPPER('hello')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: HELLO
+     ```
+
+#### Pattern Matching and Comparison Operators/Functions
+1. **LIKE**
+   - **What it is**: Simple pattern matching.
+   - **Why use it**: For wildcard searches.
+   - **How to use it**: SELECT * FROM table WHERE col LIKE 'Hel%';
+   - **When to use it**: In searches.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT 'Hello' LIKE 'Hel%'");
+     $row = mysqli_fetch_array($result);
+     var_dump((bool)$row[0]); // Output: bool(true)
+     ```
+
+2. **NOT LIKE**
+   - **What it is**: Negates LIKE.
+   - **Why use it**: For exclusion.
+   - **How to use it**: SELECT * FROM table WHERE col NOT LIKE 'Hel%';
+   - **When to use it**: In filters.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT 'Hello' NOT LIKE 'Wor%'");
+     $row = mysqli_fetch_array($result);
+     var_dump((bool)$row[0]); // Output: bool(true)
+     ```
+
+3. **REGEXP**
+   - **What it is**: Regular expression match.
+   - **Why use it**: For complex patterns.
+   - **How to use it**: SELECT 'Hello' REGEXP '^[H]';
+   - **When to use it**: In advanced searches.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT 'Hello' REGEXP 'll'");
+     $row = mysqli_fetch_array($result);
+     var_dump((bool)$row[0]); // Output: bool(true)
+     ```
+
+4. **RLIKE**
+   - **What it is**: Synonym for REGEXP.
+   - **Why use it**: Same as REGEXP.
+   - **How to use it**: SELECT 'Hello' RLIKE 'll';
+   - **When to use it**: Same as REGEXP.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT 'Hello' RLIKE 'll'");
+     $row = mysqli_fetch_array($result);
+     var_dump((bool)$row[0]); // Output: bool(true)
+     ```
+
+5. **NOT REGEXP**
+   - **What it is**: Negates REGEXP.
+   - **Why use it**: For exclusion.
+   - **How to use it**: SELECT 'Hello' NOT REGEXP 'Wor';
+   - **When to use it**: In filters.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT 'Hello' NOT REGEXP 'Wor'");
+     $row = mysqli_fetch_array($result);
+     var_dump((bool)$row[0]); // Output: bool(true)
+     ```
+
+6. **REGEXP_INSTR()**
+   - **What it is**: Returns starting index of regex match.
+   - **Why use it**: For position.
+   - **How to use it**: SELECT REGEXP_INSTR('Hello', 'll');
+   - **When to use it**: In parsing.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT REGEXP_INSTR('Hello', 'll')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: 3
+     ```
+
+7. **REGEXP_LIKE()**
+   - **What it is**: Checks regex match.
+   - **Why use it**: For boolean check.
+   - **How to use it**: SELECT REGEXP_LIKE('Hello', 'll');
+   - **When to use it**: In WHERE.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT REGEXP_LIKE('Hello', 'll')");
+     $row = mysqli_fetch_array($result);
+     var_dump((bool)$row[0]); // Output: bool(true)
+     ```
+
+8. **REGEXP_REPLACE()**
+   - **What it is**: Replaces regex matches.
+   - **Why use it**: For substitutions.
+   - **How to use it**: SELECT REGEXP_REPLACE('Hello', 'll', 'xx');
+   - **When to use it**: In cleaning.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT REGEXP_REPLACE('Hello', 'll', 'xx')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: Hexxo
+     ```
+
+9. **REGEXP_SUBSTR()**
+   - **What it is**: Returns substring matching regex.
+   - **Why use it**: For extraction.
+   - **How to use it**: SELECT REGEXP_SUBSTR('Hello', 'll');
+   - **When to use it**: In parsing.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT REGEXP_SUBSTR('Hello', 'll')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: ll
+     ```
+
+10. **STRCMP(str1, str2)**
+    - **What it is**: Compares strings.
+    - **Why use it**: For ordering.
+    - **How to use it**: SELECT STRCMP('a', 'b');
+    - **When to use it**: In sorts.
+    - **Code example**:
+      ```php
+      $result = mysqli_query($conn, "SELECT STRCMP('a', 'b')");
+      $row = mysqli_fetch_array($result);
+      echo $row[0]; // Output: -1
+      ?>
+      ```
+
+11. **SOUNDS LIKE**
+    - **What it is**: Compares soundex.
+    - **Why use it**: For phonetic match.
+    - **How to use it**: SELECT 'hello' SOUNDS LIKE 'hallo';
+    - **When to use it**: In name searches.
+    - **Code example**:
+      ```php
+      $result = mysqli_query($conn, "SELECT 'hello' SOUNDS LIKE 'hallo'");
+      $row = mysqli_fetch_array($result);
+      var_dump((bool)$row[0]); // Output: bool(true)
+      ```
+
+12. **SOUNDEX(str)**
+    - **What it is**: Returns soundex string.
+    - **Why use it**: For phonetic key.
+    - **How to use it**: SELECT SOUNDEX('hello');
+    - **When to use it**: In matching.
+    - **Code example**:
+      ```php
+      $result = mysqli_query($conn, "SELECT SOUNDEX('hello')");
+      $row = mysqli_fetch_array($result);
+      echo $row[0]; // Output: H400
+      ?>
+      ```
+
+#### Bit and Set Manipulation Functions
+1. **FIELD(str, str1, str2, ...)**
+   - **What it is**: Returns index of str in list.
+   - **Why use it**: For position in set.
+   - **How to use it**: SELECT FIELD('b', 'a', 'b', 'c');
+   - **When to use it**: In ordering.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT FIELD('b', 'a', 'b', 'c')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: 2
+     ```
+
+2. **FIND_IN_SET(str, strlist)**
+   - **What it is**: Returns position in comma-separated list.
+   - **Why use it**: For SET columns.
+   - **How to use it**: SELECT FIND_IN_SET('b', 'a,b,c');
+   - **When to use it**: In multi-value fields.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT FIND_IN_SET('b', 'a,b,c')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: 2
+     ```
+
+#### File and External Data Functions
+1. **LOAD_FILE(file_name)**
+   - **What it is**: Loads file as string.
+   - **Why use it**: To read files into DB.
+   - **How to use it**: SELECT LOAD_FILE('/path/file.txt');
+   - **When to use it**: In imports (security risk).
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT LOAD_FILE('/tmp/test.txt')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: file content
+     ```
+
+2. **QUOTE(str)**
+   - **What it is**: Escapes string for SQL.
+   - **Why use it**: For safe insertion.
+   - **How to use it**: SELECT QUOTE('Don\'t');
+   - **When to use it**: In dynamic SQL.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT QUOTE('Don''t')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: 'Don\'t'
+     ```
+
+#### Base64 Encoding/Decoding Functions
+1. **FROM_BASE64(str)**
+   - **What it is**: Decodes Base64.
+   - **Why use it**: To decode data.
+   - **How to use it**: SELECT FROM_BASE64('SGVsbG8=');
+   - **When to use it**: In stored binary.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT FROM_BASE64('SGVsbG8=')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: Hello
+     ```
+
+2. **TO_BASE64(str)**
+   - **What it is**: Encodes to Base64.
+   - **Why use it**: For safe storage.
+   - **How to use it**: SELECT TO_BASE64('Hello');
+   - **When to use it**: In JSON or URLs.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT TO_BASE64('Hello')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: SGVsbG8=
+     ```
+
+#### Miscellaneous Functions
+1. **REVERSE(str)**
+   - **What it is**: Reverses string.
+   - **Why use it**: For reversal.
+   - **How to use it**: SELECT REVERSE('Hello');
+   - **When to use it**: In algorithms.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT REVERSE('Hello')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: olleH
+     ```
+
+2. **WEIGHT_STRING(str [AS {CHAR|BINARY}(N)] [flags])**
+   - **What it is**: Returns weight string for collation.
+   - **Why use it**: For sorting analysis.
+   - **How to use it**: SELECT WEIGHT_STRING('Hello');
+   - **When to use it**: In advanced collation.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT WEIGHT_STRING('Hello')");
+     $row = mysqli_fetch_array($result);
+     echo bin2hex($row[0]); // Output: hex weight
+     ```
+
+3. **LTRIM(str)**
+   - **What it is**: Removes leading spaces.
+   - **Why use it**: For left trim.
+   - **How to use it**: SELECT LTRIM(' Hello');
+   - **When to use it**: In cleaning.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT LTRIM(' Hello')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: Hello
+     ```
+
+4. **RTRIM(str)**
+   - **What it is**: Removes trailing spaces.
+   - **Why use it**: For right trim.
+   - **How to use it**: SELECT RTRIM('Hello ');
+   - **When to use it**: In cleaning.
+   - **Code example**:
+     ```php
+     $result = mysqli_query($conn, "SELECT RTRIM('Hello ')");
+     $row = mysqli_fetch_array($result);
+     echo $row[0]; // Output: Hello
+     ```
