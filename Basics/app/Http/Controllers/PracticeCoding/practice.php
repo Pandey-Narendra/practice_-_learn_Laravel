@@ -265,3 +265,140 @@
         // }else{
         //     echo "not a anagrams";
         // }
+
+        function pyramidStars(int $n){
+            
+            // Control loop
+            for($i = 0; $i < $n; $i++){
+
+                // print $n - $i spaces
+                for($j = 1; $j < $n - $i; $j++){
+                    echo " ";
+                }
+
+                // print for the outer/controll loop
+                for($k = 0; $k <= $i; $k++){
+                    echo "*";
+                }
+
+                echo "\n";
+
+            }
+        }
+
+        // pyramidStars(5);
+
+        function pyramidReverseStars(int $n){
+            // Controll loop
+            for($i = 0; $i < $n; $i++){
+                
+                for($j = $n; $j > $n - $i -1; $j--){
+                    echo " ";
+                }
+
+                for($k = 0; $k < $n -$i ; $k++) {
+                    echo"*";
+                }
+
+                echo "\n";
+            }
+        }
+        // pyramidReverseStars(5);
+
+        function pyramidPatternStars(int $n) {
+            for($i=1; $i <= $n; $i++) {
+
+                for($k=0; $k < $n-$i-1; $k++){
+                    echo " ";
+                }
+
+                for($j=0; $j < 2*$i -1; $j++) {
+                    echo"*";
+                }
+
+                echo "\n";
+            }
+        }
+
+        // pyramidPatternStars(5);
+
+        function pyramidPatternReverseStars(int $n) {
+            for($i=1; $i <= $n; $i++){
+
+                for($k=$n; $k > $n-$i-1; $K--){
+                    echo " ";
+                }
+
+                for($j= $n; $j > 2*$i-1; $j-- ) {
+                    echo "*";
+                }
+
+                echo "\n";
+            }
+        }
+
+        // pyramidPatternReverseStars(5);
+
+        function floydTriangle(int $n) {
+            $count=0;
+            for($i=0; $i< $n; $i++){
+                
+                for($s=0; $s < $n-$i; $s++){
+                    echo" ";
+                }
+
+                for($j=0; $j<=$i; $j++){
+                    echo ++$count." ";
+                }
+
+                echo"\n";
+            }
+        }
+
+        // floydTriangle(5);
+
+        function pascalTriangle($n) {
+            for($i=0; $i< $n; $i++){
+                
+                // for($s=0; $s < $n-$i; $s++){
+                //     echo" ";
+                // }
+
+                // $number=1;
+                $number=65;
+                for($j=0; $j<=$i; $j++){
+                    // echo $number." ";
+                    // $number =  $number * ($i-$j) / ($j+1);
+                    // echo $number++." ";
+                    echo chr($number++)." ";
+                }
+                echo "\n";
+            }
+        }
+
+        // pascalTriangle(5);
+
+        function bubbleSort($arr){
+
+            $len = count($arr);
+            
+            // length counts from from 1 hence $len-1
+            // $i < $len-1 beacuse inner loop will check for J+1
+            for($i=0; $i < $len-1; $i++) {
+                // $outerElement = $arr[$i];
+
+                for($j=0; $j < $len-$i-1; $j++){
+                    // $innerElement = $arr[$j];
+
+                    if($arr[$j] < $arr[$j+1]){
+                        $temp = $arr[$j];
+                        $arr[$j] = $arr[$j+1];
+                        $arr[$j+1] = $temp;
+                    }
+                }
+            }
+
+            print_r($arr);
+        }
+
+        bubbleSort([5, 1, 4, 2, 8]);

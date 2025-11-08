@@ -1,0 +1,1356 @@
+### 100 PHP Coding Interview Questions
+
+Inspired by your examples, I've compiled 100 PHP coding questions categorized into sections like Core PHP / Basics, Arrays / Strings, Sorting / Searching, Mathematical / Logical, Pattern Printing, and added a few more categories for depth (OOP / Advanced, File Handling / Database, and Security / Performance) to reach 100 while keeping them relevant for a senior developer with 3 years in PHP. These focus on logic building, coding practice, and common interview scenarios.
+
+#### Core PHP / Basics (1-20)
+1. Write a program to check if a number is prime in PHP.
+2. Write a program to reverse a string without using built-in functions.
+3. How do you swap two numbers without using a third variable?
+4. Write a program to find the factorial of a number using recursion.
+5. Write a program to generate Fibonacci series up to n terms.
+6. Write a program to check if a string is a palindrome.
+7. How to count the number of vowels and consonants in a string?
+8. Write a program to find the largest of three numbers.
+9. Write a program to print multiplication table of a number.
+10. Write a program to calculate sum of digits of a number.
+11. Write a program to check if a number is even or odd without modulo.
+12. Write a program to find the power of a number using loops.
+13. Write a program to convert Celsius to Fahrenheit.
+14. Write a program to check if a number is positive, negative, or zero.
+15. Write a program to print all even numbers between 1 and n.
+16. Write a program to find the average of n numbers.
+17. Write a program to reverse a number.
+18. Write a program to count the number of digits in a number.
+19. Write a program to check if a string contains a substring.
+20. Write a program to capitalize the first letter of each word in a string.
+
+#### Arrays / Strings (21-40)
+21. Write a program to remove duplicate elements from an array.
+22. Write a program to find the second largest element in an array.
+23. Write a program to merge two arrays and sort them.
+24. Write a program to find intersection of two arrays.
+25. Write a program to find union of two arrays.
+26. Write a program to reverse an array without using built-in functions.
+27. Write a program to find duplicate elements in an array.
+28. Write a program to rotate an array by k positions.
+29. Write a program to check if two strings are anagrams.
+30. Write a program to count frequency of each element in an array.
+31. Write a program to find the smallest element in an array.
+32. Write a program to split a string into an array of words.
+33. Write a program to implode an array into a string.
+34. Write a program to find the length of the longest string in an array.
+35. Write a program to replace all occurrences of a substring.
+36. Write a program to sort an array in descending order.
+37. Write a program to check if an array is associative or indexed.
+38. Write a program to flatten a multi-dimensional array.
+39. Write a program to extract keys from an associative array.
+40. Write a program to pad a string to a certain length.
+
+#### Sorting / Searching (41-55)
+41. Implement Bubble Sort in PHP.
+42. Implement Insertion Sort in PHP.
+43. Implement Selection Sort in PHP.
+44. Implement Quick Sort in PHP.
+45. Implement Merge Sort in PHP.
+46. Implement Linear Search in PHP.
+47. Implement Binary Search in PHP.
+48. Write a program to find the kth largest element in an array.
+49. Write a program to sort a string alphabetically.
+50. Write a program to sort an array of associative arrays by a key.
+51. Implement Heap Sort in PHP.
+52. Write a program to search for a key in an associative array.
+53. Write a program to find the first occurrence of an element in an array.
+54. Write a program to sort an array while preserving keys.
+55. Write a program to implement counting sort for integers.
+
+#### Mathematical / Logical (56-70)
+56. Write a program to check if a number is Armstrong.
+57. Write a program to check if a number is perfect.
+58. Write a program to convert decimal to binary.
+59. Write a program to convert binary to decimal.
+60. Write a program to check if a year is a leap year.
+61. Write a program to find GCD of two numbers.
+62. Write a program to find LCM of two numbers.
+63. Write a program to print all prime numbers in a given range.
+64. Write a program to find missing number in an array.
+65. Write a program to find pair of numbers with given sum in an array.
+66. Write a program to check if a number is a palindrome.
+67. Write a program to find the square root of a number without built-in functions.
+68. Write a program to generate random numbers within a range.
+69. Write a program to solve quadratic equation.
+70. Write a program to find the nth term of an arithmetic sequence.
+
+#### Pattern Printing (71-80)
+71. Write a program to print a pyramid pattern of stars.
+72. Write a program to print Floyd’s triangle.
+73. Write a program to print Pascal’s triangle.
+74. Write a program to print a diamond pattern.
+75. Write a program to print numeric pyramid.
+76. Write a program to print inverted pyramid of stars.
+77. Write a program to print alphabet pyramid.
+78. Write a program to print hollow square pattern.
+79. Write a program to print right-angled triangle of numbers.
+80. Write a program to print mirrored right triangle.
+
+#### OOP / Advanced (81-90)
+81. Write a PHP class to implement a simple calculator.
+82. Implement inheritance with a base Animal class and derived classes.
+83. Write a program using interfaces for shape area calculation.
+84. Implement a singleton pattern in PHP.
+85. Write a program to demonstrate method overloading (simulation in PHP).
+86. Implement a factory pattern for object creation.
+87. Write a program using traits in PHP.
+88. Implement exception handling for division by zero.
+89. Write a program to serialize and unserialize an object.
+90. Implement a magic method like __toString in a class.
+
+#### File Handling / Database (91-95)
+91. Write a program to read and write to a file.
+92. Write a program to count lines in a file.
+93. Write a program to upload a file and validate its type.
+94. Write a simple PDO connection to a MySQL database.
+95. Write a program to fetch data from a database table.
+
+#### Security / Performance (96-100)
+96. Write a program to hash a password using bcrypt.
+97. Implement input sanitization to prevent SQL injection.
+98. Write a program to validate a URL.
+99. Optimize a loop to find primes up to n (using Sieve).
+100. Write a program to cache function results using memoization.
+
+### Answers and Solutions
+
+Below are detailed solutions for each of the 100 questions. Each includes a PHP code snippet, a brief explanation of the logic, time/space complexity (where applicable), and senior-level insights (e.g., optimizations, edge cases, PHP-specific notes). All code is for PHP 7+ and assumes basic error handling. Test in a PHP environment.
+
+#### Core PHP / Basics
+
+1. **Write a program to check if a number is prime in PHP.**  
+   **Solution:**  
+   ```php:disable-run
+   function isPrime(int $num): bool {
+       if ($num <= 1) return false;
+       if ($num <= 3) return true;
+       if ($num % 2 == 0 || $num % 3 == 0) return false;
+       for ($i = 5; $i * $i <= $num; $i += 6) {
+           if ($num % $i == 0 || $num % ($i + 2) == 0) return false;
+       }
+       return true;
+   }
+   // Example: var_dump(isPrime(11)); // true
+   ```  
+   **Explanation:** Check divisibility up to sqrt(n), skipping evens after 2/3. Time: O(sqrt(n)), Space: O(1). Insight: Efficient for large numbers; handle 1 as non-prime.
+
+2. **Write a program to reverse a string without using built-in functions.**  
+   **Solution:**  
+   ```php
+   function reverseString(string $str): string {
+       $reversed = '';
+       $len = 0;
+       while (isset($str[$len])) $len++;
+       for ($i = $len - 1; $i >= 0; $i--) $reversed .= $str[$i];
+       return $reversed;
+   }
+   // Example: echo reverseString("hello"); // "olleh"
+   ```  
+   **Explanation:** Manual length calculation, loop from end. Time: O(n), Space: O(n). Insight: PHP strings immutable; for Unicode, use mb_ functions.
+
+3. **How do you swap two numbers without using a third variable?**  
+   **Solution:**  
+   ```php
+   function swap(&$a, &$b) {
+       $a = $a + $b;
+       $b = $a - $b;
+       $a = $a - $b;
+   }
+   // Example: $x=5; $y=10; swap($x,$y); echo "$x $y"; // 10 5
+   ```  
+   **Explanation:** Arithmetic addition/subtraction. Time: O(1), Space: O(1). Insight: Risk of overflow for large ints; use list() for arrays or XOR for bits.
+
+4. **Write a program to find the factorial of a number using recursion.**  
+   **Solution:**  
+   ```php
+   function factorial(int $n): int {
+       return ($n <= 1) ? 1 : $n * factorial($n - 1);
+   }
+   // Example: echo factorial(5); // 120
+   ```  
+   **Explanation:** Recursive call until base case. Time: O(n), Space: O(n). Insight: Iterative for large n to avoid stack overflow; use GMP for bigints.
+
+5. **Write a program to generate Fibonacci series up to n terms.**  
+   **Solution:**  
+   ```php
+   function fibonacci(int $n): array {
+       $fib = [0, 1];
+       for ($i = 2; $i < $n; $i++) $fib[$i] = $fib[$i-1] + $fib[$i-2];
+       return array_slice($fib, 0, $n);
+   }
+   // Example: print_r(fibonacci(10));
+   ```  
+   **Explanation:** Iterative build from 0,1. Time: O(n), Space: O(n). Insight: Space optimize to O(1) by tracking only last two.
+
+6. **Write a program to check if a string is a palindrome.**  
+   **Solution:**  
+   ```php
+   function isPalindrome(string $str): bool {
+       $str = strtolower(preg_replace('/[^a-z0-9]/', '', $str));
+       $len = strlen($str);
+       for ($i = 0; $i < $len / 2; $i++) {
+           if ($str[$i] !== $str[$len - $i - 1]) return false;
+       }
+       return true;
+   }
+   // Example: var_dump(isPalindrome("radar")); // true
+   ```  
+   **Explanation:** Clean string, compare halves. Time: O(n), Space: O(1). Insight: Regex optional; manual loop for perf.
+
+7. **How to count the number of vowels and consonants in a string?**  
+   **Solution:**  
+   ```php
+   function countVowelsConsonants(string $str): array {
+       $vowels = $consonants = 0;
+       $str = strtolower($str);
+       for ($i = 0; isset($str[$i]); $i++) {
+           if (preg_match('/[aeiou]/', $str[$i])) $vowels++;
+           elseif (preg_match('/[a-z]/', $str[$i])) $consonants++;
+       }
+       return ['vowels' => $vowels, 'consonants' => $consonants];
+   }
+   // Example: print_r(countVowelsConsonants("hello"));
+   ```  
+   **Explanation:** Loop and check char type. Time: O(n), Space: O(1). Insight: Use strspn for faster counting.
+
+8. **Write a program to find the largest of three numbers.**  
+   **Solution:**  
+   ```php
+   function largestOfThree(int $a, int $b, int $c): int {
+       return max($a, $b, $c);
+   }
+   // Manual: return ($a > $b) ? ($a > $c ? $a : $c) : ($b > $c ? $b : $c);
+   // Example: echo largestOfThree(5,10,3); // 10
+   ```  
+   **Explanation:** Ternary or max(). Time: O(1). Insight: For arrays, use max(array).
+
+9. **Write a program to print multiplication table of a number.**  
+   **Solution:**  
+   ```php
+   function multiplicationTable(int $num, int $upto = 10) {
+       for ($i = 1; $i <= $upto; $i++) echo "$num x $i = " . ($num * $i) . PHP_EOL;
+   }
+   // Example: multiplicationTable(5);
+   ```  
+   **Explanation:** Loop multiply. Time: O(n). Insight: Format with sprintf for alignment.
+
+10. **Write a program to calculate sum of digits of a number.**  
+    **Solution:**  
+    ```php
+    function sumOfDigits(int $num): int {
+        $sum = 0;
+        while ($num > 0) {
+            $sum += $num % 10;
+            $num = (int)($num / 10);
+        }
+        return $sum;
+    }
+    // Example: echo sumOfDigits(123); // 6
+    ```  
+    **Explanation:** Modulo for digit, divide to shift. Time: O(d), d=digits. Insight: Handle negative with abs().
+
+11. **Write a program to check if a number is even or odd without modulo.**  
+    **Solution:**  
+    ```php
+    function isEven(int $num): bool {
+        return ($num & 1) === 0;
+    }
+    // Example: var_dump(isEven(4)); // true
+    ```  
+    **Explanation:** Bitwise AND with 1 checks LSB. Time: O(1). Insight: Faster than % for large loops.
+
+12. **Write a program to find the power of a number using loops.**  
+    **Solution:**  
+    ```php
+    function power(int $base, int $exp): int {
+        $result = 1;
+        for ($i = 0; $i < $exp; $i++) $result *= $base;
+        return $result;
+    }
+    // Example: echo power(2,3); // 8
+    ```  
+    **Explanation:** Multiply base exp times. Time: O(exp). Insight: Use pow() in prod; binary exp for O(log exp).
+
+13. **Write a program to convert Celsius to Fahrenheit.**  
+    **Solution:**  
+    ```php
+    function celsiusToFahrenheit(float $c): float {
+        return ($c * 9/5) + 32;
+    }
+    // Example: echo celsiusToFahrenheit(0); // 32
+    ```  
+    **Explanation:** Formula application. Time: O(1). Insight: Use round() for precision.
+
+14. **Write a program to check if a number is positive, negative, or zero.**  
+    **Solution:**  
+    ```php
+    function checkSign(int $num): string {
+        return $num > 0 ? 'positive' : ($num < 0 ? 'negative' : 'zero');
+    }
+    // Example: echo checkSign(-5); // negative
+    ```  
+    **Explanation:** Ternary comparison. Time: O(1). Insight: Handle floats similarly.
+
+15. **Write a program to print all even numbers between 1 and n.**  
+    **Solution:**  
+    ```php
+    function printEvens(int $n) {
+        for ($i = 2; $i <= $n; $i += 2) echo $i . ' ';
+    }
+    // Example: printEvens(10); // 2 4 6 8 10
+    ```  
+    **Explanation:** Loop step 2. Time: O(n/2). Insight: Use range() for array.
+
+16. **Write a program to find the average of n numbers.**  
+    **Solution:**  
+    ```php
+    function average(array $nums): float {
+        return array_sum($nums) / count($nums);
+    }
+    // Example: echo average([1,2,3]); // 2
+    ```  
+    **Explanation:** Sum divide by count. Time: O(n). Insight: Handle empty with check.
+
+17. **Write a program to reverse a number.**  
+    **Solution:**  
+    ```php
+    function reverseNumber(int $num): int {
+        $rev = 0;
+        while ($num > 0) {
+            $rev = $rev * 10 + $num % 10;
+            $num = (int)($num / 10);
+        }
+        return $rev;
+    }
+    // Example: echo reverseNumber(123); // 321
+    ```  
+    **Explanation:** Build reverse with modulo. Time: O(d). Insight: Handle overflow with string conv.
+
+18. **Write a program to count the number of digits in a number.**  
+    **Solution:**  
+    ```php
+    function countDigits(int $num): int {
+        $count = 0;
+        do {
+            $count++;
+            $num = (int)($num / 10);
+        } while ($num > 0);
+        return $count;
+    }
+    // Example: echo countDigits(123); // 3
+    ```  
+    **Explanation:** Divide until 0. Time: O(d). Insight: Use log10 for O(1).
+
+19. **Write a program to check if a string contains a substring.**  
+    **Solution:**  
+    ```php
+    function containsSubstring(string $str, string $sub): bool {
+        return strpos($str, $sub) !== false;
+    }
+    // Manual: loop check.
+    // Example: var_dump(containsSubstring("hello", "ell")); // true
+    ```  
+    **Explanation:** strpos check. Time: O(n). Insight: Case-insens with stripos.
+
+20. **Write a program to capitalize the first letter of each word in a string.**  
+    **Solution:**  
+    ```php
+    function capitalizeWords(string $str): string {
+        return ucwords($str);
+    }
+    // Manual: explode, ucfirst each, implode.
+    // Example: echo capitalizeWords("hello world"); // "Hello World"
+    ```  
+    **Explanation:** Built-in ucwords. Time: O(n). Insight: Handle punctuation.
+
+#### Arrays / Strings
+
+21. **Write a program to remove duplicate elements from an array.**  
+    **Solution:**  
+    ```php
+    function removeDuplicates(array $arr): array {
+        return array_values(array_unique($arr));
+    }
+    // Example: print_r(removeDuplicates([1,2,2,3])); // [1,2,3]
+    ```  
+    **Explanation:** array_unique removes dups. Time: O(n). Insight: Preserves order with manual hash.
+
+22. **Write a program to find the second largest element in an array.**  
+    **Solution:**  
+    ```php
+    function secondLargest(array $arr): int {
+        rsort($arr);
+        return $arr[1] ?? throw new Exception("Too small");
+    }
+    // Manual one pass as in prev.
+    // Example: echo secondLargest([1,3,2,4]); // 3
+    ```  
+    **Explanation:** Sort desc, take index 1. Time: O(n log n). Insight: O(n) with two vars.
+
+23. **Write a program to merge two arrays and sort them.**  
+    **Solution:**  
+    ```php
+    function mergeAndSort(array $arr1, array $arr2): array {
+        $merged = array_merge($arr1, $arr2);
+        sort($merged);
+        return $merged;
+    }
+    // Example: print_r(mergeAndSort([3,1], [4,2])); // [1,2,3,4]
+    ```  
+    **Explanation:** Merge then sort. Time: O((m+n) log (m+n)). Insight: Use heap for large.
+
+24. **Write a program to find intersection of two arrays.**  
+    **Solution:**  
+    ```php
+    function intersection(array $arr1, array $arr2): array {
+        return array_values(array_intersect($arr1, $arr2));
+    }
+    // Example: print_r(intersection([1,2,3], [2,3,4])); // [2,3]
+    ```  
+    **Explanation:** Built-in intersect. Time: O(n). Insight: Manual with hash for control.
+
+25. **Write a program to find union of two arrays.**  
+    **Solution:**  
+    ```php
+    function union(array $arr1, array $arr2): array {
+        return array_values(array_unique(array_merge($arr1, $arr2)));
+    }
+    // Example: print_r(union([1,2], [2,3])); // [1,2,3]
+    ```  
+    **Explanation:** Merge, unique. Time: O(n). Insight: Handles dups.
+
+26. **Write a program to reverse an array without using built-in functions.**  
+    **Solution:**  
+    ```php
+    function reverseArray(array $arr): array {
+        $reversed = [];
+        for ($i = count($arr) - 1; $i >= 0; $i--) $reversed[] = $arr[$i];
+        return $reversed;
+    }
+    // Example: print_r(reverseArray([1,2,3])); // [3,2,1]
+    ```  
+    **Explanation:** Loop from end. Time: O(n), Space: O(n). Insight: In-place with swap.
+
+27. **Write a program to find duplicate elements in an array.**  
+    **Solution:**  
+    ```php
+    function findDuplicates(array $arr): array {
+        $seen = $dups = [];
+        foreach ($arr as $val) {
+            if (isset($seen[$val])) $dups[] = $val;
+            else $seen[$val] = true;
+        }
+        return array_unique($dups);
+    }
+    // Example: print_r(findDuplicates([1,2,2,3])); // [2]
+    ```  
+    **Explanation:** Hash track seen. Time: O(n). Insight: For count, use array_count_values.
+
+28. **Write a program to rotate an array by k positions.**  
+    **Solution:**  
+    ```php
+    function rotateArray(array $arr, int $k): array {
+        $k %= count($arr);
+        return array_merge(array_slice($arr, $k), array_slice($arr, 0, $k));
+    }
+    // Example: print_r(rotateArray([1,2,3,4],2)); // [3,4,1,2]
+    ```  
+    **Explanation:** Slice and merge. Time: O(n). Insight: Handle negative k.
+
+29. **Write a program to check if two strings are anagrams.**  
+    **Solution:**  
+    ```php
+    function areAnagrams(string $str1, string $str2): bool {
+        $str1 = str_split($str1);
+        $str2 = str_split($str2);
+        sort($str1);
+        sort($str2);
+        return $str1 === $str2;
+    }
+    // Example: var_dump(areAnagrams("listen", "silent")); // true
+    ```  
+    **Explanation:** Sort and compare. Time: O(n log n). Insight: Count chars for O(n).
+
+30. **Write a program to count frequency of each element in an array.**  
+    **Solution:**  
+    ```php
+    function frequency(array $arr): array {
+        return array_count_values($arr);
+    }
+    // Manual: loop with assoc array.
+    // Example: print_r(frequency([1,2,2,3])); // [1=>1,2=>2,3=>1]
+    ```  
+    **Explanation:** Built-in count. Time: O(n). Insight: Good for stats.
+
+31. **Write a program to find the smallest element in an array.**  
+    **Solution:**  
+    ```php
+    function smallest(array $arr): int {
+        return min($arr);
+    }
+    // Manual: loop compare.
+    // Example: echo smallest([3,1,4]); // 1
+    ```  
+    **Explanation:** min(). Time: O(n). Insight: Handle empty.
+
+32. **Write a program to split a string into an array of words.**  
+    **Solution:**  
+    ```php
+    function splitWords(string $str): array {
+        return explode(' ', $str);
+    }
+    // Example: print_r(splitWords("hello world")); // ["hello","world"]
+    ```  
+    **Explanation:** explode on space. Time: O(n). Insight: Trim first.
+
+33. **Write a program to implode an array into a string.**  
+    **Solution:**  
+    ```php
+    function joinArray(array $arr, string $delim = ','): string {
+        return implode($delim, $arr);
+    }
+    // Example: echo joinArray(["a","b"]); // "a,b"
+    ```  
+    **Explanation:** implode. Time: O(n). Insight: Custom delim.
+
+34. **Write a program to find the length of the longest string in an array.**  
+    **Solution:**  
+    ```php
+    function longestStringLength(array $arr): int {
+        $max = 0;
+        foreach ($arr as $str) $max = max($max, strlen($str));
+        return $max;
+    }
+    // Example: echo longestStringLength(["hi","hello"]); // 5
+    ```  
+    **Explanation:** Loop max strlen. Time: O(n). Insight: array_map(strlen) + max.
+
+35. **Write a program to replace all occurrences of a substring.**  
+    **Solution:**  
+    ```php
+    function replaceSubstring(string $str, string $find, string $replace): string {
+        return str_replace($find, $replace, $str);
+    }
+    // Example: echo replaceSubstring("hello hello", "hello", "hi"); // "hi hi"
+    ```  
+    **Explanation:** str_replace. Time: O(n). Insight: Case-insens str_ireplace.
+
+36. **Write a program to sort an array in descending order.**  
+    **Solution:**  
+    ```php
+    function sortDescending(array $arr): array {
+        rsort($arr);
+        return $arr;
+    }
+    // Example: print_r(sortDescending([1,3,2])); // [3,2,1]
+    ```  
+    **Explanation:** rsort. Time: O(n log n). Insight: Preserve keys with arsort.
+
+37. **Write a program to check if an array is associative or indexed.**  
+    **Solution:**  
+    ```php
+    function isAssociative(array $arr): bool {
+        return array_keys($arr) !== range(0, count($arr) - 1);
+    }
+    // Example: var_dump(isAssociative(['a'=>1])); // true
+    ```  
+    **Explanation:** Compare keys to sequential. Time: O(n). Insight: Useful for data handling.
+
+38. **Write a program to flatten a multi-dimensional array.**  
+    **Solution:**  
+    ```php
+    function flatten(array $arr): array {
+        $flat = [];
+        array_walk_recursive($arr, function($val) use (&$flat) { $flat[] = $val; });
+        return $flat;
+    }
+    // Example: print_r(flatten([[1],[2,3]])); // [1,2,3]
+    ```  
+    **Explanation:** Recursive walk. Time: O(n). Insight: For depth limit, manual recursion.
+
+39. **Write a program to extract keys from an associative array.**  
+    **Solution:**  
+    ```php
+    function extractKeys(array $arr): array {
+        return array_keys($arr);
+    }
+    // Example: print_r(extractKeys(['a'=>1,'b'=>2])); // ["a","b"]
+    ```  
+    **Explanation:** array_keys. Time: O(n). Insight: Filter by value.
+
+40. **Write a program to pad a string to a certain length.**  
+    **Solution:**  
+    ```php
+    function padString(string $str, int $len, string $pad = ' '): string {
+        return str_pad($str, $len, $pad);
+    }
+    // Example: echo padString("hi",5); // "hi   "
+    ```  
+    **Explanation:** str_pad. Time: O(n). Insight: Left/right/ both.
+
+#### Sorting / Searching
+
+41. **Implement Bubble Sort in PHP.**  
+    **Solution:**  
+    ```php
+    function bubbleSort(array $arr): array {
+        $n = count($arr);
+        for ($i = 0; $i < $n - 1; $i++) {
+            $swapped = false;
+            for ($j = 0; $j < $n - $i - 1; $j++) {
+                if ($arr[$j] > $arr[$j+1]) {
+                    [$arr[$j], $arr[$j+1]] = [$arr[$j+1], $arr[$j]];
+                    $swapped = true;
+                }
+            }
+            if (!$swapped) break;
+        }
+        return $arr;
+    }
+    // Example: print_r(bubbleSort([5,3,1]));
+    ```  
+    **Explanation:** Adjacent swaps. Time: O(n^2). Insight: Optimized with flag.
+
+42. **Implement Insertion Sort in PHP.**  
+    **Solution:**  
+    ```php
+    function insertionSort(array $arr): array {
+        $n = count($arr);
+        for ($i = 1; $i < $n; $i++) {
+            $key = $arr[$i];
+            $j = $i - 1;
+            while ($j >= 0 && $arr[$j] > $key) {
+                $arr[$j + 1] = $arr[$j];
+                $j--;
+            }
+            $arr[$j + 1] = $key;
+        }
+        return $arr;
+    }
+    ```  
+    **Explanation:** Insert into sorted part. Time: O(n^2). Insight: Good for nearly sorted.
+
+43. **Implement Selection Sort in PHP.**  
+    **Solution:**  
+    ```php
+    function selectionSort(array $arr): array {
+        $n = count($arr);
+        for ($i = 0; $i < $n - 1; $i++) {
+            $minIdx = $i;
+            for ($j = $i + 1; $j < $n; $j++) {
+                if ($arr[$j] < $arr[$minIdx]) $minIdx = $j;
+            }
+            [$arr[$i], $arr[$minIdx]] = [$arr[$minIdx], $arr[$i]];
+        }
+        return $arr;
+    }
+    ```  
+    **Explanation:** Select min and swap. Time: O(n^2). Insight: Fewer swaps than bubble.
+
+44. **Implement Quick Sort in PHP.**  
+    **Solution:**  
+    ```php
+    function quickSort(array $arr): array {
+        if (count($arr) <= 1) return $arr;
+        $pivot = $arr[0];
+        $left = $right = [];
+        for ($i = 1; $i < count($arr); $i++) {
+            $arr[$i] < $pivot ? $left[] = $arr[$i] : $right[] = $arr[$i];
+        }
+        return array_merge(quickSort($left), [$pivot], quickSort($right));
+    }
+    ```  
+    **Explanation:** Partition and recurse. Time: O(n log n) avg. Insight: Random pivot for balance.
+
+45. **Implement Merge Sort in PHP.**  
+    **Solution:**  
+    ```php
+    function mergeSort(array $arr): array {
+        if (count($arr) <= 1) return $arr;
+        $mid = (int)(count($arr) / 2);
+        $left = mergeSort(array_slice($arr, 0, $mid));
+        $right = mergeSort(array_slice($arr, $mid));
+        return merge($left, $right);
+    }
+    function merge(array $left, array $right): array {
+        $merged = [];
+        $i = $j = 0;
+        while ($i < count($left) && $j < count($right)) {
+            $merged[] = $left[$i] <= $right[$j] ? $left[$i++] : $right[$j++];
+        }
+        return array_merge($merged, array_slice($left, $i), array_slice($right, $j));
+    }
+    ```  
+    **Explanation:** Divide, conquer, merge. Time: O(n log n). Insight: Stable sort.
+
+46. **Implement Linear Search in PHP.**  
+    **Solution:**  
+    ```php
+    function linearSearch(array $arr, $target): int {
+        foreach ($arr as $key => $val) if ($val === $target) return $key;
+        return -1;
+    }
+    ```  
+    **Explanation:** Loop check. Time: O(n). Insight: For unsorted.
+
+47. **Implement Binary Search in PHP.**  
+    **Solution:**  
+    ```php
+    function binarySearch(array $arr, $target): int {
+        $left = 0;
+        $right = count($arr) - 1;
+        while ($left <= $right) {
+            $mid = (int)(($left + $right) / 2);
+            if ($arr[$mid] === $target) return $mid;
+            elseif ($arr[$mid] < $target) $left = $mid + 1;
+            else $right = $mid - 1;
+        }
+        return -1;
+    }
+    ```  
+    **Explanation:** Halve search. Time: O(log n). Insight: Array must be sorted.
+
+48. **Write a program to find the kth largest element in an array.**  
+    **Solution:**  
+    ```php
+    function kthLargest(array $arr, int $k): int {
+        rsort($arr);
+        return $arr[$k - 1] ?? throw new Exception();
+    }
+    ```  
+    **Explanation:** Sort desc, index k-1. Time: O(n log n). Insight: Quickselect for O(n).
+
+49. **Write a program to sort a string alphabetically.**  
+    **Solution:**  
+    ```php
+    function sortString(string $str): string {
+        $chars = str_split($str);
+        sort($chars);
+        return implode('', $chars);
+    }
+    ```  
+    **Explanation:** Split, sort, join. Time: O(n log n). Insight: Case-insens natcasesort.
+
+50. **Write a program to sort an array of associative arrays by a key.**  
+    **Solution:**  
+    ```php
+    function sortByKey(array $arr, string $key): array {
+        usort($arr, function($a, $b) use ($key) {
+            return $a[$key] <=> $b[$key];
+        });
+        return $arr;
+    }
+    // Example: sortByKey([['age'=>30], ['age'=>20]], 'age');
+    ```  
+    **Explanation:** usort with spaceship. Time: O(n log n). Insight: Stable with multisort.
+
+51. **Implement Heap Sort in PHP.**  
+    **Solution:**  
+    ```php
+    function heapSort(array &$arr) {
+        $n = count($arr);
+        for ($i = (int)($n / 2) - 1; $i >= 0; $i--) heapify($arr, $n, $i);
+        for ($i = $n - 1; $i > 0; $i--) {
+            [$arr[0], $arr[$i]] = [$arr[$i], $arr[0]];
+            heapify($arr, $i, 0);
+        }
+    }
+    function heapify(array &$arr, int $n, int $i) {
+        $largest = $i;
+        $left = 2 * $i + 1;
+        $right = 2 * $i + 2;
+        if ($left < $n && $arr[$left] > $arr[$largest]) $largest = $left;
+        if ($right < $n && $arr[$right] > $arr[$largest]) $largest = $right;
+        if ($largest != $i) {
+            [$arr[$i], $arr[$largest]] = [$arr[$largest], $arr[$i]];
+            heapify($arr, $n, $largest);
+        }
+    }
+    ```  
+    **Explanation:** Build max heap, extract. Time: O(n log n). Insight: In-place.
+
+52. **Write a program to search for a key in an associative array.**  
+    **Solution:**  
+    ```php
+    function searchKey(array $arr, $key) {
+        return $arr[$key] ?? null;
+    }
+    ```  
+    **Explanation:** Direct access. Time: O(1). Insight: array_key_exists for existence.
+
+53. **Write a program to find the first occurrence of an element in an array.**  
+    **Solution:**  
+    ```php
+    function firstOccurrence(array $arr, $target): int {
+        return array_search($target, $arr);
+    }
+    ```  
+    **Explanation:** array_search. Time: O(n). Insight: False if not found.
+
+54. **Write a program to sort an array while preserving keys.**  
+    **Solution:**  
+    ```php
+    function sortPreserveKeys(array $arr): array {
+        asort($arr);
+        return $arr;
+    }
+    ```  
+    **Explanation:** asort. Time: O(n log n). Insight: For desc arsort.
+
+55. **Write a program to implement counting sort for integers.**  
+    **Solution:**  
+    ```php
+    function countingSort(array $arr, int $max): array {
+        $count = array_fill(0, $max + 1, 0);
+        foreach ($arr as $val) $count[$val]++;
+        $sorted = [];
+        for ($i = 0; $i <= $max; $i++) {
+            for ($j = 0; $j < $count[$i]; $j++) $sorted[] = $i;
+        }
+        return $sorted;
+    }
+    ```  
+    **Explanation:** Count freq, rebuild. Time: O(n + k). Insight: For positive ints, k=max.
+
+#### Mathematical / Logical
+
+56. **Write a program to check if a number is Armstrong.**  
+    **Solution:**  
+    ```php
+    function isArmstrong(int $num): bool {
+        $sum = 0;
+        $temp = $num;
+        $digits = strlen($num);
+        while ($temp > 0) {
+            $sum += ($temp % 10) ** $digits;
+            $temp = (int)($temp / 10);
+        }
+        return $sum === $num;
+    }
+    // Example: var_dump(isArmstrong(153)); // true
+    ```  
+    **Explanation:** Sum digits^order == num. Time: O(d). Insight: Order = digit count.
+
+57. **Write a program to check if a number is perfect.**  
+    **Solution:**  
+    ```php
+    function isPerfect(int $num): bool {
+        $sum = 1;
+        for ($i = 2; $i * $i <= $num; $i++) {
+            if ($num % $i == 0) {
+                $sum += $i + ($i !== $num / $i ? $num / $i : 0);
+            }
+        }
+        return $sum === $num && $num > 1;
+    }
+    // Example: var_dump(isPerfect(6)); // true
+    ```  
+    **Explanation:** Sum proper divisors == num. Time: O(sqrt(n)). Insight: Exclude num itself.
+
+58. **Write a program to convert decimal to binary.**  
+    **Solution:**  
+    ```php
+    function decimalToBinary(int $num): string {
+        return decbin($num);
+    }
+    // Manual: while loop modulo 2, reverse.
+    // Example: echo decimalToBinary(10); // 1010
+    ```  
+    **Explanation:** Built-in or manual. Time: O(log n). Insight: Handle 0.
+
+59. **Write a program to convert binary to decimal.**  
+    **Solution:**  
+    ```php
+    function binaryToDecimal(string $bin): int {
+        return bindec($bin);
+    }
+    // Manual: loop power 2.
+    // Example: echo binaryToDecimal("1010"); // 10
+    ```  
+    **Explanation:** Built-in or calc. Time: O(n). Insight: Validate binary.
+
+60. **Write a program to check if a year is a leap year.**  
+    **Solution:**  
+    ```php
+    function isLeapYear(int $year): bool {
+        return ($year % 4 == 0 && $year % 100 != 0) || ($year % 400 == 0);
+    }
+    // Example: var_dump(isLeapYear(2000)); // true
+    ```  
+    **Explanation:** Div by 4, not 100 unless 400. Time: O(1). Insight: Gregorian rule.
+
+61. **Write a program to find GCD of two numbers.**  
+    **Solution:**  
+    ```php
+    function gcd(int $a, int $b): int {
+        while ($b != 0) [$a, $b] = [$b, $a % $b];
+        return $a;
+    }
+    // Example: echo gcd(12,18); // 6
+    ```  
+    **Explanation:** Euclidean. Time: O(log min(a,b)). Insight: Built-in gcd in PHP 7.3+.
+
+62. **Write a program to find LCM of two numbers.**  
+    **Solution:**  
+    ```php
+    function lcm(int $a, int $b): int {
+        return abs($a * $b) / gcd($a, $b);
+    }
+    // Example: echo lcm(4,6); // 12
+    ```  
+    **Explanation:** (a*b)/gcd. Time: O(log). Insight: Handle 0.
+
+63. **Write a program to print all prime numbers in a given range.**  
+    **Solution:**  
+    ```php
+    function primesInRange(int $start, int $end): array {
+        $primes = [];
+        for ($i = max(2, $start); $i <= $end; $i++) {
+            if (isPrime($i)) $primes[] = $i;
+        }
+        return $primes;
+    }
+    // Use isPrime from 1.
+    ```  
+    **Explanation:** Loop check prime. Time: O((end-start)*sqrt(n)). Insight: Sieve for efficiency.
+
+64. **Write a program to find missing number in an array.**  
+    **Solution:**  
+    ```php
+    function findMissing(array $arr, int $n): int {
+        $expected = $n * ($n + 1) / 2;
+        return $expected - array_sum($arr);
+    }
+    // For 1 to n.
+    // Example: echo findMissing([1,2,4],4); // 3
+    ```  
+    **Explanation:** Sum formula minus actual. Time: O(n). Insight: XOR for alternative.
+
+65. **Write a program to find pair of numbers with given sum in an array.**  
+    **Solution:**  
+    ```php
+    function findPair(array $arr, int $sum): ?array {
+        $seen = [];
+        foreach ($arr as $val) {
+            $comp = $sum - $val;
+            if (isset($seen[$comp])) return [$comp, $val];
+            $seen[$val] = true;
+        }
+        return null;
+    }
+    // Example: print_r(findPair([1,2,3],5)); // [2,3]
+    ```  
+    **Explanation:** Hash complement. Time: O(n). Insight: Sorted two pointers.
+
+66. **Write a program to check if a number is a palindrome.**  
+    **Solution:**  
+    ```php
+    function isNumberPalindrome(int $num): bool {
+        return $num == reverseNumber($num);
+    }
+    // Use reverse from 17.
+    ```  
+    **Explanation:** Reverse compare. Time: O(d). Insight: String conv alternative.
+
+67. **Write a program to find the square root of a number without built-in functions.**  
+    **Solution:**  
+    ```php
+    function squareRoot(float $num): float {
+        $guess = $num / 2;
+        for ($i = 0; $i < 10; $i++) { // Newton
+            $guess = ($guess + $num / $guess) / 2;
+        }
+        return $guess;
+    }
+    // Example: echo squareRoot(16); // ~4
+    ```  
+    **Explanation:** Newton's method. Time: O(1) iterations. Insight: Binary search alt.
+
+68. **Write a program to generate random numbers within a range.**  
+    **Solution:**  
+    ```php
+    function randomInRange(int $min, int $max): int {
+        return rand($min, $max);
+    }
+    ```  
+    **Explanation:** rand. Time: O(1). Insight: mt_rand for better randomness.
+
+69. **Write a program to solve quadratic equation.**  
+    **Solution:**  
+    ```php
+    function quadraticRoots(float $a, float $b, float $c): array {
+        $disc = $b*$b - 4*$a*$c;
+        if ($disc < 0) return [];
+        $root1 = (-$b + sqrt($disc)) / (2*$a);
+        $root2 = (-$b - sqrt($disc)) / (2*$a);
+        return [$root1, $root2];
+    }
+    ```  
+    **Explanation:** Formula. Time: O(1). Insight: Handle complex with imag.
+
+70. **Write a program to find the nth term of an arithmetic sequence.**  
+    **Solution:**  
+    ```php
+    function nthArithmetic(int $first, int $diff, int $n): int {
+        return $first + ($n - 1) * $diff;
+    }
+    // Example: echo nthArithmetic(1,2,5); // 9
+    ```  
+    **Explanation:** Formula. Time: O(1). Insight: General for sequences.
+
+#### Pattern Printing
+
+71. **Write a program to print a pyramid pattern of stars.**  
+    **Solution:**  
+    ```php
+    function pyramid(int $rows) {
+        for ($i = 1; $i <= $rows; $i++) {
+            echo str_repeat(' ', $rows - $i) . str_repeat('* ', $i) . PHP_EOL;
+        }
+    }
+    // Example: pyramid(5);
+    ```  
+    **Explanation:** Spaces then stars. Insight: Centered.
+
+72. **Write a program to print Floyd’s triangle.**  
+    **Solution:**  
+    ```php
+    function floydTriangle(int $rows) {
+        $num = 1;
+        for ($i = 1; $i <= $rows; $i++) {
+            for ($j = 1; $j <= $i; $j++) echo $num++ . ' ';
+            echo PHP_EOL;
+        }
+    }
+    ```  
+    **Explanation:** Incremental nums. Insight: Numeric pattern.
+
+73. **Write a program to print Pascal’s triangle.**  
+    **Solution:**  
+    ```php
+    function pascalTriangle(int $rows) {
+        for ($i = 0; $i < $rows; $i++) {
+            $val = 1;
+            echo str_repeat(' ', $rows - $i - 1);
+            for ($j = 0; $j <= $i; $j++) {
+                echo $val . ' ';
+                $val = $val * ($i - $j) / ($j + 1);
+            }
+            echo PHP_EOL;
+        }
+    }
+    ```  
+    **Explanation:** Binomial coeffs. Insight: Array build alt.
+
+74. **Write a program to print a diamond pattern.**  
+    **Solution:**  
+    ```php
+    function diamond(int $rows) {
+        for ($i = 1; $i <= $rows; $i++) echo str_repeat(' ', $rows - $i) . str_repeat('* ', $i) . PHP_EOL;
+        for ($i = $rows - 1; $i >= 1; $i--) echo str_repeat(' ', $rows - $i) . str_repeat('* ', $i) . PHP_EOL;
+    }
+    ```  
+    **Explanation:** Pyramid + inverted. Insight: Odd rows for symmetry.
+
+75. **Write a program to print numeric pyramid.**  
+    **Solution:**  
+    ```php
+    function numericPyramid(int $rows) {
+        for ($i = 1; $i <= $rows; $i++) {
+            echo str_repeat(' ', $rows - $i);
+            for ($j = 1; $j <= $i; $j++) echo $j . ' ';
+            for ($j = $i - 1; $j >= 1; $j--) echo $j . ' ';
+            echo PHP_EOL;
+        }
+    }
+    ```  
+    **Explanation:** Numbers up down. Insight: Variations.
+
+76. **Write a program to print inverted pyramid of stars.**  
+    **Solution:**  
+    ```php
+    function invertedPyramid(int $rows) {
+        for ($i = $rows; $i >= 1; $i--) echo str_repeat(' ', $rows - $i) . str_repeat('* ', $i) . PHP_EOL;
+    }
+    ```  
+    **Explanation:** Reverse loop. Insight: Similar to pyramid.
+
+77. **Write a program to print alphabet pyramid.**  
+    **Solution:**  
+    ```php
+    function alphabetPyramid(int $rows) {
+        for ($i = 0; $i < $rows; $i++) {
+            echo str_repeat(' ', $rows - $i - 1);
+            for ($j = 0; $j <= $i; $j++) echo chr(65 + $j) . ' ';
+            for ($j = $i - 1; $j >= 0; $j--) echo chr(65 + $j) . ' ';
+            echo PHP_EOL;
+        }
+    }
+    ```  
+    **Explanation:** Chr for A+. Insight: ASCII.
+
+78. **Write a program to print hollow square pattern.**  
+    **Solution:**  
+    ```php
+    function hollowSquare(int $size) {
+        for ($i = 1; $i <= $size; $i++) {
+            if ($i == 1 || $i == $size) echo str_repeat('* ', $size) . PHP_EOL;
+            else echo '* ' . str_repeat('  ', $size - 2) . '* ' . PHP_EOL;
+        }
+    }
+    ```  
+    **Explanation:** Borders only. Insight: For rectangle vary.
+
+79. **Write a program to print right-angled triangle of numbers.**  
+    **Solution:**  
+    ```php
+    function rightTriangleNumbers(int $rows) {
+        for ($i = 1; $i <= $rows; $i++) {
+            for ($j = 1; $j <= $i; $j++) echo $j . ' ';
+            echo PHP_EOL;
+        }
+    }
+    ```  
+    **Explanation:** Inner loop to i. Insight: Simple.
+
+80. **Write a program to print mirrored right triangle.**  
+    **Solution:**  
+    ```php
+    function mirroredRightTriangle(int $rows) {
+        for ($i = 1; $i <= $rows; $i++) {
+            echo str_repeat(' ', $rows - $i);
+            for ($j = 1; $j <= $i; $j++) echo '* ';
+            echo PHP_EOL;
+        }
+    }
+    ```  
+    **Explanation:** Spaces then stars. Insight: Alignment.
+
+#### OOP / Advanced
+
+81. **Write a PHP class to implement a simple calculator.**  
+    **Solution:**  
+    ```php
+    class Calculator {
+        public function add(float $a, float $b): float { return $a + $b; }
+        public function subtract(float $a, float $b): float { return $a - $b; }
+        // Multiply, divide similar.
+    }
+    // Example: $calc = new Calculator(); echo $calc->add(1,2);
+    ```  
+    **Explanation:** Methods for ops. Insight: Chainable.
+
+82. **Implement inheritance with a base Animal class and derived classes.**  
+    **Solution:**  
+    ```php
+    class Animal {
+        public function speak() { echo "Sound"; }
+    }
+    class Dog extends Animal {
+        public function speak() { echo "Woof"; }
+    }
+    // Example: $dog = new Dog(); $dog->speak();
+    ```  
+    **Explanation:** Override. Insight: Polymorphism.
+
+83. **Write a program using interfaces for shape area calculation.**  
+    **Solution:**  
+    ```php
+    interface Shape {
+        public function area(): float;
+    }
+    class Circle implements Shape {
+        private $radius;
+        public function __construct(float $r) { $this->radius = $r; }
+        public function area(): float { return pi() * $this->radius ** 2; }
+    }
+    ```  
+    **Explanation:** Interface enforce. Insight: Multiple impl.
+
+84. **Implement a singleton pattern in PHP.**  
+    **Solution:**  
+    ```php
+    class Singleton {
+        private static $instance = null;
+        private function __construct() {}
+        public static function getInstance() {
+            if (!self::$instance) self::$instance = new self();
+            return self::$instance;
+        }
+    }
+    ```  
+    **Explanation:** Private ctor, static get. Insight: Thread-safe in PHP?
+
+85. **Write a program to demonstrate method overloading (simulation in PHP).**  
+    **Solution:**  
+    ```php
+    class Overload {
+        public function add(...$args) {
+            return array_sum($args);
+        }
+    }
+    // Example: $o = new Overload(); $o->add(1,2,3);
+    ```  
+    **Explanation:** Variadic. Insight: No true overload, use magic or args.
+
+86. **Implement a factory pattern for object creation.**  
+    **Solution:**  
+    ```php
+    class ShapeFactory {
+        public static function create(string $type) {
+            return new ($type . 'Shape')();
+        }
+    }
+    // Assume classes like CircleShape.
+    ```  
+    **Explanation:** Static create. Insight: Abstract factory for complex.
+
+87. **Write a program using traits in PHP.**  
+    **Solution:**  
+    ```php
+    trait Loggable {
+        public function log(string $msg) { echo $msg; }
+    }
+    class User {
+        use Loggable;
+    }
+    // Example: $u = new User(); $u->log("Hi");
+    ```  
+    **Explanation:** Mixin. Insight: Conflict resolution.
+
+88. **Implement exception handling for division by zero.**  
+    **Solution:**  
+    ```php
+    function divide(float $a, float $b): float {
+        if ($b == 0) throw new Exception("Division by zero");
+        return $a / $b;
+    }
+    try { divide(1,0); } catch (Exception $e) { echo $e->getMessage(); }
+    ```  
+    **Explanation:** Throw catch. Insight: Custom exceptions.
+
+89. **Write a program to serialize and unserialize an object.**  
+    **Solution:**  
+    ```php
+    class Obj { public $data = 'test'; }
+    $o = new Obj();
+    $ser = serialize($o);
+    $unser = unserialize($ser);
+    ```  
+    **Explanation:** Built-in. Insight: __sleep/__wakeup for control.
+
+90. **Implement a magic method like __toString in a class.**  
+    **Solution:**  
+    ```php
+    class Person {
+        private $name = 'John';
+        public function __toString(): string { return $this->name; }
+    }
+    echo new Person(); // John
+    ```  
+    **Explanation:** Auto string. Insight: Other magics like __get.
+
+#### File Handling / Database
+
+91. **Write a program to read and write to a file.**  
+    **Solution:**  
+    ```php
+    file_put_contents('file.txt', 'Hello');
+    echo file_get_contents('file.txt');
+    ```  
+    **Explanation:** Built-in. Insight: fopen for streams.
+
+92. **Write a program to count lines in a file.**  
+    **Solution:**  
+    ```php
+    function countLines(string $file): int {
+        return count(file($file));
+    }
+    ```  
+    **Explanation:** file to array. Insight: Efficient with fgets loop.
+
+93. **Write a program to upload a file and validate its type.**  
+    **Solution:**  
+    ```php
+    if ($_FILES['file']['type'] == 'image/jpeg') {
+        move_uploaded_file($_FILES['file']['tmp_name'], 'upload.jpg');
+    }
+    ```  
+    **Explanation:** $_FILES check. Insight: Size, error checks.
+
+94. **Write a simple PDO connection to a MySQL database.**  
+    **Solution:**  
+    ```php
+    $pdo = new PDO('mysql:host=localhost;dbname=test', 'user', 'pass');
+    ```  
+    **Explanation:** Constructor. Insight: Prepared statements.
+
+95. **Write a program to fetch data from a database table.**  
+    **Solution:**  
+    ```php
+    $stmt = $pdo->query('SELECT * FROM users');
+    while ($row = $stmt->fetch()) print_r($row);
+    ```  
+    **Explanation:** Query fetch. Insight: Bind params.
+
+#### Security / Performance
+
+96. **Write a program to hash a password using bcrypt.**  
+    **Solution:**  
+    ```php
+    $hash = password_hash('pass', PASSWORD_BCRYPT);
+    var_dump(password_verify('pass', $hash)); // true
+    ```  
+    **Explanation:** Built-in. Insight: Cost param.
+
+97. **Implement input sanitization to prevent SQL injection.**  
+    **Solution:**  
+    ```php
+    $stmt = $pdo->prepare('SELECT * FROM users WHERE id = :id');
+    $stmt->execute(['id' => $input]);
+    ```  
+    **Explanation:** Prepared. Insight: filter_var for other.
+
+98. **Write a program to validate a URL.**  
+    **Solution:**  
+    ```php
+    function isValidUrl(string $url): bool {
+        return filter_var($url, FILTER_VALIDATE_URL) !== false;
+    }
+    ```  
+    **Explanation:** Filter. Insight: Regex for strict.
+
+99. **Optimize a loop to find primes up to n (using Sieve).**  
+    **Solution:**  
+    ```php
+    function sieve(int $n): array {
+        $primes = array_fill(0, $n+1, true);
+        $primes[0] = $primes[1] = false;
+        for ($i = 2; $i * $i <= $n; $i++) if ($primes[$i]) for ($j = $i*$i; $j <= $n; $j += $i) $primes[$j] = false;
+        $result = [];
+        for ($i = 2; $i <= $n; $i++) if ($primes[$i]) $result[] = $i;
+        return $result;
+    }
+    ```  
+    **Explanation:** Mark multiples. Time: O(n log log n). Insight: Bitset for memory.
+
+100. **Write a program to cache function results using memoization.**  
+     **Solution:**  
+     ```php
+     function memoize(callable $func): callable {
+         return function (...$args) use ($func) {
+             static $cache = [];
+             $key = serialize($args);
+             return $cache[$key] ?? ($cache[$key] = $func(...$args));
+         };
+     }
+     $fib = memoize(function($n) use (&$fib) { return $n <= 1 ? $n : $fib($n-1) + $fib($n-2); });
+     ```  
+     **Explanation:** Static cache. Insight: For recursive perf.
+```

@@ -84,7 +84,7 @@ echo $percent; // Output: 80
 33) str_word_count($string, $format, $charlist) : Returns word count or list.
                                                    echo str_word_count("Hello World"); // Output: 2
 
-34 ) strrev($string) :  Reverses a string.  
+34) strrev($string) :  Reverses a string.  
                          echo strrev("Hello"); // Output: olleH
 
 
@@ -132,5 +132,85 @@ echo $percent; // Output: 80
 5) range($start, $end, $step) :   Creates an array of a range of elements                                             
                                     print_r(range(1, 5)); // Output: Array ( [0] => 1 [1] => 2 [2] => 3 [3] => 4 [4] => 5 )
 
+6) array_key_exists($key, $array) : Checks if a key exists in array
+                                    var_dump(array_key_exists("a", $arr)); // Output: bool(true)
                                     
-                                                                                                  
+7)  array_key_first($array) :  Gets the first key   
+                                echo array_key_first($arr); // Output: a    
+
+8) array_key_last($array) :  Gets the last key.
+                             echo array_key_last($arr); // Output: b
+
+9) array_keys($array, $search_value, $strict) : Returns all keys or subset
+                                                print_r(array_keys($arr)); // Output: Array ( [0] => a [1] => b )
+
+10) array_search($needle, $haystack, $strict) : Searches for value and returns key.
+                                                echo array_search(2, $arr); // Output: b
+
+11) array_values($array) : Returns all values as indexed array.
+                            print_r(array_values($arr)); // Output: Array ( [0] => 1 [1] => 2 )
+
+12) in_array($needle, $haystack, $strict) : Checks if value exists in array.
+                                            var_dump(in_array(1, $arr)); // Output: bool(true)
+
+13) key_exists($key, $array) :   Alias of array_key_exists.
+                                var_dump(key_exists("a", $arr)); // Output: bool(true)  
+
+14) array_filter($array, $callback, $flag) :    Filters elements using a callback. 
+                                                print_r(array_filter($arr, fn($v) => $v > 1)); // Output: Array ( [1] => 2 [2] => 3 )   
+
+15) array_reduce($array, $callback, $initial) :  Reduces array to single value using callback.
+                                                    $arr = array(1, 2, 3);
+                                                    echo array_reduce($arr, fn($carry, $item) => $carry + $item); // Output: 6       
+
+16) array_find($array, $callback) :   Returns first element satisfying callback (PHP 8.4+).   
+                                        $arr = array(1, 2, 3);
+                                        echo array_find($arr, fn($v) => $v > 1); // Output: 2     
+
+17) array_find_key($array, $callback) :  Returns key of first element satisfying callback  
+                                            $arr = array("a" => 1, "b" => 2);
+                                            echo array_find_key($arr, fn($v) => $v > 1); // Output: b  
+
+18) array_all($array, $callback) :      Checks if all elements satisfy callback 
+                                        $arr = array(2, 4);
+                                        var_dump(array_all($arr, fn($v) => $v % 2 == 0)); // Output: bool(true) 
+
+19) array_any($array, $callback) :      Checks if at least one element satisfies callback   
+                                        $arr = array(1, 2);
+                                        var_dump(array_any($arr, fn($v) => $v % 2 == 0)); // Output: bool(true) 
+
+20) arsort($array, $flags) :   Sorts array in descending order, maintaining keys(associative).
+                                $arr = array("a" => 2, "b" => 1);
+                                arsort($arr);
+                                print_r($arr); // Output: Array ( [a] => 2 [b] => 1 )
+
+21) asort($array, $flags) : Sorts array in ascending order, maintaining keys(associative).
+                            $arr = array("a" => 2, "b" => 1);
+                            asort($arr);
+                            print_r($arr); // Output: Array ( [b] => 1 [a] => 2 )
+
+22) krsort($array, $flags) : Sorts by key(associative) in descending order.
+                                $arr = array("b" => 1, "a" => 2);
+                                krsort($arr);
+                                print_r($arr); // Output: Array ( [b] => 1 [a] => 2 )
+
+23) ksort($array, $flags) : Sorts by key(associative) in ascending order
+                            $arr = array("b" => 1, "a" => 2);
+                            ksort($arr);
+                            print_r($arr); // Output: Array ( [a] => 2 [b] => 1 )
+
+24) rsort($array, $flags) :  Sorts in descending order, reindexing keys  
+                                $arr = array(1, 2);
+                                rsort($arr);
+                                print_r($arr); // Output: Array ( [0] => 2 [1] => 1 )   
+
+25) sort($array, $flags) :    Sorts in ascending order, reindexing keys.   
+                                $arr = array(2, 1);
+                                sort($arr);
+                                print_r($arr); // Output: Array ( [0] => 1 [1] => 2 )    
+
+26) array_multisort($array1, $sort_order, $sort_flags, ...) :   Sorts multiple or multi-dimensional arrays 
+                                                                    $arr1 = array(2, 1);
+                                                                    $arr2 = array("b", "a");
+                                                                    array_multisort($arr1, $arr2);
+                                                                    print_r($arr1); // Sorted with $arr2                                                                          

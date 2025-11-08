@@ -19,6 +19,7 @@
             // Only check odd divisors up to square root of the number
             // if n is divisible by a number greater than sqrt(n), 
             // the corresponding divisor would be smaller than sqrt(n) and already checked.
+            // $i=3; $i<sqrt($num); $i+=2
             for($i=3; $i <= sqrt($num); $i+=2){
 
                 // divisible by i, so not prime
@@ -316,6 +317,81 @@
     
     // printEvens(10); 
 
+
+// 16) Average of n Numbers
+    function average($arr) {
+        $sum = 0;
+        $count = 0;
+
+        for ($i = 0; isset($arr[$i]); $i++) {
+            $sum += $arr[$i];
+            $count++;
+        }
+
+        return $count > 0 ? $sum / $count : 0;
+    }
+
+    // echo average([10, 20, 30, 40, 50]);
+
+// 17) Reverse a Number
+
+    function reverseNumber($n) {
+        $rev = 0;
+        while ($n > 0) {
+            $digit = $n % 10;
+            $rev = $rev * 10 + $digit;
+            $n = (int)($n / 10);
+        }
+        return $rev;
+    }
+
+    // echo reverseNumber(12345);
+
+// 18) Count Digits in a Number
+
+    function countDigits($n) {
+        $count = 0;
+        if ($n == 0) return 1;
+        while ($n > 0) {
+            $count++;
+            $n = (int)($n / 10);
+        }
+        return $count;
+    }
+
+    // echo countDigits(12345);
+
+// 19) Check if String Contains Substring
+
+// 20) Capitalize First Letter of Each Word
+
+    function capitalizeWords($str) {
+        $result = "";
+        $capitalizeNext = true;
+        $i = 0;
+
+        while (isset($str[$i])) {
+            $ch = $str[$i];
+            if ($ch == ' ') {
+                $capitalizeNext = true;
+                $result .= $ch;
+            } else {
+                if ($capitalizeNext && $ch >= 'a' && $ch <= 'z') {
+                    $ch = chr(ord($ch) - 32); // convert to uppercase manually
+                }
+                $result .= $ch;
+                $capitalizeNext = false;
+            }
+            $i++;
+        }
+
+        return $result;
+    }
+
+    // echo capitalizeWords("this is a php test");
+
+
+
 // Arrays / Strings
 // 21) Write a program to remove duplicate elements from an array. 
         function removeDuplicates (array $duplicates) : array {
@@ -347,16 +423,57 @@
 
 //  22) Write a program to find the second largest element in an array.
         function secondLargest(array $arr) {
-            $uniqueArr = array_unique($arr);   // remove duplicates
-            rsort($uniqueArr);                // sort in descending order
-            return $uniqueArr[1] ?? "No second largest element";
+            $n = count($arr);
+
+            // Sort manually in descending order (bubble sort)
+            for ($i = 0; $i < $n - 1; $i++) {
+                for ($j = 0; $j < $n - $i - 1; $j++) {
+                    if ($arr[$j] < $arr[$j + 1]) {
+                        $temp = $arr[$j];
+                        $arr[$j] = $arr[$j + 1];
+                        $arr[$j + 1] = $temp;
+                    }
+                }
+            }
+
+            // First element is largest, second element is second largest
+            return $arr[1];
         }
 
-        // $arr = [12, 35, 1, 10, 34, 1];
-        // echo "Second Largest: " . secondLargest($arr);
+        // echo secondLargest([12, 35, 1, 10, 34, 1]); // 34
 
 
 // 23) Write a program to merge two arrays and sort them.
+
+        function mergeAndSort(array $a1, array $a2) {
+            $merged = [];
+
+            // merge manually
+            for ($i = 0; $i < count($a1); $i++) {
+                $merged[] = $a1[$i];
+            }
+
+            for ($i = 0; $i < count($a2); $i++) {
+                $merged[] = $a2[$i];
+            }
+
+            // simple ascending bubble sort
+            $n = count($merged);
+            for ($i = 0; $i < $n - 1; $i++) {
+                for ($j = 0; $j < $n - $i - 1; $j++) {
+                    if ($merged[$j] > $merged[$j + 1]) {
+                        $temp = $merged[$j];
+                        $merged[$j] = $merged[$j + 1];
+                        $merged[$j + 1] = $temp;
+                    }
+                }
+            }
+
+            return $merged;
+        }
+
+        // print_r(mergeAndSort([5, 2, 9], [8, 1, 3]));
+
 
 // 24) Write a program to find intersection of two arrays.
         function intersectionArray (array $array1, array $array2) : array {
@@ -377,7 +494,7 @@
                         // check for duplicates in result array
                         $exists = false;
 
-                        for($k= 0; $k < count($result); $k++) {
+                        for($k = 0; $k < count($result); $k++) {
 
                             if($outer === $result[$k] ){
                                 $exists = true;
@@ -399,34 +516,41 @@
 
 // 25) Write a program to find union of two arrays. ---> same as removing duplicates
         
-        function arrayUnionManual(array $arr1, array $arr2) : array {
-            // start with first array
-            $union = $arr1; 
+        function unionArray(array $a1, array $a2) {
+            $result = [];
 
-            // Loop through second array
-            for ($i = 0; $i < count($arr2); $i++) {
-                $exists = false;
-
-                // Check if element already exists in union
-                for ($j = 0; $j < count($union); $j++) {
-                    if ($arr2[$i] === $union[$j]) {
-                        $exists = true;
+            // Add all elements of first array
+            for ($i = 0; $i < count($a1); $i++) {
+                $isExist = false;
+                for ($k = 0; $k < count($result); $k++) {
+                    if ($result[$k] === $a1[$i]) {
+                        $isExist = true;
                         break;
                     }
                 }
-
-                // If not found, add to union
-                if (!$exists) {
-                    $union[] = $arr2[$i];
+                if (!$isExist) {
+                    $result[] = $a1[$i];
                 }
             }
 
-            return $union;
+            // Add elements of second array if not already present
+            for ($i = 0; $i < count($a2); $i++) {
+                $isExist = false;
+                for ($k = 0; $k < count($result); $k++) {
+                    if ($result[$k] === $a2[$i]) {
+                        $isExist = true;
+                        break;
+                    }
+                }
+                if (!$isExist) {
+                    $result[] = $a2[$i];
+                }
+            }
+
+            return $result;
         }
 
-        // $arr1 = [1, 2, 3, 4];
-        // $arr2 = [3, 4, 3, 6];
-        // print_r(arrayUnionManual($arr1, $arr2));
+        // print_r(unionArray([1,2,3,4], [3,4,5,6]));
 
 // 26) Write a program to reverse an array without using built-in functions.
         function reverseArray(array $array) : array {
@@ -479,6 +603,24 @@
         // print_r(Duplicates([2,2,3,4,5,5,6]));
 
 // 28) Write a program to rotate an array by k positions.
+        function rotateArray(array $arr, int $k) {
+            $n = count($arr);
+            $k = $k % $n;
+            $rotated = [];
+
+            for ($i = $k; $i < $n; $i++) {
+                $rotated[] = $arr[$i];
+            }
+
+            for ($i = 0; $i < $k; $i++) {
+                $rotated[] = $arr[$i];
+            }
+
+            return $rotated;
+        }
+
+        // print_r(rotateArray([1,2,3,4,5], 2));
+
 
 // 29) Write a program to check if two strings are anagrams.
         function anagrams(string $str1, string $str2){
@@ -557,6 +699,27 @@
         }
 
         // print_r(explodeString("This is a string"));
+// 32.1) 
+        function splitWords($string) {
+            $words = [];
+            $current = "";
+
+            for ($i = 0; $i < strlen($string); $i++) {
+                if ($string[$i] === ' ') {
+                    if ($current !== "") {
+                        $words[] = $current;
+                        $current = "";
+                    }
+                } else {
+                    $current .= $string[$i];
+                }
+            }
+            if ($current !== "") $words[] = $current;
+
+            return $words;
+        }
+
+        // print_r(splitWords("This is a string"));
 
 // 33) Write a program to implode an array into a string.
         function implodeString(array $array) : string {
@@ -566,6 +729,20 @@
         }
 
         // echo implodeString(["This", "is", "a", "string"]);
+
+// 33.1)  
+        function implodeArray(array $arr, $sep = " ") {
+            $result = "";
+            for ($i = 0; $i < count($arr); $i++) {
+                $result .= $arr[$i];
+                if ($i < count($arr) - 1) {
+                    $result .= $sep;
+                }
+            }
+            return $result;
+        }
+
+        // echo implodeArray(["This", "is", "PHP"], "-");
 
 // 34) Write a program to find the length of the longest string in an array.
         function longestStringLen(array $array) : int {
@@ -581,6 +758,7 @@
         // echo longestStringLen(["this", 'is', 'a', 'string']);
 
 // 35) Write a program to replace all occurrences of a substring.
+
 
 // 36) Write a program to sort an array in descending order.
         function sortDesc(array $array) : array {
@@ -617,7 +795,38 @@
     // echo "\n";
     // echo isAssociative($assocArray) ? "Associative" : "Indexed";
 
+// 37.1) 
+    function isAssociative1(array $arr) {
+        $i = 0;
+        foreach ($arr as $key => $val) {
+            if ($key !== $i) return true;
+            $i++;
+        }
+        return false;
+    }
+
+        // var_dump(isAssociative1(["a"=>1,"b"=>2])); // true
+        // var_dump(isAssociative1([1,2,3])); // false
+
+
 // 38) Write a program to flatten a multi-dimensional array.
+    function flatten(array $arr) {
+        $result = [];
+        foreach ($arr as $val) {
+            if (is_array($val)) {
+                $flat = flatten($val);
+                foreach ($flat as $f) {
+                    $result[] = $f;
+                }
+            } else {
+                $result[] = $val;
+            }
+        }
+        return $result;
+    }
+
+    // print_r(flatten([1,[2,3],[4,[5,6]]]));
+
 
 // 39) Write a program to extract keys from an associative array.
     // Function to extract keys manually
@@ -876,6 +1085,7 @@
 
 // 53) Write a program to find the square root of a number without built-in functions.
 // 54) Write a program to solve quadratic equation.
+        // (-b +- (b^2 - sqrt(4ac)))/ 2a 
         function quadraticRoots(float $a, float $b, float $c): array {
             
             $disc = $b*$b - 4*$a*$c;
@@ -907,10 +1117,12 @@
 
         function pyramidStars(int $n) {
             for ($i = 1; $i <= $n; $i++) {
+
                 // Print spaces
                 for ($j = 0; $j < $n - $i; $j++) {
                     echo " ";
                 }
+                
                 // Print stars
                 for ($k = 1; $k <= $i; $k++) {
                     echo "*";
@@ -1001,6 +1213,7 @@
         // floydTriangle(5);
 
 // 59) Write a program to print Pascal’s triangle.
+    //  $number =  $number * ($i-$j) / ($j+1);
         function pascalTriangle(int $n) {
             
             for($i=0; $i< $n; $i++) {
@@ -1076,3 +1289,312 @@
     }
 
     // rightAngledNumberTriangle(5);
+
+// 65) Implement Bubble Sort in PHP.
+    // It repeatedly steps through the list, compares adjacent elements, and swaps them if they are in the wrong order.
+    // The largest element “bubbles up” to the end of the array in each pass — hence the name Bubble Sort.  
+
+    // Ascending Order
+    function bubbleSort(array $arr): array {
+        $n = count($arr);
+
+        // Outer loop for passes
+        for ($i = 0; $i < $n - 1; $i++) {
+
+            $swapped = false;
+
+            // Inner loop for comparison
+            for ($j = 0; $j < $n - $i - 1; $j++) {
+                // Swap if elements are in wrong order
+                if ($arr[$j] > $arr[$j + 1]) {
+                    $temp = $arr[$j];
+                    $arr[$j] = $arr[$j + 1];
+                    $arr[$j + 1] = $temp;
+
+                    $swapped = true;
+                }
+            }
+
+            // If no swaps occurred → already sorted
+            if (!$swapped) break;
+        }
+
+        return $arr;
+    }
+
+    // Example usage:
+    // $numbers = [5, 1, 4, 2, 8];
+    // $sorted = bubbleSort($numbers);
+
+    // print_r($sorted);
+
+// 65.1) Descending Order
+
+    function bubbleSortDescending(array $arr): array {
+        $n = count($arr);
+
+        for ($i = 0; $i < $n - 1; $i++) {
+            for ($j = 0; $j < $n - $i - 1; $j++) {
+                if ($arr[$j] < $arr[$j + 1]) { // flip sign for descending
+                    $temp = $arr[$j];
+                    $arr[$j] = $arr[$j + 1];
+                    $arr[$j + 1] = $temp;
+                }
+            }
+        }
+
+        return $arr;
+    }
+
+    // $numbers = [5, 1, 4, 2, 8];
+    // print_r(bubbleSortDescending($numbers));
+
+// 66) Implement Insertion Sort in PHP.
+    // Start from the second element (index 1), assuming the first element is already sorted.
+    // Compare the picked element (called key) with the elements before it.
+    // Shift all elements greater than the key one position ahead.
+    // Insert the key into the correct position.
+    // Continue until the entire array is sorted.
+
+    function insertionSort(array $array) : array {
+        $len =  count($array);
+        
+        for($i = 1; $i < $len; $i++){
+
+            // element to be inserted
+            $key = $array[$i];
+            $j = $i-1;
+
+            // Move elements greater than key to one position ahead
+            // $array[$j] > $key  --- ascending order
+            // $array[$j] < $key  --- desending order
+
+            while($j >=0 && $array[$j] > $key){
+                $array[$j+1] = $array[$j];
+                $j--;
+            }
+
+            // Insert the key in its correct position
+            $array[$j+1] = $key;
+        }
+        
+        return $array;
+    }
+
+    // print_r(insertionSort([2,4,1,9,5,18,12,5]));
+
+// 67) Implement Selection Sort in PHP.
+    // Start from the first element (i = 0).
+    // Assume it is the smallest element.
+    // Compare it with all elements after it (j = i+1 to n-1).
+    // If a smaller element is found, remember its index.
+    // After the inner loop, swap the smallest element with the element at position i.
+    // Repeat until the array is sorted.
+
+    function selectionSort(array $arr) : array {
+        $len = count($arr);
+
+        for($i = 0; $i < $len -1; $i++ ) {
+            
+            // Find the smallest element in the unsorted part
+            $minIndex = $i;
+
+            // Find the smallest element in the unsorted part
+            // $array[$j] < $arr[$i]  --- ascending order
+            // $array[$j] > $arr[$i]  --- desending order
+            for($j = $i + 1; $j < $len; $j++){
+                if($arr[$j] < $arr[$i]){
+                    $minIndex = $j;
+                }
+            }
+
+            //  Swap the found minimum element with the first unsorted element
+            if($minIndex != $i) {
+                $temp = $arr[$i];
+                $arr[$i] = $arr[$minIndex];
+                $arr[$minIndex] = $temp;
+            }
+        }
+        
+        return $arr;
+    } 
+
+    // print_r(selectionSort([2,4,1,9,5,18,12,5]));
+
+// 68) Implement Quick Sort in PHP.    
+    // Choose a pivot element (commonly the last element).
+    // Partition the array:
+    // Move all elements smaller than pivot to the left.
+    // Move all elements greater than pivot to the right.
+    // Recursively apply Quick Sort to left and right subarrays.
+    // Combine (merge) the results.
+
+    function quickSort(array $arr) : array {
+        $len = count($arr);
+
+        if($len <= 1) {
+            return $arr;
+        }
+
+        $pivot = $arr[$len-1];
+        $left = [];
+        $right = [];
+
+        // $arr[$i] > $pivot  --- ascending order
+        // $arr[$i] < $pivot  --- desending order
+        for($i=0; $i < $len-1; $i++) {
+            if($arr[$i] >= $pivot){
+                $right[] = $arr[$i];
+            }else{
+                $left[] = $arr[$i];
+            }
+        }   
+        
+        $leftArraySorted = quickSort($left);
+        $rightArraySorted = quickSort($right);
+
+        return array_merge($leftArraySorted, [$pivot], $rightArraySorted);
+    }
+
+    // print_r(quickSort([2,4,1,9,5,18,12,5]));
+
+// 69)Implement Merge Sort in PHP.
+
+// 70) Implement Linear Search in PHP.
+
+    // Start from the first element of the array.
+    // Compare each element with the target value.
+    // If a match is found → return its index (position).
+    // If the loop ends without a match → return “not found”.
+
+    function linearSearch($arr, $target) {
+        
+        // Loop through each element
+        for ($i = 0; $i < count($arr); $i++) {
+            
+            if ($arr[$i] == $target) {
+                return $i; 
+            }
+        }
+        // If not found
+        return -1;
+    }
+
+    // Example 
+    // $numbers = [12, 35, 1, 10, 34, 1];
+    // $target = 10;
+
+    // $result = linearSearch($numbers, $target);
+
+    // if ($result != -1) {
+    //     echo "Element $target found at index $result";
+    // } else {
+    //     echo "Element $target not found in the array.";
+    // }
+
+// 71)  Implement Binary Search in PHP.
+    // Start with two pointers:
+    // low = 0, high = n - 1
+    // Find the middle index:
+    // mid = (low + high) / 2
+
+    // Compare:
+    // If arr[mid] == target → element found
+    // If arr[mid] > target → search left half
+    // If arr[mid] < target → search right half
+    // Repeat steps until low > high.
+
+    function binarySearch(array $arr, int $target) : int{
+        $len = count($arr);
+        if($len < 1){
+            return -1;
+        }
+
+        $low = 0;
+        $high = $len -1;
+
+        while($low <= $high){
+            $mid = (int)(($low + $high)/2);
+
+            if($arr[$mid] === $target){
+                return $mid;
+            }else if($target < $arr[$mid]){
+                $high = $mid -1;
+            }else{
+                $low = $mid+1;
+            }
+        }
+
+        return -1;
+    }
+
+    // $numbers = [1, 5, 8, 12, 20, 35, 50]; // Must be sorted
+    // $target = 20;
+
+    // $result = binarySearch($numbers, $target);
+
+    // if ($result != -1) {
+    //     echo "Element $target found at index $result";
+    // } else {
+    //     echo "Element $target not found.";
+    // }
+
+// 72) Write a program to find the kth largest element in an array.
+
+    function kthLargestElement(array $arr, int $k) {
+
+        $len = count($arr);
+        
+        // bubble sort DESC
+        for($i=0; $i< $len -1; $i++){
+
+            for($j=0; $j< $len - $i -1; $j++){
+                if($arr[$j] < $arr[$j+1]){
+                    $temp = $arr[$j];
+                    $arr[$j] = $arr[$j+1];
+                    $arr[$j+1] = $temp;
+                }
+            }
+        }
+
+        return $arr[$k-1];
+    }
+
+    // echo kthLargestElement([1, 5, 8, 12, 20, 35, 50], 4);
+
+// 73) Write a program to sort a string alphabetically.
+
+    function sortStringCaseInsensitive($str) {
+        // Convert string to array manually
+        $arr = [];
+        $len = strlen($str);
+        for ($i = 0; $i < $len; $i++) {
+            $arr[$i] = $str[$i];
+        }
+
+        // Bubble sort (case-insensitive)
+        for ($i = 0; $i < $len - 1; $i++) {
+            for ($j = 0; $j < $len - $i - 1; $j++) {
+                // Compare lowercase ASCII values
+                if (ord(strtolower($arr[$j])) > ord(strtolower($arr[$j + 1]))) {
+                    // Swap
+                    $temp = $arr[$j];
+                    $arr[$j] = $arr[$j + 1];
+                    $arr[$j + 1] = $temp;
+                }
+            }
+        }
+
+        // Convert array back to string manually
+        $sortedStr = "";
+        for ($i = 0; $i < $len; $i++) {
+            $sortedStr .= $arr[$i];
+        }
+
+        return $sortedStr;
+    }
+
+    // Example usage
+    // $string = "PhpCodeABC";
+    // echo "Original string: $string\n";
+    // echo "Sorted (case-insensitive): " . sortStringCaseInsensitive($string);

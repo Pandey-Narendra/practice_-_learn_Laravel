@@ -1099,7 +1099,7 @@ PHP has over 100 built-in string functions for manipulating text. Below, I expla
       ?>
       ```
 
-34. **substr_replace**
+34. **substr_replace **
     - **What it is**: Replaces a portion of a string.
     - **Why use it**: For targeted replacements.
     - **How to use it**: `substr_replace($string, $replacement, $start, $length)`

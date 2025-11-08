@@ -9,6 +9,8 @@ class Order extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+    
     protected $fillable = ['user_id', 'total_amount', 'created_at'];
 
     public function user()

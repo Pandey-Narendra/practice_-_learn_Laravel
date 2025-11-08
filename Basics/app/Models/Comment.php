@@ -10,6 +10,8 @@ class Comment extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = ['post_id', 'user_id', 'body', 'created_at'];
 
     public function post()

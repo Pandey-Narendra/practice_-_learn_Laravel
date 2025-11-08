@@ -124,7 +124,8 @@ Introduction to Migrations:
         timestamp($column): TIMESTAMP for dates/times.
         Example: $table->timestamp('last_login_at')->nullable()
 
-        float($column, $totalDigits, $decimals): FLOAT for decimals. E.g., $table->float('price', 8, 2); (8 total digits, 2 after decimal).
+        float($column, $totalDigits, $decimals): FLOAT for decimals. 
+        E.g., $table->float('price', 8, 2); (8 total digits, 2 after decimal).
 
         date($column): DATE for YYYY-MM-DD.
         
@@ -225,6 +226,16 @@ Introduction to Migrations:
         index(): Creates an index for faster queries.
             Example: $table->string('slug')->index();
         
+        ->comment('text'): Adds DB comment.
+        
+        ->fullText(): For full-text search (MySQL).
+        
+        ->after('column'): Places column after another.
+        
+        ->first(): Places at table start.
+
+        ->spatialIndex(): For geometry types (GIS).
+
         $table->string('slug')->comment('URL slug');   // Add column comment
 
         primary(): Makes it a primary key
