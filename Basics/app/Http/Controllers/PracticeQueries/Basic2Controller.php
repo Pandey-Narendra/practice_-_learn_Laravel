@@ -60,6 +60,17 @@ class Basics2Controller extends Controller
                 // GROUP BY name, email, salary 
                 // HAVING COUNT(*) > 1;
 
+                // SELECT *
+                // FROM employees e
+                // WHERE (first_name, last_name, salary) IN (
+                // SELECT first_name, last_name, salary
+                // FROM employees
+                // GROUP BY first_name, last_name, salary
+                // HAVING COUNT(*) > 1
+                // )
+                // ORDER BY first_name, last_name, salary;
+
+
         // 5) Delete duplicate records from a table.
                 // delete e1 
                 // from employees e1
@@ -94,7 +105,15 @@ class Basics2Controller extends Controller
                 // left join employees e2 on e1.manager_id = e2.employee_id;
 
         // 12)  Find all employees who belong to a department with more than 10 employees.
-
+                
+                // select * from employees
+                // where department_id in (
+                //                 select department_id 
+                //                 from employees
+                //                 group by department_id
+                //                 having count(*) > 10
+                //         )
+                // ;
         // 13)   Write a query to list departments that have no employees. 
                     // select * 
                     // from departments 
@@ -125,9 +144,20 @@ class Basics2Controller extends Controller
                 //  select * from employees where salary > (select avg(salary) from employees)
 
         // 17) Write a query using a correlated subquery to find the highest salary in each department. 
-                // SELECT d.department_name, 
-                //     (SELECT MAX(e2.salary) FROM Employees e2 WHERE e2.department_id = d.department_id) AS max_salary
-                // FROM Departments d;
+                // select e1.*
+                // from employees e1
+                // where salary = (
+                //         select max(e2.salary)
+                // from employees e2
+                // where e1.department_id = e2.department_id
+                // );
+
+                // select d.*, max(e.salary)
+                // from departments d 
+                // left join employees e on d.department_id = e.department_id
+                // group by d.department_id;
+
+                // select d.department_name, (select max(e.salary) from employees e where e.department_id = d.department_id) as max_salary from departments d;
 
         // 18) Write a query using NOT EXISTS to find departments without employees.
                 // SELECT d.department_id, d.department_name
@@ -165,16 +195,27 @@ class Basics2Controller extends Controller
                 // GROUP BY d.department_name;
 
         // 25) Find department with the highest average salary.
-                // SELECT d.department_name, avg(e.employee_id) AS employee_avg
-                // FROM Departments d
-                // LEFT JOIN Employees e ON d.department_id = e.department_id
-                // GROUP BY d.department_name;
+                // SELECT d.department_name, AVG(e.salary) AS avg_salary
+                // FROM Employees e
+                // INNER JOIN Departments d ON e.department_id = d.department_id
+                // GROUP BY d.department_name
+                // ORDER BY avg_salary DESC LIMIT 1;
 
         // 26) Find the highest-paid employee in each department. 
-                // select e.first_name, e.last_name, d.department_name, max(e.salary) 
-                // from departments d 
-                // join employees e on d.department_id = e.department_id 
-                // group by d.department_id;
+                // SELECT 
+                // e.first_name, 
+                // e.last_name, 
+                // d.department_name, 
+                // e.salary
+                // FROM employees e
+                // JOIN departments d 
+                // ON e.department_id = d.department_id
+                // WHERE e.salary = (
+                // SELECT MAX(salary)
+                // FROM employees
+                // WHERE department_id = e.department_id
+                // );
+
 
         // 27) Find departments where average salary > 50,000.
                 // select d.department_name, avg(e.salary) as avg_salary 
@@ -194,12 +235,27 @@ class Basics2Controller extends Controller
                 // SELECT DISTINCT salary FROM Employees ORDER BY salary DESC LIMIT 1 OFFSET 4;
 
         // 30) Find all employees except the top 10 earners.
-                // SELECT * FROM Employees
-                // WHERE salary NOT IN (
-                                                // SELECT DISTINCT salary 
-                                                // FROM Employees 
-                                                // ORDER BY salary DESC LIMIT 10
-                                        // );
+                // SELECT * 
+                // FROM employees
+                // WHERE employee_id NOT IN (
+                // SELECT employee_id 
+                // FROM (
+                //         SELECT employee_id
+                //         FROM employees
+                //         ORDER BY salary DESC
+                //         LIMIT 10
+                // ) AS top10
+                // );
+
+                // SELECT employee_id
+                // FROM (
+                // SELECT employee_id
+                // FROM employees
+                // ORDER BY salary DESC
+                // LIMIT 10
+                // ) AS t;
+
+
 
         // 31) Write a query to fetch the third highest salary from an Employee table.
                 // SELECT DISTINCT salary FROM Employees ORDER BY salary DESC LIMIT 1 OFFSET 2;
@@ -248,7 +304,53 @@ class Basics2Controller extends Controller
                 // GROUP BY d.department_name
                 // HAVING AVG(e.salary) > (SELECT AVG(salary) FROM Employees);
 
+        // 43) Top 3 salaries per department.
+        
+                // SELECT 
+                // d.department_name,
+                // r.department_id,
+                // r.salary
+                // FROM (
+                // SELECT 
+                //         department_id,
+                //         salary,
+                //         ROW_NUMBER() OVER (PARTITION BY department_id ORDER BY salary DESC) AS rn
+                // FROM employees
+                // ) AS r
+                // JOIN departments d ON d.department_id = r.department_id
+                // WHERE r.rn <= 3
+                // ORDER BY d.department_name, r.salary DESC;
 
+        // 44)  Rank employees by salary using RANK().
+                
+                // select first_name, last_name, salary,
+                //         rank() over(ORDER by salary desc) as rnk
+                // from employees     
+                        
+        // 45) Assign row numbers to employees.
+                // SELECT employee_id, first_name, ROW_NUMBER() OVER (ORDER BY employee_id) AS row_num     
+                // FROM  Employees;
+
+        // 46) Find employees with gaps in salary values.
+
+                // select e.*
+                // from (
+                // select first_name, last_name, salary,
+                //         salary-lag(salary) over(order by salary) as prev_gap_salary
+                // from employees )as e
+                // where e.prev_gap_salary > 5000;
+
+        // 47) show salary difference with the next employee.
+
+                // select e.*
+                // from (
+                // select first_name, last_name, salary,
+                //         salary- lead(salary) over(order by salary) as diff 
+                // from employees )as e
+                // HAVING e.diff > 5000
+                // ;  
+
+        // 48) 
 
 
 

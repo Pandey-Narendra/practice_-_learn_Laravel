@@ -1,404 +1,419 @@
 <?php
-// 01
 
-    function isPrime($num) {
-        if($num <= 1) return false;
+// 01)
+    function isPrime($num){
+        if(!$num) return false;
+        if($num <=1) return false;
+        if($num == 2 ) return true;
+        if($num % 2 === 0) return false;
 
-        if($num === 2) return true;
-
-        if($num % 2 === 0 ) return false;
-
-        for($i = 3; $i <= sqrt($num); $i+=2 ) {
+        for($i=3; $i<=sqrt($num); $i+=2){
             if($num % $i === 0) return false;
         }
 
         return true;
     }
 
-    // if(isPrime(13)){
-    //     echo "Prime Number";
-    // }else{
-    //     echo " Not a Prime Number";
+    // $number = 29;
+    // if (isPrime($number)) {
+    //     echo "$number is a Prime Number.";
+    // } else {
+    //     echo "$number is Not a Prime Number.";
     // }
 
+// 02) 
     function reverseString($str) {
-        $len = strlen($str);
-        for($i=0; $i < $len/2; $i++) {
-            $temp = $str[$i];
-            $str[$i] = $str[$len - $i -1];
-            $str[$len - $i -1] = $temp;
-        }
+        if($str === '' || $str[1] === false) return $str;
 
+        $len = strlen($str);
+        for($i = 0; $i<=($len/2); $i++){
+            $temp = $str[$i];
+            $str[$i] = $str[$len-$i-1];
+            $str[$len-$i-1] = $temp;
+        }
         return $str;
     }
 
-    // echo reverseString("this is s string");
+    // $string = "this is s string";
+    // echo $reversedString = reverseString($string);
 
+    function reverseStringRecursive($str) {
+        if ($str === '' || isset($str[1]) === false) return $str;
 
-    function fibonacci($n){
-        $first =  0;
-        $second = 1; 
-        // $third = $first;
-
-        for($i = 1; $i<= $n; $i++ ) {
-            echo $first." ";
-            $third = $first + $second;
-            $first = $second;
-            $second = $third;
-        }
+        return reverseStringRecursive(substr($str, 1)) . $str[0];
     }
 
-    // fibonacci(10);
+    // $string = "this is s string";
+    // echo $reversedString = reverseStringRecursive($string);
 
-        function palindrome(string $string ) : bool {
-            $len = strlen($string);
+    function recursionFactorial($n) {
+        if($n <=1) return 1;
+        return $n*recursionFactorial($n-1);
+    }
+    // echo recursionFactorial(5);
 
-            for($i = 0; $i <= $len/2; $i++ ){
-                if($string[$i] !== $string[$len-$i-1]) return false;
-            }
+    function fibonacci($n){
+       $first = 0;
+       $second = 1;
+       echo "fibonacci series: ";
+       
+        for($i=1;$i<=$n; $i++ ){
+            echo $third = $first + $second. " ";
+            $first = $second;
+            $second = $third;    
+        }
+    }
+    // $n = 10;
+    // fibonacci($n);
 
-            return true;
+    function palindrome($str) {
+        if(!isset($str)) return false;
+        $len=strlen($str);
+
+        for($i=0; $i<=($len/2); $i++){
+            if($str[$i] !== $str[$len-$i-1]) return false;
+        }
+        return true;
+    }
+
+    // if(palindrome('dwerfewtg')) {
+    //     echo "palindrome";
+    // }else{
+    //     echo " not a palindrome";
+    // }
+
+    function sumOfDigits($num){
+        if(!$num) return -1;
+        $sum = 0;
+        $len = (string)($num);
+
+        while($num > 0) {
+            $sum+= ($num%10);
+            $num = (int)($num/10);
         }
 
-        // if(palindrome('dwerfewtg')) {
-        //     echo "palindrome";
-        // }else{
-        //     echo " not a palindrome";
-        // }
+        return $sum;
+    }
 
+    // echo sumOfDigits(124); 
 
-        function sumOfDigits(int $digit) : int {
-            $sum = 0;
-            while ($digit > 0) {
-                $sum += ($digit% 10);
-                $digit = (int) ($digit / 10);
-            }
+    function reverseNumber($num){
+        if(!$num) return -1;
+        $sum = 0;
+        $len = (string)($num);
 
-            return $sum;
+        while($num > 0) {
+            $sum= ($sum*10) + ($num%10);
+            $num = (int)($num/10);
         }
 
-        // echo sumOfDigits(124); 
+        return $sum;
+    }
 
-        // ($num/2) * 2 === 0;
-        // ($num & 1) === 0;
-        //  f = (c*9/5) + 32;
+    // echo reverseNumber(12345);
 
-        function removeDuplicates (array $duplicates)  {
+    function removeDuplicates($duplicates) {
+        $result = [];
+        $len = count($duplicates);
+        for($i=0; $i<$len; $i++){
+           
+            $is_duplicate = false;
+            for($j=0; $j<count($result); $j++){
+                if($duplicates[$i] ===  $result[$j]){
+                    $is_duplicate =true;
+                    break;
+                }
+            } 
+
+            if(!$is_duplicate){
+                $result[]= $duplicates[$i];
+            }
+        }
+
+        return $result;
+    }
+
+    // print_r(removeDuplicates([2,2,33,3,4,5,5,7,9,10,11,11]));
+
+    function bubbleSortDesc($arr) {
+        $len = count($arr);
+        for($i=0; $i<$len; $i++){
+
+            // $arr[$j] < $arr[$j+1]  -- Desc
+            // $arr[$j] > $arr[$j+1] -- ASC
+            for($j=0; $j<$len-$i-1; $j++){
+                if($arr[$j] < $arr[$j+1]){
+                    $temp = $arr[$j];
+                    $arr[$j] = $arr[$j+1];
+                    $arr[$j+1] = $temp;
+                }
+            }
+        }
+
+        return $arr;
+    }
+
+    // print_r(bubbleSortDesc([2,2,33,3,4,5,5,7,9,10,11,11]));
+
+    function intersectionArray($arr1, $arr2) {
+        $intersectedArray = [];
+        $len1 = count($arr1); 
+        $len2 = count($arr2); 
+
+        for($i=0; $i<$len1; $i++){
             
-            $noDuplicates = [];
-            $duplicates_count = [];
-
-            for ($i = 0; $i < count($duplicates); $i++) {
-                
-                // Count how many times each value occurs
-                $duplicates_count[$duplicates[$i]] =  ($duplicates_count[$duplicates[$i]] ?? 0) + 1;
-                
-                // Check if this value is already in noDuplicates
-                $isduplicates = false;
-                for ($j = 0; $j < count($noDuplicates); $j++) {
-
-                    if($duplicates[$i] === $noDuplicates[$j]){
-                        $isduplicates = true;
-                        break;
+            for($j=0; $j<$len2; $j++){
+                $is_exists = false;
+                if($arr1[$i] === $arr2[$j]){
+                    for($k=0; $k<count($intersectedArray); $k++){
+                        if($arr1[$i] === $intersectedArray[$k]){
+                            $is_exists = true;
+                            break;
+                        }
+                    }
+                    if(!$is_exists){
+                        $intersectedArray[] = $arr1[$i];
                     }
                 }
-
-                // If not duplicate, add to noDuplicates array
-                if(!$isduplicates) $noDuplicates[] = $duplicates[$i];
-
+                
             }
-
-            print_r($noDuplicates);
-            print_r($duplicates_count);
-            
         }
+        return $intersectedArray;
+    }
 
-        // removeDuplicates([2,2,33,3,4,5,5,7,9,10,11,11]);
+    // print_r(intersectionArray([1,2,2,3,4,5,5,6], [1,2,3,4,5,5,6]));
 
-        
-        // function secondLargest(array $arr){
-            
-        //     for ($i = 0; $i < count($arr); $i++) {
-                
-        //         $min = $arr[$i];
-        //         $outerElement = $arr[$i];
-                
-        //         for ($j = 0; $j < count($arr) - $i; $j++) {
-                    
-        //             $innerElement = $arr[$j];
+    function Duplicates($arr) {
+        $result = [];
+        $len = count($arr);
 
-        //             if($outerElement < $innerElement) {
-                        
-        //                 $min = $innerElement;
-        //             }
-
-        //         }
-
-        //         $arr[count($arr) - $i - 1] = $min;
-
-        //     }
-            
-        //     print_r($arr);
-        // }
-
-        // secondLargest([12, 35, 1, 10, 34, 1]);
-
-        function intersectionArray (array $array1, array $array2) {
-            
-            $intersectArray = [];
-
-            for($i = 0; $i < count($array1); $i++) {
-                
-                $isIntersect = false;
-
-                for($j = 0; $j < count($array2); $j++) {
-
-                    if($array1[$i] === $array2[$j]){
-                        $isIntersect = true;
-                        break;
-                    }
-
-                }
-
-                if($isIntersect) {
-                    
-                    $isIntersectUnique = true;
-                    
-                    for($j = 0; $j < count($intersectArray); $j++) {
-                    
-                        if($array1[$i] === $intersectArray[$j]){
-                            $isIntersectUnique = false;
+        for($i=0; $i<$len; $i++){
+            for($j=$i+1; $j<$len; $j++){
+                if($arr[$i] === $arr[$j]){
+                    $is_exsits = false;
+                    for($k=0; $k<count($result); $k++){
+                        if($arr[$i] === $result[$k]){
+                            $is_exsits = true;
                             break;
                         }
                     }
 
-                    if($isIntersectUnique) {
-                        $intersectArray[] = $array1[$i];
+                    if(!$is_exsits){
+                        $result[]=$arr[$i];
                     }
                 }
-
-            }
-
-            print_r($intersectArray); 
+            } 
         }
 
-        // print_r(intersectionArray([2,2,3,4,5,5,6], [1,2,3,4,5,5,6]));
+        return $result;
+    }
 
+    // print_r(Duplicates([2,2,3,4,5,5,6]));
 
-        function arrayUnionManual(array $array1, array $array2){
+    function anagrams($str1, $str2) {
+        $len1 = strlen($str1);
+        $len2 = strlen($str2);
+
+        if($len1 !== $len2) return false;
+
+        $str1_freq=[];
+        for($i=0; $i<$len1; $i++){
+            $str1_freq[$str1[$i]] = ($str1_freq[$str1[$i]] ?? 0 ) +1; 
+        }
+
+        
+        $str2_freq=[];
+        for($i=0; $i<$len2; $i++){
+            $str2_freq[$str2[$i]] = ($str2_freq[$str2[$i]] ?? 0 ) +1; 
+        }
+
+        $isAnagram = true;
+
+        for($i=0; $i<count($str2_freq); $i++){
+            if($str1_freq[$str1[$i]] !== $str2_freq[$str1[$i]]){
+                $isAnagram = false;
+                break;
+            }
+        }
+
+        return $isAnagram;
+    }
+
+    // if(anagrams("listen", "silent")) {
+    //     echo "anagrams";
+    // }else{
+    //     echo "not a anagrams";
+    // }
+
+    function flatten($arr) {
+        $result = [];
+        foreach($arr as $val){
+            if(is_array($val)) {
+                $falt = flatten($val);
+                foreach($falt as $ft){
+                    $result[] = $ft; 
+                }
+            }else{
+                $result[] = $val;  
+            }
+        } 
+
+        return $result;
+    }    
+
+    // print_r(flatten([1,[2,3,2],[4,[5,6]]]));
+
+    function perfectNo($no) {
+        if($no <= 1) return false;
+        $sum = 0;
+        for($i=1; $i<=$no/2; $i++) {
+            if($no%$i === 0){
+                $sum += $i;
+            } 
+        }
+
+        return $sum === $no;
+    }
+
+    // if(perfectNo(6)) {
+    //     echo "perfect number";
+    // }else{ 
+    //     echo "not a perfect number";
+    // }
+
+    function decimalToBinary($num){
+        if($num === 0) return "0";
+        
+        $binary = '';
+        while($num > 0){
+            $remainder = $num%2;
+            $binary = $remainder.$binary;
+            $num = (int)($num/2);
+        }
+        return $binary;
+    }
+
+    // echo decimalToBinary(25);
+
+    function binaryToDecimal($num){
+        $len = strlen((string)($num));
+        $decimal=0;
+
+        for($i=0; $i < $len; $i++){
+            $binary = $num[$len-$i-1];
+            if($binary == 1){
+                $decimal = $decimal + pow(2,$i);
+            }
+        }
+
+        return $decimal;
+
+    }
+    
+    // echo binaryToDecimal('11001');
+
+    function isLeapYear($year) {
+        if(($year % 4 === 0 && $year % 100 !== 0) || ($year % 400 === 0) ){
+            return true;
+        }
+        return false;
+    }
+
+    // if(isLeapYear(2000)) {
+    //     echo "leap year";
+    // }else{
+    //     echo " not a leap year";
+    // }
+
+    function pyramidStars($n) {
+        // COntrol Loop
+        for($i = 0; $i<$n; $i++) {
+
+            for($j=$n-$i-1; $j > 0; $j--) {
+                echo " ";
+            }
+
+            for($j=0; $j<=$i; $j++) {
+                echo "*";
+            }
+            echo"\n";
+        }
+    }
+
+    // pyramidStars(5);
+
+    function pyramidReverseStars($n) {
+        for($i = 0; $i<$n; $i++) {
             
-            $unionArray = [];
-
-            for($i = 0; $i < count($array1); $i++) {
-                
-                $isExists = false;
-                
-                for($j = 0; $j < count($unionArray); $j++){
-                    
-                    if($array1[$i] === $unionArray[$j]){
-                        $isExists = true;
-                        break;
-                    }
-
-                }
-
-                if(!$isExists) {
-
-                    $unionArray[] = $array1[$i];
-                }
+            for($j=$n; $j > $n-$i; $j--) {
+                echo" ";
             }
 
-            for($i = 0; $i < count($array2); $i++) {
-                
-                $isExists = false;
-                
-                for($j = 0; $j < count($unionArray); $j++){
-                    
-                    if($array2[$i] === $unionArray[$j]){
-                        $isExists = true;
-                        break;
-                    }
-
-                }
-
-                if(!$isExists) {
-
-                    $unionArray[] = $array2[$i];
-                }
+            for($j=$n-$i; $j > 0; $j--) {
+                echo"*";
             }
 
-            print_r($unionArray);
+            echo "\n";
         }
+    }
+    // pyramidReverseStars(5);
 
-        // print_r(arrayUnionManual([1, 2, 3, 4],[3, 4, 5, 6]));
+    function pyramidPatternStars($n){
+        for($i=0; $i<$n; $i++) {
 
-        function anagrams(string $str1, string $str2){
-            $len1 = strlen($str1);
-            $len2 = strlen($str2);
-
-            if($len1 !== $len2) return false;
-
-            $freq_str1 = [];
-            for($i=0; $i < $len1; $i++) {
-                $freq_str1[$str1[$i]] =  ($freq_str1[$str1[$i]] ?? 0) + 1;
+            for($j=0; $j < $n-$i; $j++){
+                echo " ";
             }
-
-            $freq_str2 = [];
-            for($i=0; $i < $len2; $i++) {
-                $freq_str2[$str2[$i]] =  ($freq_str2[$str2[$i]] ?? 0) + 1;
+            for($j=0; $j< 2*$i+1; $j++) {
+                echo"*";
             }
-
-            $isAnagram = true;
-
-            for($i=0; $i < $len1; $i++) {
-                if($freq_str1[$str1[$i]] !== $freq_str2[$str1[$i]]){
-                    $isAnagram = false;
-                    break;
-                }
-            }
-
-          return $isAnagram;
+            echo "\n";
         }
+    }
+    // pyramidPatternStars(5);
 
-        // if(anagrams("listen", "silent")) {
-        //     echo "anagrams";
-        // }else{
-        //     echo "not a anagrams";
-        // }
+    function pyramidPatternReverseStars($n) {
+        for($i=0; $i<$n; $i++){
 
-        function pyramidStars(int $n){
-            
-            // Control loop
-            for($i = 0; $i < $n; $i++){
-
-                // print $n - $i spaces
-                for($j = 1; $j < $n - $i; $j++){
-                    echo " ";
-                }
-
-                // print for the outer/controll loop
-                for($k = 0; $k <= $i; $k++){
-                    echo "*";
-                }
-
-                echo "\n";
-
+            for($j=0; $j<$i; $j++ ){
+                echo " ";
             }
-        }
-
-        // pyramidStars(5);
-
-        function pyramidReverseStars(int $n){
-            // Controll loop
-            for($i = 0; $i < $n; $i++){
-                
-                for($j = $n; $j > $n - $i -1; $j--){
-                    echo " ";
-                }
-
-                for($k = 0; $k < $n -$i ; $k++) {
-                    echo"*";
-                }
-
-                echo "\n";
+            for($j=2*($n-$i)-1; $j>0; $j--){
+                echo"*";
             }
+            echo"\n";
         }
-        // pyramidReverseStars(5);
+    }
+    // pyramidPatternReverseStars(5);
 
-        function pyramidPatternStars(int $n) {
-            for($i=1; $i <= $n; $i++) {
+    function floydTriangle($n){
+        $count=0;
+        for($i=0; $i<$n; $i++){
 
-                for($k=0; $k < $n-$i-1; $k++){
-                    echo " ";
-                }
-
-                for($j=0; $j < 2*$i -1; $j++) {
-                    echo"*";
-                }
-
-                echo "\n";
+            for($j=0; $j<$n-$i; $j++){
+                echo" ";
             }
-        }
-
-        // pyramidPatternStars(5);
-
-        function pyramidPatternReverseStars(int $n) {
-            for($i=1; $i <= $n; $i++){
-
-                for($k=$n; $k > $n-$i-1; $K--){
-                    echo " ";
-                }
-
-                for($j= $n; $j > 2*$i-1; $j-- ) {
-                    echo "*";
-                }
-
-                echo "\n";
+            for($j=0; $j<=$i; $j++){
+                echo ++$count.' ';
             }
+            echo"\n";
         }
+    }
 
-        // pyramidPatternReverseStars(5);
+    // floydTriangle(5);
 
-        function floydTriangle(int $n) {
-            $count=0;
-            for($i=0; $i< $n; $i++){
-                
-                for($s=0; $s < $n-$i; $s++){
-                    echo" ";
-                }
-
-                for($j=0; $j<=$i; $j++){
-                    echo ++$count." ";
-                }
-
-                echo"\n";
+    function pascalTriangle($n) {
+        for($i=0; $i<$n; $i++){
+            $no = 1;
+            for($j=0; $j<$n-$i; $j++){
+                echo" ";
             }
-        }
-
-        // floydTriangle(5);
-
-        function pascalTriangle($n) {
-            for($i=0; $i< $n; $i++){
-                
-                // for($s=0; $s < $n-$i; $s++){
-                //     echo" ";
-                // }
-
-                // $number=1;
-                $number=65;
-                for($j=0; $j<=$i; $j++){
-                    // echo $number." ";
-                    // $number =  $number * ($i-$j) / ($j+1);
-                    // echo $number++." ";
-                    echo chr($number++)." ";
-                }
-                echo "\n";
+            for($j=0; $j<=$i; $j++){
+                echo $no." ";
+                $no = $no*($i-$j)/($j+1);
             }
+            echo"\n";
         }
+    }
 
-        // pascalTriangle(5);
-
-        function bubbleSort($arr){
-
-            $len = count($arr);
-            
-            // length counts from from 1 hence $len-1
-            // $i < $len-1 beacuse inner loop will check for J+1
-            for($i=0; $i < $len-1; $i++) {
-                // $outerElement = $arr[$i];
-
-                for($j=0; $j < $len-$i-1; $j++){
-                    // $innerElement = $arr[$j];
-
-                    if($arr[$j] < $arr[$j+1]){
-                        $temp = $arr[$j];
-                        $arr[$j] = $arr[$j+1];
-                        $arr[$j+1] = $temp;
-                    }
-                }
-            }
-
-            print_r($arr);
-        }
-
-        bubbleSort([5, 1, 4, 2, 8]);
+    // pascalTriangle(5);

@@ -952,7 +952,7 @@
             
             $bit = $num[$len -$i -1];
             if($bit == 1){
-                $decimal += power(2,$i);
+                $decimal += pow(2,$i);
             }
         }
 
@@ -1171,23 +1171,20 @@
 
 // 57.1)  Write a program to print a pyramid reverse pattern of stars 2
 
-        function pyramidPatternReverseStars(int $n) {
-            
-            for($i = 0; $i < $n; $i++){
-                
-                for($j = $n; $j <= $n-$i-1; $j--){
-                    echo " ";
-                }
+    function pyramidPatternReverseStars($n) {
+        for($i=0; $i<$n; $i++){
 
-                for($k = $n-$i; $k > 0; $k--) {
-                    echo "*";
-                }
-
-                echo "\n";
+            for($j=0; $j<$i; $j++ ){
+                echo " ";
             }
+            for($j=2*($n-$i)-1; $j>0; $j--){
+                echo"*";
+            }
+            echo"\n";
         }
+    }
 
-        // pyramidPatternReverseStars(5);
+    // pyramidPatternReverseStars(5);
 
 // 58) Write a program to print Floyd’s triangle.
 
